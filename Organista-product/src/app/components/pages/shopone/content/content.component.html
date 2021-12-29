@@ -1,0 +1,166 @@
+<!-- Products Start -->
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Product Count & Orderby Start -->
+                <div class="andro_shop-global">
+                    <p>Showing <b>6</b> of <b>{{shopbox.length}}</b> products </p>
+                    <form method="post">
+                        <select class="form-control" name="orderby">
+                            <option value="default">Default sorting</option>
+                            <option value="latest">Latest release</option>
+                            <option value="price-down">Price: High - Low</option>
+                            <option value="price-up">Price: Low - High</option>
+                            <option value="popularity">Popularity Sorting</option>
+                        </select>
+                    </form>
+                </div>
+                <!-- Product Count & Orderby End -->
+                <div class="row masonry">
+                    <!-- Product Start --> 
+                    <div class="col-sm-6 masonry-item"
+                        *ngFor="let item of shopbox | paginate: { itemsPerPage: 6, currentPage: page }">
+                        <div class="andro_product">
+                            <div class="andro_product-badge andro_badge-featured" *ngIf="item.featured">
+                                <i class="fa fa-star"></i>
+                                <span>Featured</span>
+                            </div>
+                            <div class="andro_product-badge andro_badge-sale" *ngIf="item.discount">
+                                {{item.discount}}% Off
+                            </div>
+                            <div class="andro_product-thumb">
+                                <a routerLink="/product-single/{{item.id}}"><img src="{{item.img}}"
+                                        alt="{{item.title}}"></a>
+                            </div>
+                            <div class="andro_product-body">
+                                <h5 class="andro_product-title"><a routerLink="/product-single/{{item.id}}">
+                                        {{item.title}} </a> </h5>
+                                <p>{{item.shortdesc}}</p>
+                                <div class="andro_rating-wrapper">
+                                    <div class="andro_rating">
+                                        <ngb-rating [max]="5" [(rate)]="item.rating" [readonly]="true">
+                                            <ng-template let-fill="fill" let-index="index">
+                                                <i class="fa fa-star" [class.active]="fill === 100"></i>
+                                            </ng-template>
+                                        </ngb-rating>
+                                    </div>
+                                    <span>{{item.rating}} Stars</span>
+                                </div>
+                            </div>
+                            <div class="andro_product-footer">
+                                <div class="andro_product-price">
+                                    <span *ngIf="item.discount">${{item.price * (100 - item.discount) / 100 |
+                                        number:'1.2-2'}}</span>
+                                    <span>${{item.price| number:'1.2-2'}}</span>
+                                </div>
+                                <div class="btn-group" ngbDropdown>
+                                    <a routerLink="/product-single/{{item.id}}" class="andro_btn-custom btn-sm">Buy
+                                        Now</a>
+                                    <button type="button" class="andro_btn-custom dropdown-toggle-split btn-sm"
+                                        ngbDropdownToggle>
+                                    </button>
+                                    <div class="dropdown-menu" ngbDropdownMenu>
+                                        <a class="dropdown-item" href="javascript:void(0)" (click)="open(shopmodal, item)">
+                                            <i class="fa fa-eye"></i> Quick View</a>
+                                        <a class="dropdown-item" href="#"> <i class="fa fa-sync"></i> Compare</a>
+                                        <a class="dropdown-item" href="#"> <i class="fa fa-heart"></i> Add To
+                                            Wishlist</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Product End -->
+                </div>
+                <!-- Pagination Start -->
+                <pagination-controls (pageChange)="page = $event"></pagination-controls>
+                <!-- Pagination End -->
+            </div>
+            <!-- Sidebar Start -->
+            <div class="col-lg-4">
+                <app-shopsidebar></app-shopsidebar>
+            </div>
+            <!-- Sidebar End -->
+        </div>
+    </div>
+</div>
+<!-- Products End -->
+<ng-template #shopmodal let-modal>
+    <div class="modal-body">
+        <div class="close-btn close-dark close" (click)="modal.dismiss('Cross click')">
+            <span></span>
+            <span></span>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="andro_product">
+                        <div class="andro_product-badge andro_badge-featured" *ngIf="modalContent.featured">
+                            <i class="fa fa-star"></i>
+                            <span>Featured</span>
+                        </div>
+                        <div class="andro_product-badge andro_badge-sale" *ngIf="modalContent.discount">
+                            {{modalContent.discount}}% Off
+                        </div>
+                        <img [src]="modalContent.img" alt="{{modalContent.title}}">
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="andro_product-single-content">
+                        <div class="andro_rating-wrapper">
+                            <div class="andro_rating">
+                                <ngb-rating [max]="5" [(rate)]="modalContent.rating" [readonly]="true">
+                                    <ng-template let-fill="fill" let-index="index">
+                                        <i class="fa fa-star" [class.active]="fill === 100"></i>
+                                    </ng-template>
+                                </ngb-rating>
+                            </div>
+                            <span>{{modalContent.rating}} Stars</span>
+                        </div>
+                        <h3> {{modalContent.title}} </h3>
+                        <div class="andro_product-price">
+                            <span *ngIf="modalContent.discount">${{modalContent.price * (100 - modalContent.discount) /
+                                100 |
+                                number:'1.2-2'}}</span>
+                            <span>${{modalContent.price| number:'1.2-2'}}</span>
+                        </div>
+                        <p class="andro_product-excerpt">{{modalContent.shortdesc}}</p>
+                        <form class="andro_product-atc-form">
+                            <div class="andro_product-variation-wrapper">
+                                <div class="form-group">
+                                    <select class="form-control" name="amount">
+                                        <option value="">Select Amount</option>
+                                        <option value="1">1 Kilo</option>
+                                        <option value="2">2 Kilos</option>
+                                        <option value="3">3 Kilos</option>
+                                        <option value="4">4 Kilos</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control" name="breed">
+                                        <option value="">Select a Breed</option>
+                                        <option value="italian">Italian</option>
+                                        <option value="egyptian">Egyptian</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="qty-outter">
+                                <a routerLink="/product-single/{{modalContent.id}}" (click)="modal.dismiss('Cross click')" class="andro_btn-custom">Buy Now</a>
+                                <div class="qty">
+                                    <span class="qty-subtract" (click)="decrement()">
+                                        <i class="fa fa-minus"></i>
+                                    </span>
+                                    <input type="text" name="qty" value="{{counter}}">
+                                    <span class="qty-add" (click)="increment()">
+                                        <i class="fa fa-plus"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

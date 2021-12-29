@@ -1,0 +1,36 @@
+<!-- Related Posts Start -->
+<div class="section pt-0 andro_related-posts">
+    <div class="container">
+        <div class="section-title flex-title">
+            <h4 class="title">Related Posts</h4>
+            <div class="andro_arrows">
+                <i class="fa fa-arrow-left slick-arrow slider-prev"></i>
+                <i class="fa fa-arrow-right slick-arrow slider-next"></i>
+            </div>
+        </div>
+        <ngx-slick-carousel #slickModal="slick-carousel" [config]="relatedConfig" class="andro_related-posts-slider">
+            <!-- Article Start -->
+            <article ngxSlickItem class="andro_post" *ngFor="let item of blogbox">
+                <div class="andro_post-thumb">
+                    <a routerLink="/post-single/{{item.id}}">
+                        <img src="{{item.photo}}" alt="{{item.title}}">
+                    </a>
+                </div>
+                <div class="andro_post-body">
+                    <div class="andro_post-categories">
+                        <a href="#" *ngFor="let tags of getBlogTags(item.tags)">{{tags.title}}</a>
+                    </div>
+                    <div class="andro_post-desc">
+                        <h5> <a routerLink="/post-single/{{item.id}}">{{item.title}}</a> </h5>
+                        <span> <span class="fw-600">Posted On </span> <a routerLink="/post-single/{{item.id}}"
+                                class="andro_post-date">{{item.postdate}}</a> </span>
+                        <p>{{item.shortdesc}}</p>
+                    </div>
+                    <a class="andro_btn-custom btn-block" routerLink="/post-single/{{item.id}}"> Read More </a>
+                </div>
+            </article>
+            <!-- Article End -->
+        </ngx-slick-carousel>
+    </div>
+</div>
+<!-- Related Posts End -->

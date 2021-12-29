@@ -1,0 +1,37 @@
+<!-- Blog Posts Start -->
+<div class="section">
+    <div class="container">
+        <ng-masonry-grid [masonryOptions]="{ transitionDuration: '0.8s', percentPosition: true }" [useAnimation]="true"
+            [useImagesLoaded]="true" class="row masonry">
+            <!-- Article Start -->
+            <ng-masonry-grid-item class="col-lg-4 col-md-6 masonry-item"
+                *ngFor="let item of blogbox | paginate: { itemsPerPage: 9, currentPage: page }">
+                <article class="andro_post">
+                    <div class="andro_post-thumb">
+                        <a routerLink="/post-single/{{item.id}}">
+                            <img src="{{item.masonryphoto}}" alt="{{item.title}}">
+                        </a>
+                    </div>
+                    <div class="andro_post-body">
+                        <div class="andro_post-categories">
+                            <a href="#" *ngFor="let tags of getBlogTags(item.tags)">{{tags.title}}</a>
+                        </div>
+                        <div class="andro_post-desc">
+                            <h5> <a routerLink="/post-single/{{item.id}}">{{item.title}}</a> </h5>
+                            <span> <span class="fw-600">Posted On </span> <a routerLink="/post-single/{{item.id}}"
+                                    class="andro_post-date">{{item.postdate}}</a> </span>
+                            <p>{{item.shortdesc}}</p>
+                        </div>
+                        <a class="andro_btn-custom btn-block" routerLink="/post-single/{{item.id}}"> Read More
+                        </a>
+                    </div>
+                </article>
+            </ng-masonry-grid-item>
+            <!-- Article End -->
+        </ng-masonry-grid>
+        <!-- Pagination Start -->
+        <pagination-controls (pageChange)="page = $event"></pagination-controls>
+        <!-- Pagination End -->
+    </div>
+</div>
+<!-- Blog Posts End -->

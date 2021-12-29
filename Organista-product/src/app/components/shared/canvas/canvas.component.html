@@ -1,0 +1,25 @@
+<div class="sidebar d-block">
+    <!-- Popular Categories Start -->
+    <div class="sidebar-widget widget-categories-icons">
+        <h5 class="widget-title">Popular Categories</h5>
+        <div class="row">
+            <div class="col-lg-6" *ngFor="let item of category | slice:0:6">
+                <div class="andro_icon-block text-center has-link">
+                    <a href="#">
+                        <i class="{{item.icon}}"></i>
+                        <h5>{{item.title}}</h5>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Popular Categories End -->
+    <!-- Popular Tags Start -->
+    <div class="sidebar-widget">
+        <h5 class="widget-title">Popular Tags</h5>
+        <div class="tagcloud">
+            <a routerLink="/post-single/{{item.id}}" *ngFor="let item of tags">{{item.title}}</a>
+        </div>
+    </div>
+    <!-- Popular Tags End -->
+</div>

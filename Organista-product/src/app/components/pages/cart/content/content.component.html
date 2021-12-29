@@ -1,0 +1,210 @@
+<!--Cart Start -->
+<div class="section">
+    <div class="container">
+        <!-- Cart Table Start -->
+        <table class="andro_responsive-table">
+            <thead>
+                <tr>
+                    <th class="remove-item"></th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Qunantity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of cart">
+                    <td class="remove">
+                        <button type="button" class="close-btn close-danger remove-from-cart">
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </td>
+                    <td data-title="Product">
+                        <div class="andro_cart-product-wrapper">
+                            <img [src]="item.img" alt="{{item.title}}">
+                            <div class="andro_cart-product-body">
+                                <h6> <a href="#">{{item.title}}</a> </h6>
+                                <p>{{item.qty}} Kilos</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td data-title="Price"> <strong>{{item.price | number:'1.2-2'}}$</strong> </td>
+                    <td class="quantity" data-title="Quantity">
+                        <input type="number" class="qty form-control" value="{{item.qty}}">
+                    </td>
+                    <td data-title="Total"> <strong>{{item.qty * item.price | number:'1.2-2'}}$</strong> </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- Cart Table End -->
+        <!-- Coupon Code Start -->
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="form-group mb-0">
+                    <div class="input-group mb-0">
+                        <input type="text" class="form-control" placeholder="Enter Coupon Code"
+                            aria-label="Coupon Code">
+                        <div class="input-group-append">
+                            <button class="andro_btn-custom shadow-none" type="button">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Coupon Code End -->
+    </div>
+</div>
+<!-- Cart End -->
+<!-- Cart form Start -->
+<div class="section pt-0">
+    <div class="container">
+        <div class="row andro_cart-form">
+            <div class="col-lg-6 andro_upsells">
+                <div class="section-title flex-title">
+                    <h4 class="title">Upsells</h4>
+                    <div class="andro_arrows">
+                        <i class="fa fa-arrow-left slick-arrow slider-prev"></i>
+                        <i class="fa fa-arrow-right slick-arrow slider-next"></i>
+                    </div>
+                </div>
+                <!-- Upsells Start -->
+                <ngx-slick-carousel #slickModal="slick-carousel" [config]="upsellConfig" class="andro_upsells-slider">
+                    <!-- Product Start -->
+                    <div ngxSlickItem class="andro_product andro_product-list andro_product-has-controls andro_product-has-buttons" *ngFor="let item of shopbox">
+                        <div class="andro_product-thumb">
+                            <a routerLink="/product-single/{{item.id}}"><img src="{{item.img}}" alt="{{item.title}}"></a>
+                        </div>
+                        <div class="andro_product-body">
+                            <div class="andro_rating-wrapper">
+                                <div class="andro_rating">
+                                    <ngb-rating [max]="5" [(rate)]="item.rating" [readonly]="true">
+                                        <ng-template let-fill="fill" let-index="index">
+                                            <i class="fa fa-star" [class.active]="fill === 100"></i>
+                                        </ng-template>
+                                    </ngb-rating>
+                                </div>
+                                <span>{{item.rating}} Stars</span>
+                            </div>
+                            <h5 class="andro_product-title"> <a routerLink="/product-single/{{item.id}}"> {{item.title}} </a> </h5>
+                            <div class="andro_product-price">
+                                <span *ngIf="item.discount">${{item.price * (100 - item.discount) / 100 | number:'1.2-2'}}</span>
+                                <span>${{item.price| number:'1.2-2'}}</span>
+                            </div>
+                            <p>{{item.shortdesc}}</p>
+                        </div>
+                        <div class="andro_product-footer">
+                            <div class="andro_product-buttons">
+                                <a routerLink="/product-single/{{item.id}}" class="andro_btn-custom primary">Add To Cart</a>
+                                <a href="javascript:void(0)" (click)="open(shopmodal, item)" class="andro_btn-custom light">Quick View</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Product End -->
+                </ngx-slick-carousel>
+                <!-- Upsells End -->
+            </div>
+            <div class="col-lg-6">
+                <div class="section-title">
+                    <h4 class="title">Cart Total</h4>
+                </div>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Subtotal</th>
+                            <td>{{calculateprice() | number:'1.2-2'}}$</td>
+                        </tr>
+                        <tr>
+                            <th>Tax</th>
+                            <td> {{taxPrice}}$ <span class="small">(11%)</span> </td>
+                        </tr>
+                        <tr>
+                            <th>Total</th>
+                            <td> <b>{{calculateprice() + taxPrice | number:'1.2-2'}}$</b> </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="submit" class="andro_btn-custom primary btn-block">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Cart form End -->
+<ng-template #shopmodal let-modal>
+    <div class="modal-body">
+        <div class="close-btn close-dark close" (click)="modal.dismiss('Cross click')">
+            <span></span>
+            <span></span>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="andro_product">
+                        <div class="andro_product-badge andro_badge-featured" *ngIf="modalContent.featured">
+                            <i class="fa fa-star"></i>
+                            <span>Featured</span>
+                        </div>
+                        <div class="andro_product-badge andro_badge-sale" *ngIf="modalContent.discount">
+                            {{modalContent.discount}}% Off
+                        </div>
+                        <img [src]="modalContent.img" alt="{{modalContent.title}}">
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="andro_product-single-content">
+                        <div class="andro_rating-wrapper">
+                            <div class="andro_rating">
+                                <ngb-rating [max]="5" [(rate)]="modalContent.rating" [readonly]="true">
+                                    <ng-template let-fill="fill" let-index="index">
+                                        <i class="fa fa-star" [class.active]="fill === 100"></i>
+                                    </ng-template>
+                                </ngb-rating>
+                            </div>
+                            <span>{{modalContent.rating}} Stars</span>
+                        </div>
+                        <h3> {{modalContent.title}} </h3>
+                        <div class="andro_product-price">
+                            <span *ngIf="modalContent.discount">${{modalContent.price * (100 - modalContent.discount) /
+                                100 |
+                                number:'1.2-2'}}</span>
+                            <span>${{modalContent.price| number:'1.2-2'}}</span>
+                        </div>
+                        <p class="andro_product-excerpt">{{modalContent.shortdesc}}</p>
+                        <form class="andro_product-atc-form">
+                            <div class="andro_product-variation-wrapper">
+                                <div class="form-group">
+                                    <select class="form-control" name="amount">
+                                        <option value="">Select Amount</option>
+                                        <option value="1">1 Kilo</option>
+                                        <option value="2">2 Kilos</option>
+                                        <option value="3">3 Kilos</option>
+                                        <option value="4">4 Kilos</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control" name="breed">
+                                        <option value="">Select a Breed</option>
+                                        <option value="italian">Italian</option>
+                                        <option value="egyptian">Egyptian</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="qty-outter">
+                                <a routerLink="/product-single/{{modalContent.id}}" (click)="modal.dismiss('Cross click')" class="andro_btn-custom">Buy Now</a>
+                                <div class="qty">
+                                    <span class="qty-subtract" (click)="decrement()">
+                                        <i class="fa fa-minus"></i>
+                                    </span>
+                                    <input type="text" name="qty" value="{{counter}}">
+                                    <span class="qty-add" (click)="increment()">
+                                        <i class="fa fa-plus"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

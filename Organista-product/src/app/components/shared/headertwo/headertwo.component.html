@@ -1,0 +1,136 @@
+<!-- Aside (Right Panel) -->
+<aside class="andro_aside andro_aside-right" [ngClass]="sidebarmethod ? '' : 'open'">
+    <app-canvas></app-canvas>
+</aside>
+<div class="andro_aside-overlay aside-trigger-right" (click)="sidebarToggle()"></div>
+<!-- Aside (Mobile Navigation) -->
+<aside class="andro_aside andro_aside-left" [ngClass]="navmethod ? '' : 'open'">
+    <app-mobilemenu></app-mobilemenu>
+</aside>
+<div class="andro_aside-overlay aside-trigger-left" (click)="toggleNav()"></div>
+<!-- Header Start -->
+<header class="andro_header header-1 can-sticky" id="can-sticky">
+    <!-- Topheader Start -->
+    <div class="andro_header-top">
+        <div class="container">
+            <div class="andro_header-top-inner">
+                <ul class="andro_header-top-sm andro_sm">
+                    <li> <a href="#"> <i class="fab fa-facebook-f"></i> </a> </li>
+                    <li> <a href="#"> <i class="fab fa-twitter"></i> </a> </li>
+                    <li> <a href="#"> <i class="fab fa-linkedin-in"></i> </a> </li>
+                    <li> <a href="#"> <i class="fab fa-youtube"></i> </a> </li>
+                </ul>
+                <ul class="andro_header-top-links">
+                    <li class="menu-item"><a routerLink="/login"> My Account </a></li>
+                    <li class="menu-item menu-item-has-children">
+                        <a href="#"> <span class="andro_current-currency-text">Currency</span> (USD) </a>
+                        <ul class="sub-menu sub-menu-left">
+                            <li> <a href="#">United States Dollar (USD)</a> </li>
+                            <li> <a href="#">Kuwait Dinar (KWD)</a> </li>
+                            <li> <a href="#">Pound Sterling (GBP)</a> </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Topheader End -->
+    <!-- Middle Header Start -->
+    <div class="andro_header-middle">
+        <div class="container">
+            <nav class="navbar">
+                <!-- Logo -->
+                <a class="navbar-brand" routerLink="/"> <img src="assets/img/logo.png" alt="logo"> </a>
+                <!-- Search Form -->
+                <div class="andro_search-adv">
+                    <form method="post">
+                        <div class="andro_search-adv-cats">
+                            <span>All Categories</span>
+                            <div class="sub-menu">
+                                <div class="andro_dropdown-scroll">
+                                    <label>
+                                        <input type="checkbox" name="category1" value="food">
+                                        Food
+                                        <i class="fas fa-check"></i>
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="category2" value="home-care">
+                                        Home Care
+                                        <i class="fas fa-check"></i>
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="category3" value="keto">
+                                        Keto
+                                        <i class="fas fa-check"></i>
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="category4" value="baskets">
+                                        Baskets
+                                        <i class="fas fa-check"></i>
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="category5" value="supplements">
+                                        Supplements
+                                        <i class="fas fa-check"></i>
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="category6" value="baby-kids">
+                                        Baby & Kids care
+                                        <i class="fas fa-check"></i>
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="category7" value="serum">
+                                        Serum
+                                        <i class="fas fa-check"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="andro_search-adv-input">
+                            <input type="text" class="form-control" placeholder="Look for Fruits, Vegetables" name="search" value="">
+                            <button type="submit" name="button"><i class="fa fa-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="andro_header-controls">
+                    <ul class="andro_header-controls-inner">
+                        <li class="andro_header-favorites"> <a routerLink="/wishlist" title="Your Wishlist"> <i class="flaticon-like"></i> </a> </li>
+                        <li class="andro_header-cart">
+                            <a routerLink="/cart" title="Your Cart">
+                                <i class="flaticon-shopping-basket"></i>
+                                <div class="andro_header-cart-content">
+                                    <span>{{cart.length}} Items</span>
+                                    <span>{{calculateprice() | number:'1.2-2'}}$</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- Toggler -->
+                    <div class="aside-toggler aside-trigger-left" (click)="toggleNav()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Middle Header End -->
+    <!-- Bottom Header Start -->
+    <div class="andro_header-bottom">
+        <div class="container">
+            <div class="andro_header-bottom-inner">
+                <!-- Menu -->
+                <app-navigation></app-navigation>
+                <!-- Side navigation toggle -->
+                <div class="aside-toggler aside-trigger-right desktop-toggler" (click)="sidebarToggle()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bottom Header End -->
+</header>
+<!-- Header End -->

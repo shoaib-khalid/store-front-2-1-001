@@ -1,0 +1,58 @@
+<!-- Wishlist Start -->
+<div class="section">
+    <div class="container">
+        <!-- Wishlist Table Start -->
+        <table class="andro_responsive-table">
+            <thead>
+                <tr>
+                    <th class="remove-item"></th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Availability</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of wishlist">
+                    <td class="remove">
+                        <button type="button" class="close-btn close-danger remove-from-cart">
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </td>
+                    <td data-title="Product">
+                        <div class="andro_cart-product-wrapper">
+                            <img [src]="item.photo" alt="{{item.title}}">
+                            <div class="andro_cart-product-body">
+                                <h6> <a href="#">{{item.title}}</a> </h6>
+                                <p>{{item.qty}} Kilos</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td data-title="Price"> <strong>{{item.price | number:'1.2-2'}}$</strong> </td>
+                    <td data-title="Availability">
+                        <span class="andro_product-stock instock" *ngIf="item.stock">In Stock</span>
+                        <span class="andro_product-stock outofstock" *ngIf="!item.stock">Out of Stock</span>
+                    </td>
+                    <td data-title="Total"> <strong>{{item.price * item.qty | number:'1.2-2'}}$</strong> </td>
+                    <td data-title="Actions"> <button type="submit" class="andro_btn-custom btn-sm shadow-none">Add to Cart</button> </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- Wishlist Table End -->
+        <!-- Share Wishlist Start -->
+        <div class="text-center">
+            <h5>Share Your Wishlist</h5>
+            <div class="andro_post-share">
+                <ul class="andro_sm justify-content-center">
+                    <li> <a href="#" ngbTooltip="Share on Facebook"> <i class="fab fa-facebook-f"></i> </a> </li>
+                    <li> <a href="#" ngbTooltip="Share on Twitter"> <i class="fab fa-twitter"></i> </a> </li>
+                    <li> <a href="#" ngbTooltip="Share on Linkedin"> <i class="fab fa-linkedin-in"></i> </a> </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Share Wishlist End -->
+    </div>
+</div>
+<!--  Wishlist End -->

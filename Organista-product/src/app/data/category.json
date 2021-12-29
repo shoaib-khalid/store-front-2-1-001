@@ -1,0 +1,26 @@
+[
+    {
+        "icon": "flaticon-diet",
+        "title": "Food"
+    },
+    {
+        "icon": "flaticon-supplements",
+        "title": "Supplements"
+    },
+    {
+        "icon": "flaticon-groceries",
+        "title": "Baskets"
+    },
+    {
+        "icon": "flaticon-cleaning-spray",
+        "title": "Home Care"
+    },
+    {
+        "icon": "flaticon-baby",
+        "title": "Kids Care"
+    },
+    {
+        "icon": "flaticon-olive-oil",
+        "title": "Oils"
+    }
+]

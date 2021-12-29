@@ -1,0 +1,91 @@
+<div class="sidebar">
+    <!-- Search Start -->
+    <div class="sidebar-widget widget-search">
+        <form method="post">
+            <div class="andro_search-adv-input">
+                <input type="text" class="form-control" placeholder="Look for Products" name="search" value="">
+                <button type="submit" name="button"><i class="fa fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+    <!-- Search End -->
+    <!-- Filter: Categories Start -->
+    <div class="sidebar-widget">
+        <h5 class="widget-title"> Category </h5>
+        <ul class="sidebar-widget-list">
+            <li>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" (click)="getAllProduct()" [ngClass]="{'selected' : this.selectedMenu === 'all'}" class="custom-control-input" id="category">
+                    <label class="custom-control-label" for="category">All Products</label>
+                </div>
+            </li>
+            <li *ngFor="let item of categories">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" (click)="getProduct(catId,sortBy)" [ngClass]="{'selected' : this.selectedMenu === item.id}" class="custom-control-input" id="category{{item.id}}">
+                    <label class="custom-control-label" for="category{{item.id}}">{{item.name}}</label>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- Filter: Categories End -->
+    <!-- Filter: Condition Start
+    <div class="sidebar-widget">
+        <h5 class="widget-title"> Condition </h5>
+        <ul class="sidebar-widget-list">
+            <li *ngFor="let item of condition">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="condition{{item.id}}">
+                    <label class="custom-control-label" for="condition{{item.id}}">{{item.title}}</label>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- Filter: Condition End -->
+    <!-- Filter: State Start 
+    <div class="sidebar-widget">
+        <h5 class="widget-title"> Brand </h5>
+        <ul class="sidebar-widget-list">
+            <li *ngFor="let item of brand">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="brand{{item.id}}">
+                    <label class="custom-control-label" for="brand{{item.id}}">{{item.title}}</label>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- Filter: State End -->
+    <!-- Filter: Freshness Start
+    <div class="sidebar-widget">
+        <h5 class="widget-title"> Freshness </h5>
+        <ion-range-slider type="double" min="0" max="10" from="4" to="6" grid="true" postfix=" days"></ion-range-slider>
+    </div>
+    <!-- Filter: Freshness End -->
+    <!-- Filter: Price Start 
+    <div class="sidebar-widget">
+        <h5 class="widget-title"> Price </h5>
+        <ion-range-slider type="double" min="0" max="500" from="10" to="100" grid="true" postfix=" $"></ion-range-slider>
+    </div>
+    <!-- Filter: Price End -->
+    <!-- Tags Start 
+    <div class="sidebar-widget">
+        <h5 class="widget-title"> Popular Tags </h5>
+        <div class="tagcloud">
+            <a href="#" *ngFor="let item of tags">{{item.title}}</a>
+        </div>
+    </div>
+    <!-- Tags End -->
+    <!-- Newsletter Start 
+    <div class="sidebar-widget">
+        <div class="andro_newsletter-form">
+            <h5>Join our newsletter</h5>
+            <p>Get exclusive weekly deals with our newsletter subscription</p>
+            <form method="post">
+                <div class="form-group">
+                    <input type="email" class="form-control" name="newsletter_email" placeholder="Email Address" value="">
+                </div>
+                <button type="submit" class="andro_btn-custom secondary btn-block shadow-none" name="button">Join Newsletter</button>
+            </form>
+        </div>
+    </div>
+    <!-- Newsletter End -->
+</div>

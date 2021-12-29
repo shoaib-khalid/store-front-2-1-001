@@ -1,0 +1,52 @@
+<div class="sidebar">
+    <!-- Recent Posts Start -->
+    <div class="sidebar-widget widget-recent-posts">
+        <h5 class="widget-title">Recent Posts</h5>
+        <article class="post" *ngFor="let item of blogbox | slice:0:3">
+            <a routerLink="/post-single/{{item.id}}">
+                <img src="{{item.photo}}" alt="{{item.title}}">
+            </a>
+            <h6> <a routerLink="/post-single/{{item.id}}">{{item.title}}</a> </h6>
+            <span>Posted on <a routerLink="/post-single/{{item.id}}">{{item.postdate}}</a> </span>
+        </article>
+    </div>
+    <!-- Recent Posts End -->
+    <!-- Categories Start -->
+    <div class="sidebar-widget">
+        <h5 class="widget-title"> Post Categories </h5>
+        <ul class="sidebar-widget-list">
+            <li *ngFor="let item of category">
+                <a href="#"> {{item.title}} <span>({{item.count}})</span> </a>
+                <ul>
+                    <li *ngFor="let item of item.children"> <a href="#"> {{item.title}}
+                            <span>({{item.count}})</span> </a> </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!-- Categories End -->
+    <!-- Popular Tags Start -->
+    <div class="sidebar-widget">
+        <h5 class="widget-title">Popular Tags</h5>
+        <div class="tagcloud">
+            <a href="#" *ngFor="let item of tags">{{item.title}}</a>
+        </div>
+    </div>
+    <!-- Popular Tags End -->
+    <!-- Newsletter Start -->
+    <div class="sidebar-widget">
+        <div class="andro_newsletter-form primary-bg pattern-bg">
+            <h5 class="text-white">Join our newsletter</h5>
+            <p class="text-white">Get exclusive weekly deals with our newsletter subscription</p>
+            <form method="post">
+                <div class="form-group">
+                    <input type="email" class="form-control" name="newsletter_email"
+                        placeholder="Email Address" value="">
+                </div>
+                <button type="submit" class="andro_btn-custom light btn-block" name="button">Join
+                    Newsletter</button>
+            </form>
+        </div>
+    </div>
+    <!-- Newsletter End -->
+</div>

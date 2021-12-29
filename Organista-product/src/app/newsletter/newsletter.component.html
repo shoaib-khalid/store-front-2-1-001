@@ -1,0 +1,22 @@
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <img src="assets/img/ig/3.jpg" alt="newsletter">
+        <div class="close-btn close newsletter-popup-trigger" (click)="modal.dismiss('Cross click')">
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="andro_newsletter-popup-text-wrapper">
+            <h3>Join Our Newsletter</h3>
+            <p>Sed porttitor lectus nibh. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Curabitur aliquet quam id dui posuere.</p>
+        </div>
+        <form method="post" class="text-center">
+            <div class="form-group">
+                <input type="email" placeholder="Email Address" class="form-control" name="newsletter-email" value="">
+            </div>
+            <button type="submit" class="andro_btn-custom" name="button">Subscribe</button>
+            <span class="newsletter-popup-trigger" (click)="modal.dismiss('Cross click')">No Thanks</span>
+        </form>
+    </div>
+</ng-template>

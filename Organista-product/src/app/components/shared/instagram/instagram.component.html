@@ -1,0 +1,19 @@
+<!-- Instagram Start -->
+<div class="row no-gutters">
+    <div class="col-lg-4 {{layout}} pattern-bg">
+        <div class="andro_instagram">
+            <h3 class="text-white">Follow Us On Instagram</h3>
+            <a href="#" class="andro_btn-custom light">Follow Us</a>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="row no-gutters">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-6 p-0" *ngFor="let item of instagram">
+                <a href="#" class="andro_ig-item">
+                    <img [src]="item.img" alt="ig">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Instagram End -->
