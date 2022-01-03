@@ -130,12 +130,7 @@ goToDetails(prodName){
 //         }
         
 //         console.log('Pagination Arr[]:', this.paginationArr)
-//         console.log('getProduct()', this.product)
-//         console.log('ProducPagination: ', productPagination)
-//         console.log('totalPages: ', totalPages)
-
-//         let productObj = this.product;
-//         productObj.forEach(obj => {
+//         console.log('getProduct()', this.product)gt
 //           let productID = obj.id;
 //           let inventoryArr = obj.productInventories;
 
@@ -188,7 +183,10 @@ goToDetails(prodName){
 
 getCategoryProducts(catId: any,sortBy){
 this.apiService.getProductSByCategory(catId,this.storeID,sortBy,this.page_no).subscribe((res: any) => {
-    console.log('fnwj',res)
+    console.log('This category product:',res)
+    if(res.message){
+      this.product = res.data.content;
+    }
 })
 }
   
