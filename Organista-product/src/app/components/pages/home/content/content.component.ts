@@ -12,7 +12,8 @@ import { Category } from 'src/app/components/models/category';
 import { Product } from 'src/app/components/models/product';
 import { HttpClient } from '@angular/common/http';
 //import { resolve } from 'path';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { promise } from 'protractor';
 //import { resolve } from 'path';
 
 @Component({
@@ -125,16 +126,19 @@ export class ContentComponent implements OnInit {
       console.log(error)
     })
   }
-  goToDetails(prodName){
+  goToDetails(productID){
     // alert(prodName)
     // return false;
-    this.route.navigate(['product-single-v2/:prodSeoName/'] + prodName);
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.productID = params['productID'];
+    });
+    this.route.navigate(['product-single-v2/:prodSeoName/'] + productID);
   }
   //Navigation to category
   goToCategory(catId) {
     // alert(catId)
     // return false;
-    this.route.navigate(['shop-v2/'] + catId);// + catId
+    this.route.navigate(['shop-v2/'+ catId] );// + catId
   }
 
   // Fresharrivals
@@ -177,59 +181,24 @@ export class ContentComponent implements OnInit {
     });
     
   }
-  getProductByID(product_id) {
-    this.apiService.getProductByProductID(product_id).subscribe((res: any) => {
-      console.log('Product Deets', res)
-      if (res.message) {
-        resolve(res.data)
-      }
-    })
-  }
-  findInventory(productID) {
-    var toFind = this.requestParamVariantNew;
-    console.log("Products", this.product);
-    console.log();
-    var productArr = this.product.filter(function (content) {
-      return content.id === productID;
-    });
-    console.log('Inventory: ',productArr);
-    console.log();
-    var inventories = productArr[0]['productInventories']
-    console.log('inventories', inventories)
-    var flag = true;
-    var selectedItem;
-    var productInventoryItems;
-    for (let j = 0; j < productInventoryItems.length; j++) {
-      if (toFind.includes(productInventoryItems[j].productVariantAvailableId)) {
-        continue;
-      } else {
-        flag = false;
-        break;
-      }
-    }
-    if (flag) {
-      console.log('selected item: ', selectedItem)
-      this.popupPrice = selectedItem.price;
-      this.popupItemcode = selectedItem.itemCode;
-      this.popupSKU = selectedItem.sku;
-      console.log('popup details: ' + this.popupPrice + " | " + this.popupItemcode + " | " + this.popupSKU)
-    }
-  }
-
+  // getProductByID(productID) {
+  //   return new promise(resolve =>{
+  //      this.apiService.getProductByProductID(productID).subscribe((res: any) => {
+  //      console.log('Product Deets', res)
+  //     if (res.message) {
+  //       resolve(res.data)
+  //     }
+  //   })
+  // })
+  // }
   ngOnInit() {
     this.getCategory();
     this.getStoreProductById();
+    
     //this.getProductByID(this.product_id);
     // this.api.getCategoryByStoreID("McD").subscribe((data)=>{
     //   console.log("Category obj",data);
     // })
   }
 }
-
-function resolve(data: any) {
-  throw new Error('Function not implemented.');
-}
-// function resolve(data: any) {
-//   throw new Error('Function not implemented.');
-// }
 

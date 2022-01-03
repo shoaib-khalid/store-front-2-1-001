@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-md-5">
                     <div class="andro_product-single-thumb">
-                        <img [src]="product.thumbnailUrl" alt="{{product.name}}">
+                        <img [src]="product[0].thumbnailUrl" alt="{{product.name}}">
                     </div>
                     <!-- Pagination Start 
                     <div class="andro_single-pagination">
@@ -60,13 +60,13 @@
                             </div>
                             <span>{{product.rating}} Stars</span>
                         </div>-->
-                        <h3> {{product.name}} </h3>
+                        <h3> {{product[0].name}} </h3>
                         <div class="andro_product-price">
                             <!--<span *ngIf="product.discount">${{product.price * (100 - product.discount) / 100 |
                                 number:'1.2-2'}}</span>-->
-                            <span>PKR {{product.productInventories[0].price| number:'1.2-2'}}</span>
+                            <span>PKR {{product[0].productInventories[0].price| number:'1.2-2'}}</span>
                         </div>
-                        <p class="andro_product-excerpt">{{product.description}}</p>
+                        <p class="andro_product-excerpt">{{product[0].description}}</p>
                         <form class="andro_product-atc-form">
                             <div class="andro_product-variation-wrapper">
                                 <div class="form-group">
@@ -116,7 +116,7 @@
                             <li>
                                 <span>SKU: </span>
                                 <div class="andro_product-meta-item">
-                                    <span>{{product.productInventories[0].sku}}</span>
+                                    <span>{{product[0].productInventories[0].sku}}</span>
                                 </div>
                             </li>
                         </ul>
@@ -147,7 +147,7 @@
                                 <a ngbNavLink>Description</a>
                                 <ng-template ngbNavContent>
                                     <h4>Description</h4>
-                                    <div [innerHtml]="product.description"></div>
+                                    <div [innerHtml]="product[0].description"></div>
                                 </ng-template>
                             </li>
                             <li [ngbNavItem]="2">

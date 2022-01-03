@@ -358,7 +358,9 @@ getProductSByCategory(categoryId, storeID, sortId, pageNo) {
 // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-product-controller/getStoreProductsUsingGET
 getProductByName(name, store_id) {
   const header = {
-      headers: new HttpHeaders({'Content-Type': 'application/json', Authorization: 'Bearer accessToken'}),
+      headers: new HttpHeaders({
+          'Content-Type': 'application/json', Authorization: 'Bearer accessToken'
+        }),
   };
 
   const url =

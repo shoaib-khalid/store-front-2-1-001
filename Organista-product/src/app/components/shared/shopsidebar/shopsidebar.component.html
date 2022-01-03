@@ -21,7 +21,7 @@
             </li>
             <li *ngFor="let item of categories">
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" (click)="getProduct(catId,sortBy)" [ngClass]="{'selected' : this.selectedMenu === item.id}" class="custom-control-input" id="category{{item.id}}">
+                    <input type="checkbox"  (click)="getProduct(catId,sortBy)" [ngClass]="{'selected' : this.selectedMenu === item.id}" class="custom-control-input" id="category{{item.id}}">
                     <label class="custom-control-label" for="category{{item.id}}">{{item.name}}</label>
                 </div>
             </li>

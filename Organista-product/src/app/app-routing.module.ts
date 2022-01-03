@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'product-page/:id', loadChildren: () => import('./components/pages/product-page/product-page.module').then(m => m.ProductpageModule), data: { breadcrumb: 'Product Details' } },
   { path: 'wishlist', loadChildren: () => import('./components/pages/wishlist/wishlist.module').then(m => m.WishlistModule), data: { breadcrumb: 'Wishlist' } },
   { path: 'shop-v1', loadChildren: () => import('./components/pages/shopone/shopone.module').then(m => m.ShoponeModule), data: { breadcrumb: 'Shop v1 (Default)' } },
-  { path: 'shop-v2', loadChildren: () => import('./components/pages/shoptwo/shoptwo.module').then(m => m.ShoptwoModule), data: { breadcrumb: 'Shop v2 (Full Width)' } },
+  { path: 'shop-v2/:catId', loadChildren: () => import('./components/pages/shoptwo/shoptwo.module').then(m => m.ShoptwoModule), data: { breadcrumb: 'Shop v2 (Full Width)' } },
   { path: 'shop-v3', loadChildren: () => import('./components/pages/shopthree/shopthree.module').then(m => m.ShopthreeModule), data: { breadcrumb: 'Shop v3 (No Sidebar)' } },
   { path: 'shop-v4', loadChildren: () => import('./components/pages/shopfour/shopfour.module').then(m => m.ShopfourModule), data: { breadcrumb: 'Shop v4 (List view)' } },
   { path: 'thankyou', loadChildren: () => import('./components/pages/thankyou/thankyou.module').then(m => m.ThankyouModule), data: { breadcrumb: 'Thankyou'} },
