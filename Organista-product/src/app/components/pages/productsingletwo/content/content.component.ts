@@ -22,17 +22,17 @@ export class ContentComponent implements OnInit {
   productAssets: any;
   storeName: any;
   //product: any[] = [];
-  itemWithinProduct:any;
-  requestParamVariant:any = [];
-  requestParamVariantNew:any = [];
+  itemWithinProduct: any;
+  requestParamVariant: any = [];
+  requestParamVariantNew: any = [];
   variantOfSelected: any;
-  productPrice:any = 0;
+  productPrice: any = 0;
   productItemCode: any;
-  storeID:any;
-  storeDeliveryPercentage:any;
-  inputQty:any;
-  product:Product;
-   //product: Product = new Product;
+  storeID: any;
+  storeDeliveryPercentage: any;
+  inputQty: any;
+  product: Product;
+  //product: Product = new Product;
   currentVariant: any[];
   productSku: any;
   imageCollection: any;
@@ -43,19 +43,19 @@ export class ContentComponent implements OnInit {
 
   constructor(private router: ActivatedRoute,
     private activatedRoute: ActivatedRoute,
-        private route: Router,
-        private apiService: ApiService,
-        private platformLocation: PlatformLocation) { 
-          //console.log("router value",this.activatedRoute.snapshot.paramMap.get('productID'));
-          this.storeID = "McD";
-          //this.productID = this.route.routerState.snapshot.url..get('id');//"2710969f-6cbf-4058-87db-c829bb4012d1"
-          //this.seoName = "4-Piece-Chicken-McNuggets®-Happy-Meal"
-          this.activatedRoute.params.subscribe(params => {
-            this.seoName = params['prodSeoName'];
-            this.storeName = (params['storeName']) ? params['storeName'] : this.storeName;
-            console.log('product name before: ' + this.seoName); // Print the parameter to the console.             
-        });
-        }
+    private route: Router,
+    private apiService: ApiService,
+    private platformLocation: PlatformLocation) {
+    //console.log("router value",this.activatedRoute.snapshot.paramMap.get('productID'));
+    this.storeID = "McD";
+    //this.productID = this.route.routerState.snapshot.url..get('id');//"2710969f-6cbf-4058-87db-c829bb4012d1"
+    //this.seoName = "4-Piece-Chicken-McNuggets®-Happy-Meal"
+    this.activatedRoute.params.subscribe(params => {
+      this.seoName = params['prodSeoName'];
+      this.storeName = (params['storeName']) ? params['storeName'] : this.storeName;
+      console.log('product name before: ' + this.seoName); // Print the parameter to the console.             
+    });
+  }
   // public Product: { name: string, productID: number }[] = shoppost;
   // //public tags: { title: string, id: number }[] = blogtags;
   // //public category: { title: string, id: number }[] = blogcategory;
@@ -81,19 +81,21 @@ export class ContentComponent implements OnInit {
     this.counter += 1;
   }
   decrement() {
-    this.counter -= 1;
+    if (this.counter > 1) {
+      this.counter -= 1;
+    }
   }
-  getProductDetailsByName(seoName, storeID){
+  getProductDetailsByName(seoName, storeID) {
     console.log('getProductDetailsByName(): ' + seoName)
-    return new Promise( resolve => {        
-        this.apiService.getProductByName(seoName, storeID).subscribe((res: any) => {
-            if (res.message){
-                // resolve(res.data.content[0])
-                resolve(res.data.content)
-                console.log('From Name: ' , res.data.content)
-                this.product = res.data.content;
-            } 
-        },) 
+    return new Promise(resolve => {
+      this.apiService.getProductByName(seoName, storeID).subscribe((res: any) => {
+        if (res.message) {
+          // resolve(res.data.content[0])
+          resolve(res.data.content)
+          console.log('From Name: ', res.data.content)
+          this.product = res.data.content;
+        }
+      })
     })
   }
   // getProductByID(){
@@ -108,11 +110,11 @@ export class ContentComponent implements OnInit {
   //       },) 
   //   })
   // }
-   async getVariantFlow(){
-    
+  async getVariantFlow() {
+
     const prodName = await this.getProductDetailsByName(this.seoName, this.storeID)
 
- }
+  }
 
   async ngOnInit() {
     // this.activatedRoute.queryParams.subscribe(params => {
@@ -124,16 +126,16 @@ export class ContentComponent implements OnInit {
     // })
     //this.getProductByID();
     await this.getVariantFlow();
-  //   this.activatedRoute.paramMap.subscribe(paramMap => {
-  //     let productID = paramMap.get('productID'); // id gets updated whenever parameters change
-  //     console.log("router value",productID);
-  //     // add or call any code that needs to re-run when a parameter changes here
-  // });
-  
+    //   this.activatedRoute.paramMap.subscribe(paramMap => {
+    //     let productID = paramMap.get('productID'); // id gets updated whenever parameters change
+    //     console.log("router value",productID);
+    //     // add or call any code that needs to re-run when a parameter changes here
+    // });
+
     // this.setProduct(this.router.snapshot.params.id);
     // await this.getVariantFlow();
     //console.log('Product' , this.product)
-    
+
   }
 
 }
