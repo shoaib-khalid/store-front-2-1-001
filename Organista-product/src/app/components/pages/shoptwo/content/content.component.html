@@ -67,7 +67,46 @@
             </div>
             <!-- Sidebar Start -->
             <div class="col-lg-3">
-                <app-shopsidebar></app-shopsidebar>
+                <div class="sidebar">
+                    <!-- Search Start -->
+                    <div class="sidebar-widget widget-search">
+                        <form method="post">
+                            <div class="andro_search-adv-input">
+                                <input type="text" class="form-control" placeholder="Look for Products" name="search" value="">
+                                <button type="submit" name="button"><i class="fa fa-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Search End -->
+                    <!-- Filter: Categories Start -->
+                    <div class="sidebar-widget">
+                        <h5 class="widget-title"> Category </h5>
+                        <div class="sidebar-widget-list">
+                            <div id="CategoryList">
+                                <div id="allcategory">
+                                    <div class="card" >
+                                    <a (click)="getAllProduct()" [ngClass]="{'selected' : this.selectedMenu === 'all'}" class="text-center details btn btn-outline-warning btn-lg" id="price" style="margin: 2px; font-size: 13px; font-weight: bold; color: black;">All</a>
+                                    </div>
+                                </div>
+                                <!--<li>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="radio" (click)="getAllProduct()" [ngClass]="{'selected' : this.selectedMenu === 'all'}" class="custom-control-input" id="category">
+                                    <label class="custom-control-label" for="category">All Products</label>
+                                </div>
+                            </li>-->
+                                <div *ngFor="let item of categories">
+                                    <div class="card" >
+                                    <a (click)="getCategoryProducts(item.id,sortBy)" [ngClass]="{'selected' : this.selectedMenu === item.id}" class="text-center details btn btn-outline-warning btn-lg" id="price" style="margin: 2px; font-size: 13px; font-weight: bold; color: black;">{{ item.name }}</a>
+                                    </div>    
+                                <!--<div class="custom-control custom-checkbox">
+                                    <input type="radio" (click)="getProduct()" [ngClass]="{'selected' : this.selectedMenu === item.id}" class="custom-control-input" id="category{{item.id}}">
+                                    <label class="custom-control-label" for="category{{item.id}}">{{item.name}}</label>
+                                </div>-->
+                                </div>
+                            </div>    
+                        </div>
+                    </div>
+                </div>      
             </div>
             <!-- Sidebar End -->
         </div>

@@ -1,0 +1,7 @@
+
+.card{
+    border: none; background-color: transparent; height: auto; width: fit-content;
+}
+.text{
+    margin: 2px; font-size: 13px; font-weight: bold; color: black;
+}
