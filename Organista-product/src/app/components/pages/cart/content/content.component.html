@@ -8,7 +8,7 @@
                     <th class="remove-item"></th>
                     <th>Product</th>
                     <th>Price</th>
-                    <th>Qunantity</th>
+                    <th>Quantity</th>
                     <th>Total</th>
                 </tr>
             </thead>
@@ -171,7 +171,7 @@
                         </div>
                         <p class="andro_product-excerpt">{{modalContent.shortdesc}}</p>
                         <form class="andro_product-atc-form">
-                            <div class="andro_product-variation-wrapper">
+                            <!-- <div class="andro_product-variation-wrapper">
                                 <div class="form-group">
                                     <select class="form-control" name="amount">
                                         <option value="">Select Amount</option>
@@ -188,9 +188,9 @@
                                         <option value="egyptian">Egyptian</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="qty-outter">
-                                <a routerLink="/product-single/{{modalContent.id}}" (click)="modal.dismiss('Cross click')" class="andro_btn-custom">Buy Now</a>
+                                <a routerLink="/product-single/{{modalContent.id}}" (click)="modal.dismiss('Cross click')" class="andro_btn-custom">Add to Cart</a>
                                 <div class="qty">
                                     <span class="qty-subtract" (click)="decrement()">
                                         <i class="fa fa-minus"></i>

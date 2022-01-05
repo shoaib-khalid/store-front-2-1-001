@@ -25,7 +25,7 @@ export class ContentComponent implements OnInit {
 
   closeResult: string;
   public categoryArray: Category[];
-  modalContent: any;
+  modalContent: Product;
   data: any;
   product_id: any;
   productID: any;
@@ -56,8 +56,8 @@ export class ContentComponent implements OnInit {
     private activatedRoute: ActivatedRoute) {
     this.storeID = "McD";
   }
-  open(content: any, item: any) {
-    this.modalContent = item
+  open(content: any, item: Product) {
+    this.modalContent = item;
     this.modalService.open(content, { centered: true, size: "lg", windowClass: 'andro_quick-view-modal p-0' });
   }
   // Increment decrement
@@ -66,7 +66,9 @@ export class ContentComponent implements OnInit {
     this.counter += 1;
   }
   decrement() {
-    this.counter -= 1;
+    if (this.counter > 1) {
+      this.counter -= 1;
+    }
   }
   public shopbox: { img: string }[] = shoppost;
   public featuredpost: { img: string }[] = shoppost;

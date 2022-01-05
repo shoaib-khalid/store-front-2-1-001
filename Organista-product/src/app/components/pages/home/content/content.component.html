@@ -24,7 +24,7 @@
             <div class="col-lg-2 col-md-6 col-sm-4" *ngFor="let item of categories ; let i = index; ">
                 <div class="andro_icon-block text-center has-link" (click)="goToCategory(item.id)" >
                     <a routerLink="/shop-v2/{{item.id}}">
-                        <i class="{{item.icon}}"></i>
+                        <img src="{{item.thumbnailUrl}}" />
                         <h5>{{item.name}}</h5>
                     </a>
                 </div>
@@ -79,9 +79,9 @@
                     </div>
                     <div class="andro_product-footer">
                         <div class="andro_product-controls">
-                            <a routerLink= "/product-single-v2/{{item.seoName}}">
+                            <!-- <a routerLink= "/product-single-v2/{{item.seoName}}">
                                 <i ngbTooltip="Add To Cart" placement="top" class="flaticon-shopping-basket"></i>
-                            </a>
+                            </a> -->
                             <a href="javascript:void(0)" (click)="open(shopmodal, item)">
                                 <i ngbTooltip="Quick View" placement="top" class="flaticon-view"></i>
                             </a>
@@ -138,9 +138,9 @@
                     </div>
                     <div class="andro_product-footer">
                         <div class="andro_product-controls">
-                            <a routerLink= "/product-single-v2/{{item.seoName}}">
+                            <!-- <a routerLink= "/product-single-v2/{{item.seoName}}">
                                 <i ngbTooltip="Add To Cart" placement="top" class="flaticon-shopping-basket"></i>
-                            </a>
+                            </a> -->
                             <a href="javascript:void(0)" (click)="open(shopmodal, item)">
                                 <i ngbTooltip="Quick View" placement="top" class="flaticon-view"></i>
                             </a>
@@ -162,38 +162,40 @@
             <div class="row">
                 <div class="col-md-5">
                     <div class="andro_product">
-                        <div class="andro_product-badge andro_badge-featured" *ngIf="modalContent.featured">
+                        <!-- <div class="andro_product-badge andro_badge-featured" *ngIf="modalContent.featured">
                             <i class="fa fa-star"></i>
                             <span>Featured</span>
                         </div>
                         <div class="andro_product-badge andro_badge-sale" *ngIf="modalContent.discount">
                             {{modalContent.discount}}% Off
-                        </div>
-                        <img [src]="modalContent.img" alt="{{modalContent.title}}">
+                        </div> -->
+                        <img [src]="modalContent.thumbnailUrl" alt="{{modalContent.name}}">
                     </div>
                 </div>
                 <div class="col-md-7">
                     <div class="andro_product-single-content">
                         <div class="andro_rating-wrapper">
                             <div class="andro_rating">
-                                <ngb-rating [max]="5" [(rate)]="modalContent.rating" [readonly]="true">
+                                <!-- <ngb-rating [max]="5" [(rate)]="modalContent.rating" [readonly]="true">
                                     <ng-template let-fill="fill" let-index="index">
                                         <i class="fa fa-star" [class.active]="fill === 100"></i>
                                     </ng-template>
-                                </ngb-rating>
+                                </ngb-rating> -->
                             </div>
-                            <span>{{modalContent.rating}} Stars</span>
+                            <!-- <span>{{modalContent.rating}} Stars</span> -->
                         </div>
-                        <h3> {{modalContent.title}} </h3>
+                        <h3> {{modalContent.name}} </h3>
                         <div class="andro_product-price">
-                            <span *ngIf="modalContent.discount">${{modalContent.price * (100 - modalContent.discount) /
+                            <!-- <span *ngIf="modalContent.discount">${{modalContent.price * (100 - modalContent.discount) /
                                 100 |
-                                number:'1.2-2'}}</span>
-                            <span>${{modalContent.price| number:'1.2-2'}}</span>
+                                number:'1.2-2'}}</span> -->
+                            <span>PKR {{modalContent.productInventories[0].price| number:'1.2-2'}}</span>
                         </div>
-                        <p class="andro_product-excerpt">{{modalContent.shortdesc}}</p>
+                        <p class="andro_product-excerpt">
+                            {{modalContent.description}}
+                        </p>
                         <form class="andro_product-atc-form">
-                            <div class="andro_product-variation-wrapper">
+                            <!-- <div class="andro_product-variation-wrapper">
                                 <div class="form-group">
                                     <select class="form-control" name="amount">
                                         <option value="">Select Amount</option>
@@ -210,9 +212,9 @@
                                         <option value="egyptian">Egyptian</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="qty-outter">
-                                <a routerLink="/product-single/{{modalContent.id}}" (click)="modal.dismiss('Cross click')" class="andro_btn-custom">Buy Now</a>
+                                <a routerLink="/product-single/{{modalContent.id}}" (click)="modal.dismiss('Cross click')" class="andro_btn-custom">Add to Cart</a>
                                 <div class="qty">
                                     <span class="qty-subtract" (click)="decrement()">
                                         <i class="fa fa-minus"></i>
