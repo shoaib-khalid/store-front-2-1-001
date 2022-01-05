@@ -1,0 +1,16 @@
+.sidebar-box{
+    max-width: 32%;
+    padding: 1px;
+    flex: auto;
+}
+.sidebar-box-inner{
+    padding: 20px;
+    position: relative;
+    margin-bottom: 30px;
+    border: 1px solid #F0F2F3;
+    background-color: #fff;
+    border-radius: 8px;
+    z-index: 1;
+    box-shadow: 0 3px 24px rgb(0 0 0 / 4%);
+    transition: .3s;
+}

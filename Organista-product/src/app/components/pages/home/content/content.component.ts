@@ -48,6 +48,8 @@ export class ContentComponent implements OnInit {
   popupSKU: any;
   catalogueList: any;
   noPrice: any;
+  assets: unknown;
+  bannerExist: boolean = false;
 
   constructor(private modalService: NgbModal,
     private apiService: ApiService,
@@ -111,6 +113,19 @@ export class ContentComponent implements OnInit {
     dots: false,
     autoplay: true,
   }
+  //Banner
+  getAssets(storeID){
+    return new Promise(resolve => {
+        // check count Item in Cart 
+        this.apiService.getStoreAssets(storeID).subscribe((res: any) => {
+            resolve(res.data)
+        }, error => {
+            // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        }) 
+        
+    });
+
+}
   //Categories
   getCategory() {
     this.apiService.getCategoryByStoreID(this.storeID).subscribe((res: any) => {
@@ -174,29 +189,18 @@ export class ContentComponent implements OnInit {
       if (res.data.content.length > 1) {
         this.product = res.data.content;
         this.goToDetails(this.product);
-        // console.log("name wala " + res.data.content[0].name);
-        // console.log("Finding inventory by product id: " + this.product[0].productInventories[0].productId);
-        // console.log("2ns " + res.data.content);
-        //res.data.content.findInventory(res.data.content.productInventories[0].productId)
-        //this.findInventory(this.product[0].id);
       }
     });
     
   }
-  // getProductByID(productID) {
-  //   return new promise(resolve =>{
-  //      this.apiService.getProductByProductID(productID).subscribe((res: any) => {
-  //      console.log('Product Deets', res)
-  //     if (res.message) {
-  //       resolve(res.data)
-  //     }
-  //   })
-  // })
-  // }
-  ngOnInit() {
+  async ngOnInit() {
+    const assetData = await this.getAssets(this.storeID)
+    this.assets = assetData
+    if(this.assets['bannerUrl'] != null){
+      this.bannerExist = true;
+    }
     this.getCategory();
     this.getStoreProductById();
-    
     //this.getProductByID(this.product_id);
     // this.api.getCategoryByStoreID("McD").subscribe((data)=>{
     //   console.log("Category obj",data);

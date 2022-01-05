@@ -84,19 +84,19 @@
                         <div class="sidebar-widget-list">
                             <div id="CategoryList">
                                 <div id="allcategory">
-                                    <div class="card" >
-                                    <a (click)="getAllProduct()" [ngClass]="{'selected' : this.selectedMenu === 'all'}" class="text-center details btn btn-outline-warning btn-lg" id="price" style="margin: 2px; font-size: 13px; font-weight: bold; color: black;">All</a>
+                                    <div class="card-button">
+                                    <a (click)="getAllProduct()" [ngClass]="{'selected' : this.selectedMenu === 'all'}"  id="price" >All</a>
                                     </div>
                                 </div>
-                                <!--<li>
+                            <!--<li>
                                 <div class="custom-control custom-checkbox">
                                     <input type="radio" (click)="getAllProduct()" [ngClass]="{'selected' : this.selectedMenu === 'all'}" class="custom-control-input" id="category">
                                     <label class="custom-control-label" for="category">All Products</label>
                                 </div>
                             </li>-->
                                 <div *ngFor="let item of categories">
-                                    <div class="card" >
-                                    <a (click)="getCategoryProducts(item.id,sortBy)" [ngClass]="{'selected' : this.selectedMenu === item.id}" class="text-center details btn btn-outline-warning btn-lg" id="price" style="margin: 2px; font-size: 13px; font-weight: bold; color: black;">{{ item.name }}</a>
+                                    <div class="card-button">
+                                    <a (click)="getCategoryProducts(item.id,sortBy)" [ngClass]="{'selected' : this.selectedMenu === item.id}"  id="price">{{ item.name }}</a>
                                     </div>    
                                 <!--<div class="custom-control custom-checkbox">
                                     <input type="radio" (click)="getProduct()" [ngClass]="{'selected' : this.selectedMenu === item.id}" class="custom-control-input" id="category{{item.id}}">
@@ -130,7 +130,7 @@
                         <div class="andro_product-badge andro_badge-sale" *ngIf="modalContent.discount">
                             {{modalContent.discount}}% Off
                         </div>
-                        <img [src]="modalContent.img" alt="{{modalContent.title}}">
+                        <img [src]="modalContent.thumbnailUrl" alt="{{modalContent.name}}">
                     </div>
                 </div>
                 <div class="col-md-7">
@@ -146,16 +146,17 @@
                             </div>
                             <span>{{modalContent.rating}} Stars</span>
                         </div>-->
-                        <h3> {{modalContent.title}} </h3>
+                        <h3> {{modalContent.name}} </h3>
                         <div class="andro_product-price">
-                            <span *ngIf="modalContent.discount">${{modalContent.price * (100 - modalContent.discount) /
+                            <span *ngIf="modalContent.discount">PKR {{modalContent.price * (100 - modalContent.discount) /
                                 100 |
                                 number:'1.2-2'}}</span>
-                            <span>${{modalContent.price| number:'1.2-2'}}</span>
+                            <span>PKR {{modalContent.productInventories[0].price| number:'1.2-2'}}</span>
                         </div>
-                        <p class="andro_product-excerpt">{{modalContent.shortdesc}}</p>
+                        <div [innerHtml]="modalContent.description"></div>
+                        <!--<p class="andro_product-excerpt">{{modalContent.description}}</p>-->
                         <form class="andro_product-atc-form">
-                            <div class="andro_product-variation-wrapper">
+                            <!--<div class="andro_product-variation-wrapper">
                                 <div class="form-group">
                                     <select class="form-control" name="amount">
                                         <option value="">Select Amount</option>
@@ -172,9 +173,9 @@
                                         <option value="egyptian">Egyptian</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="qty-outter">
-                                <a routerLink="/product-single/{{modalContent.id}}" (click)="modal.dismiss('Cross click')" class="andro_btn-custom">Buy Now</a>
+                                <a routerLink="/product-single-v2/{{modalContent.id}}" (click)="modal.dismiss('Cross click')" class="andro_btn-custom">Buy Now</a>
                                 <div class="qty">
                                     <span class="qty-subtract" (click)="decrement()">
                                         <i class="fa fa-minus"></i>

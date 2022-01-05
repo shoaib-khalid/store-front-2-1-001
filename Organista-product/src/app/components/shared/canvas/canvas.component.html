@@ -1,20 +1,20 @@
 <div class="sidebar d-block">
     <!-- Popular Categories Start -->
     <div class="sidebar-widget widget-categories-icons">
-        <h5 class="widget-title">Popular Categories</h5>
+        <h5 class="widget-title">Categories</h5>
         <div class="row">
-            <div class="col-lg-6" *ngFor="let item of category | slice:0:6">
-                <div class="andro_icon-block text-center has-link">
-                    <a href="#">
-                        <i class="{{item.icon}}"></i>
-                        <h5>{{item.title}}</h5>
+            <div class="sidebar-box" *ngFor="let item of categories ; let i = index;">
+                <div class="andro_icon-block text-center has-link" (click)="goToCategory(item.id)" >
+                    <a routerLink="/shop-v2/{{item.id}}">
+                        <img src="{{item.thumbnailUrl}}" />
+                        <h5>{{item.name}}</h5>
                     </a>
                 </div>
             </div>
         </div>
     </div>
     <!-- Popular Categories End -->
-    <!-- Popular Tags Start -->
+    <!-- Popular Tags Start 
     <div class="sidebar-widget">
         <h5 class="widget-title">Popular Tags</h5>
         <div class="tagcloud">

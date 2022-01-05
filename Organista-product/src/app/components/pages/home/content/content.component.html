@@ -1,19 +1,20 @@
 <!-- Banner Start -->
 <div class="andro_banner banner-2">
-    <ngx-slick-carousel #slickModal="slick-carousel" [config]="bannerConfig" class="andro_banner-slider">
+    <img class="banner-design" src="{{assets['bannerUrl']}}"> 
+   <!-- <ngx-slick-carousel #slickModal="slick-carousel" [config]="bannerConfig" class="andro_banner-slider" >
         <div ngxSlickItem class="andro_banner-slider-inner" style="background-image: url('{{item.photo}}');"
             *ngFor="let item of bannerslides">
-            <div class="container">
+            <div class="container" ><img src="{{assets['bannerUrl']}}">
                 <div class="andro_banner-slider-text">
-                    <img src="{{item.proimg}}" class="img-1" alt="{{item.title}}">
+                    <!--<img src="{{item.proimg}}" class="img-1" alt="{{item.title}}">
                     <p>Use code <strong class="custom-primary">{{item.couponcode}}</strong> during checkout</p>
                     <h1 style="background-image: url('{{item.ctaimg}}') "> {{item.title}} </h1>
                     <p>{{item.para}}</p>
-                    <a routerLink="/shop-v1" class="andro_btn-custom">Shop Now</a>
+                    
                 </div>
             </div>
         </div>
-    </ngx-slick-carousel>
+    </ngx-slick-carousel>-->
 </div>
 <!-- Banner End -->
 <!-- Categories Start -->
@@ -24,7 +25,7 @@
             <div class="col-lg-2 col-md-6 col-sm-4" *ngFor="let item of categories ; let i = index; ">
                 <div class="andro_icon-block text-center has-link" (click)="goToCategory(item.id)" >
                     <a routerLink="/shop-v2/{{item.id}}">
-                        <img src="{{item.thumbnailUrl}}" />
+                        <img class="cat-img" src="{{item.thumbnailUrl}}" />
                         <h5>{{item.name}}</h5>
                     </a>
                 </div>
