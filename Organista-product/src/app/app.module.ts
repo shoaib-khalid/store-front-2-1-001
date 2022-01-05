@@ -12,6 +12,7 @@ import { PreloaderComponent } from './preloader/preloader.component';
 import { NewsletterComponent } from './newsletter/newsletter.component';
 
 import { HttpClientModule } from '@angular/common/http';
+import { SharedModule } from './components/shared/shared.module';
 
 
 @NgModule({
@@ -28,9 +29,10 @@ import { HttpClientModule } from '@angular/common/http';
     BreadcrumbModule,
     NgbModule,
     SlickCarouselModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedModule
   ],
-  providers: [ ],
+  providers: [],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -35,7 +35,7 @@ import { ShopsidebarComponent } from './shopsidebar/shopsidebar.component';
     CountdownModule,
     BreadcrumbModule,
     IonRangeSliderModule
-  ], 
+  ],
   exports: [BlogsidebarComponent, BreadcrumbsComponent, CanvasComponent, CategoryComponent, DealsliderComponent, FooterComponent, HeaderComponent, HeadertwoComponent, HeaderthreeComponent, InstagramComponent, MobilemenuComponent, NavigationComponent, RelatedpostComponent, RelatedproductComponent, ShopsidebarComponent]
 })
 export class SharedModule { }

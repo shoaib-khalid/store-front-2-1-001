@@ -25,7 +25,8 @@ export class ApiService {
         this.checkBaseUrl();
     }
     checkBaseUrl() {
-        this.productServiceURL = 'https://api.symplified.it/product-service/v1/'
+        this.productServiceURL = 'https://api.symplified.it/product-service/v1/';
+        this.orderServiceURL = 'https://api.symplified.it/order-service/v1/';
         //this.productServiceURL = AppConfig.settings.serviceUrl.productServiceURL;
         //console.log("appsettings",this.productServiceURL)
     }

@@ -14,6 +14,8 @@ import { HttpClient } from '@angular/common/http';
 //import { resolve } from 'path';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { promise } from 'protractor';
+import { CartService } from 'src/app/cart.service';
+import { CartItem } from 'src/app/components/models/cart';
 //import { resolve } from 'path';
 
 @Component({
@@ -53,15 +55,20 @@ export class ContentComponent implements OnInit {
     private apiService: ApiService,
     private httpClient: HttpClient,
     private route: Router,
-    private activatedRoute: ActivatedRoute) {
+    private activatedRoute: ActivatedRoute,
+    private cartService: CartService) {
     this.storeID = "McD";
   }
   open(content: any, item: Product) {
+    this.counter = 1;
     this.modalContent = item;
     this.modalService.open(content, { centered: true, size: "lg", windowClass: 'andro_quick-view-modal p-0' });
   }
+  closeModal() {
+    this.modalService.dismissAll();
+  }
   // Increment decrement
-  public counter: number = 1
+  public counter: number = 1;
   increment() {
     this.counter += 1;
   }
@@ -128,7 +135,7 @@ export class ContentComponent implements OnInit {
       console.log(error)
     })
   }
-  goToDetails(productID){
+  goToDetails(productID) {
     // alert(prodName)
     // return false;
     this.activatedRoute.queryParams.subscribe(params => {
@@ -140,7 +147,7 @@ export class ContentComponent implements OnInit {
   goToCategory(catId) {
     // alert(catId)
     // return false;
-    this.route.navigate(['shop-v2/'+ catId] );// + catId
+    this.route.navigate(['shop-v2/' + catId]);// + catId
   }
 
   // Fresharrivals
@@ -181,7 +188,11 @@ export class ContentComponent implements OnInit {
         //this.findInventory(this.product[0].id);
       }
     });
-    
+
+  }
+  addToCartFromModal(product: Product) {
+    this.modalService.dismissAll();
+    this.cartService.addToCart(product, this.counter);
   }
   // getProductByID(productID) {
   //   return new promise(resolve =>{
@@ -196,7 +207,7 @@ export class ContentComponent implements OnInit {
   ngOnInit() {
     this.getCategory();
     this.getStoreProductById();
-    
+
     //this.getProductByID(this.product_id);
     // this.api.getCategoryByStoreID("McD").subscribe((data)=>{
     //   console.log("Category obj",data);
