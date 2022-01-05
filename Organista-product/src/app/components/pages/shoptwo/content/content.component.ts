@@ -22,7 +22,7 @@ export class ContentComponent implements OnInit {
   storeID: any;
   catId: any;
   sortBy: any = 0;
-  selectedMenu: any;
+  selectedMenu: string = "";
   categoryId: any;
   page_no: number = 0;
   catalogueList: [];
@@ -42,6 +42,7 @@ export class ContentComponent implements OnInit {
   priceObj: any;
   catID: any;
   storeName: any;
+  
   constructor(
     private modalService: NgbModal,
     private route: Router,
@@ -73,16 +74,38 @@ export class ContentComponent implements OnInit {
 getAllProduct(){
   this.catId = null
   this.sortBy = null
-  //this.getProduct(this.catId ,this.sortBy)
+  this.getCategoryProducts(this.catId ,this.sortBy)
 }
 
+// getProduct(){
+//   this.selectedMenu
+//   this.getCategoryProducts(this.catId, this.sortBy)
+// }
+
+//SideBar Categories
+getCategory(){
+  this.apiService.getCategoryByStoreID(this.storeID).subscribe((res: any) => {
+      console.log('category obj: ', res)
+      if (res.message){
+          if(res.data.content.length > 1){
+              this.categories = res.data.content;
+          }else{
+              this.categories = res.data.content;
+          }
+          //console.log('newCategories getCategory: ', this.categories);
+      }else{
+      }
+  }, error => {
+      console.log(error)
+  }) 
+}
+// onSelectionChange(catId) {
+//   this.selectedMenu = this.catId;
+//   this.getCategoryProducts(this.catId, this.sortBy);
+// }
+
 goToDetails(prodName){
-  
-  
-  // alert(prodName)
-  // return false;
   this.route.navigate(['shop-v2/' + prodName]);
-  // alert('Hello')
 }
 // getProduct(catId: any, sortBy: any) {
 //     if(!catId && !sortBy){
@@ -181,22 +204,31 @@ goToDetails(prodName){
 //     this.getProduct(this.catId ,this.sortBy)
 // }
 
-getCategoryProducts(catId: any,sortBy){
-this.apiService.getProductSByCategory(catId,this.storeID,sortBy,this.page_no).subscribe((res: any) => {
+getCategoryProducts(categoryId,sortId){
+  if (!categoryId && !sortId){
+     this.selectedMenu = 'all';
+} else {
+    this.selectedMenu = categoryId;
+    console.log(categoryId)
+}
+console.log('this.selectedMenu', this.selectedMenu)
+this.catId = categoryId;
+localStorage.setItem('category_id',this.catId)
+this.catalogueList = []
+this.apiService.getProductSByCategory(categoryId,this.storeID,sortId,this.page_no).subscribe((res: any) => {
     console.log('This category product:',res)
     if(res.message){
       this.product = res.data.content;
     }
 })
 }
-  
-  ngOnInit() {
+
+ngOnInit() {
     this.catId = localStorage.getItem("category_id")
     console.log('Catalogue on Page Load');
+    this.getCategory();
     this.getCategoryProducts(this.catId, this.sortBy);
     // this.getAllProduct();
-    // this.getProduct;
-    
+    // this.getProduct;    
   }
-
 }
