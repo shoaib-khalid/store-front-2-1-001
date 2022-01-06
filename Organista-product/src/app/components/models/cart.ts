@@ -5,17 +5,15 @@ export interface Cart {
     isOpen: boolean;
 }
 export interface CartItem {
-    id: string;
-    quantity: number;
-    cartId: string;
-    productId: string;
-    itemCode: string;
-    price: number;
-    productPrice: number;
-    weight: number;
-    SKU: string;
-    productName: string;
-    specialInstruction: string;
+    "cartId": string,
+    "id": "",
+    "itemCode": string,
+    "price": number,
+    "productId": string,
+    "productPrice": number,
+    "quantity": number,
+    "SKU": string,
+    "specialInstruction": string
 }
 export interface CartSubItem {
     id: string;
