@@ -17,7 +17,8 @@ export class ProductInventory {
     quantity: number;
     productId: string;
     sku: string;
-    productInventoryItems: ProductInventoryItem;
+    productInventoryItems: ProductInventoryItem[];
+    product: Product;
 }
 
 export class ProductInventoryItem {

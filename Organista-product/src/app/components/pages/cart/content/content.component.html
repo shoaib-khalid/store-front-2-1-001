@@ -8,7 +8,8 @@
                     <th class="remove-item"></th>
                     <th>Product</th>
                     <th>Price</th>
-                    <th>Quantity</th>
+                    <!-- TODO: Change bacck to quantity -->
+                    <th>Xuantity</th>
                     <th>Total</th>
                 </tr>
             </thead>
@@ -22,18 +23,20 @@
                     </td>
                     <td data-title="Product">
                         <div class="andro_cart-product-wrapper">
-                            <img [src]="item.img" alt="{{item.title}}">
+                            <!-- [src]="item."  -->
+                            <img [src]="item.productInventory.product.thumbnailUrl" alt="{{ item.productName }}">
                             <div class="andro_cart-product-body">
-                                <h6> <a href="#">{{item.title}}</a> </h6>
-                                <p>{{item.qty}} Kilos</p>
+                                <h6> <a routerLink="/product-single-v2/{{item.productName}}">{{
+                                        item.productName }}</a>
+                                </h6>
                             </div>
                         </div>
                     </td>
-                    <td data-title="Price"> <strong>{{item.price | number:'1.2-2'}}$</strong> </td>
+                    <td data-title="Price"> <strong>PKR {{ item.price | number:'1.2-2' }}</strong> </td>
                     <td class="quantity" data-title="Quantity">
-                        <input type="number" class="qty form-control" value="{{item.qty}}">
+                        <input type="number" class="qty form-control" value="{{ item.quantity }}">
                     </td>
-                    <td data-title="Total"> <strong>{{item.qty * item.price | number:'1.2-2'}}$</strong> </td>
+                    <td data-title="Total"> <strong>PKR {{ item.quantity * item.price | number:'1.2-2' }}</strong> </td>
                 </tr>
             </tbody>
         </table>
@@ -71,9 +74,12 @@
                 <!-- Upsells Start -->
                 <ngx-slick-carousel #slickModal="slick-carousel" [config]="upsellConfig" class="andro_upsells-slider">
                     <!-- Product Start -->
-                    <div ngxSlickItem class="andro_product andro_product-list andro_product-has-controls andro_product-has-buttons" *ngFor="let item of shopbox">
+                    <div ngxSlickItem
+                        class="andro_product andro_product-list andro_product-has-controls andro_product-has-buttons"
+                        *ngFor="let item of shopbox">
                         <div class="andro_product-thumb">
-                            <a routerLink="/product-single/{{item.id}}"><img src="{{item.img}}" alt="{{item.title}}"></a>
+                            <a routerLink="/product-single/{{item.id}}"><img src="{{item.img}}"
+                                    alt="{{item.title}}"></a>
                         </div>
                         <div class="andro_product-body">
                             <div class="andro_rating-wrapper">
@@ -86,17 +92,21 @@
                                 </div>
                                 <span>{{item.rating}} Stars</span>
                             </div>
-                            <h5 class="andro_product-title"> <a routerLink="/product-single/{{item.id}}"> {{item.title}} </a> </h5>
+                            <h5 class="andro_product-title"> <a routerLink="/product-single/{{item.id}}"> {{item.title}}
+                                </a> </h5>
                             <div class="andro_product-price">
-                                <span *ngIf="item.discount">${{item.price * (100 - item.discount) / 100 | number:'1.2-2'}}</span>
+                                <span *ngIf="item.discount">${{item.price * (100 - item.discount) / 100 |
+                                    number:'1.2-2'}}</span>
                                 <span>${{item.price| number:'1.2-2'}}</span>
                             </div>
                             <p>{{item.shortdesc}}</p>
                         </div>
                         <div class="andro_product-footer">
                             <div class="andro_product-buttons">
-                                <a routerLink="/product-single/{{item.id}}" class="andro_btn-custom primary">Add To Cart</a>
-                                <a href="javascript:void(0)" (click)="open(shopmodal, item)" class="andro_btn-custom light">Quick View</a>
+                                <a routerLink="/product-single/{{item.id}}" class="andro_btn-custom primary">Add To
+                                    Cart</a>
+                                <a href="javascript:void(0)" (click)="open(shopmodal, item)"
+                                    class="andro_btn-custom light">Quick View</a>
                             </div>
                         </div>
                     </div>
@@ -190,7 +200,8 @@
                                 </div>
                             </div> -->
                             <div class="qty-outter">
-                                <a routerLink="/product-single/{{modalContent.id}}" (click)="modal.dismiss('Cross click')" class="andro_btn-custom">Add to Cart</a>
+                                <a routerLink="/product-single/{{modalContent.id}}"
+                                    (click)="modal.dismiss('Cross click')" class="andro_btn-custom">Add to Cart</a>
                                 <div class="qty">
                                     <span class="qty-subtract" (click)="decrement()">
                                         <i class="fa fa-minus"></i>

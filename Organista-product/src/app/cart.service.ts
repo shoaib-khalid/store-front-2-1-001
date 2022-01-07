@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { getEnabledCategories } from 'trace_events';
 import { ApiService } from './api.service';
 import { Cart, CartItem } from './components/models/cart';
-import { Product } from './components/models/product';
+import { Product, ProductInventory } from './components/models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -74,7 +74,14 @@ export class CartService {
       productPrice: product.price,
       quantity: quantity,
       SKU: sku,
-      specialInstruction: ''
+      specialInstruction: '',
+      discountCalculationType: null,
+      discountCalculationValue: null,
+      discountId: null,
+      discountLabel: null,
+      productName: product.name,
+      weight: 0,
+      productInventory: new ProductInventory
     };
 
     // Add to cart, or create one if one doesn't exist
