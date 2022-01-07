@@ -151,7 +151,7 @@
                                     <div [innerHtml]="product[0].description"></div>
                                 </ng-template>
                             </li>
-                            <li [ngbNavItem]="2">
+                            <!-- <li [ngbNavItem]="2">
                                 <a ngbNavLink>Additional Information</a>
                                 <ng-template ngbNavContent>
                                     <h4>Additional Information</h4>
@@ -166,17 +166,17 @@
                                             <tr>
                                                 <td> <strong>Color</strong> </td>
                                                 <td>
-                                                  <!--  <span *ngFor="let item of product.color">{{item}},</span>-->
+                                                   <span *ngFor="let item of product.color">{{item}},</span>
                                                 </td>
                                             </tr>
                                             <tr>
-                                               <!-- <td> <strong>Material</strong> </td>
-                                                <td><span *ngFor="let item of product.material">{{item}},</span></td>-->
+                                               <td> <strong>Material</strong> </td>
+                                                <td><span *ngFor="let item of product.material">{{item}},</span></td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </ng-template>
-                            </li>
+                            </li> -->
                             <!--<li [ngbNavItem]="3">
                                 <a ngbNavLink>Reviews ({{product.reviews.length}})</a>
                                 <ng-template ngbNavContent>

@@ -125,7 +125,7 @@ export class ApiService {
         const url =
             "https://api.symplified.it/product-service/v1/stores/" + storeID;
 
-        return this.http.get(this.productServiceURL + url, header);
+        return this.http.get(url, header);
     }
 
     // Ref : https://api.symplified.biz/order-service/v1/carts/8a4868e2-c5d2-4c7e-8c8f-1547c9736208/discount?deliveryCharge=10.00

@@ -207,9 +207,9 @@ export class ContentComponent implements OnInit {
   async ngOnInit() {
     const assetData = await this.getAssets(this.storeID)
     this.assets = assetData
-    if(this.assets['bannerUrl'] != null){
-      this.bannerExist = true;
-    }
+    // if(this.assets['bannerUrl'] != null){
+    //   this.bannerExist = true;
+    // }
     this.getCategory();
     this.getStoreProductById();
     //this.getProductByID(this.product_id);

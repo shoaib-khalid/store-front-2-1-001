@@ -2,6 +2,7 @@
     max-width: 32%;
     padding: 1px;
     flex: auto;
+    height: 30%;
 }
 .sidebar-box-inner{
     padding: 20px;
@@ -13,4 +14,11 @@
     z-index: 1;
     box-shadow: 0 3px 24px rgb(0 0 0 / 4%);
     transition: .3s;
+}
+.inner-box-text{
+    text-align: -webkit-center;
+    font-size: 12px;
+    line-height: 1.7;
+    font-weight: 700;
+    
 }

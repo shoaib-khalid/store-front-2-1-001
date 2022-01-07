@@ -1,6 +1,9 @@
 <!-- Banner Start -->
-<div class="andro_banner banner-2">
-    <img class="banner-design" src="{{assets['bannerUrl']}}"> 
+<div>
+    <div class="andro_banner banner-2">
+        <img class="banner-design" src="{{assets['bannerUrl']}}">
+    </div>
+   <!-- <img class="banner-design" src="{{assets['bannerUrl']}}"> -->
    <!-- <ngx-slick-carousel #slickModal="slick-carousel" [config]="bannerConfig" class="andro_banner-slider" >
         <div ngxSlickItem class="andro_banner-slider-inner" style="background-image: url('{{item.photo}}');"
             *ngFor="let item of bannerslides">
@@ -34,74 +37,14 @@
     </div>
 </div>
 <!-- Categories End -->
-<!-- Fresh Arrival Start -->
-<div class="section pt-0 andro_fresh-arrivals">
-    <div class="container">
-        <div class="section-title flex-title">
-            <h4 class="title">Featured Products</h4>
-            <div class="andro_arrows">
-                <i class="fa fa-arrow-left slick-arrow slider-prev"></i>
-                <i class="fa fa-arrow-right slick-arrow slider-next"></i>
-            </div>
-        </div>
-        <ngx-slick-carousel #slickModal="slick-carousel" [config]="freshConfig" class="andro_fresh-arrivals-slider">
-            <!-- Product Start -->
+<!-- Featured Products Start -->
 
-            <div ngxSlickItem class="andro_product andro_product-has-controls"
-                *ngFor="let item of product ; let i = index; ">
-                <div class="andro_product-badge andro_badge-featured" *ngIf="item.featured">
-                    <i class="fa fa-star"></i>
-                    <span>New</span>
-                </div>
-                <div class="andro_product-badge andro_badge-sale" *ngIf="item.discount">
-                    {{item.discount}}% Off
-                </div>
-                <div class="andro_product-thumb thumb-sm">
-                    <a routerLink="/product-single-v2/{{item.seoName}}"><img (click)="goToDetails(item.seoName)"
-                            src="{{item.thumbnailUrl}}" alt="{{item.name}}"></a>
-                </div>
-                <div class="andro_product-body">
-                    <h5 (click)="goToDetails(item.seoName)" class="andro_product-title"> <a
-                            routerLink="/product-single-v2/{{item.seoName}}">
-                            {{item.name}} </a> </h5>
-                    <div class="andro_product-price">
-                        <span *ngIf="item.discount">PKR {{item.productInventories[0].price * (100 - item.discount) / 100
-                            |
-                            number:'1.2-2'}}</span>
-                        <span>PKR {{item.productInventories[0].price| number:'1.2-2'}}</span>
-                    </div>
-                    <!--<div class="andro_rating-wrapper">
-                                    <div class="andro_rating">
-                                        <ngb-rating [max]="5" [(rate)]="item.rating" [readonly]="true">
-                                            <ng-template let-fill="fill" let-index="index">
-                                                <i class="fa fa-star" [class.active]="fill === 100"></i>
-                                            </ng-template>
-                                        </ngb-rating>
-                                    </div>
-                                    <span>{{item.rating}} Stars</span>
-                                </div>-->
-                </div>
-                <div class="andro_product-footer">
-                    <div class="andro_product-controls">
-                        <!-- <a routerLink= "/product-single-v2/{{item.seoName}}">
-                                <i ngbTooltip="Add To Cart" placement="top" class="flaticon-shopping-basket"></i>
-                            </a> -->
-                        <a href="javascript:void(0)" (click)="open(shopmodal, item)">
-                            <i ngbTooltip="Quick View" placement="top" class="flaticon-view"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!-- Product End -->
-        </ngx-slick-carousel>
-    </div>
-</div>
 <!-- Products End -->
 <!-- Fresh Arrival Start -->
 <div class="section pt-0 andro_fresh-arrivals">
     <div class="container">
         <div class="section-title flex-title">
-            <h4 class="title">Fresh Arrivals</h4>
+            <h4 class="title">Featured Products</h4>
             <div class="andro_arrows">
                 <i class="fa fa-arrow-left slick-arrow slider-prev"></i>
                 <i class="fa fa-arrow-right slick-arrow slider-next"></i>
@@ -200,9 +143,10 @@
                                 number:'1.2-2'}}</span> -->
                             <span>PKR {{modalContent.productInventories[0].price| number:'1.2-2'}}</span>
                         </div>
-                        <p class="andro_product-excerpt">
+                        <div [innerHtml]="modalContent.description"></div>
+                        <!-- <p class="andro_product-excerpt">
                             {{modalContent.description}}
-                        </p>
+                        </p> -->
                         <form class="andro_product-atc-form">
                             <!-- <div class="andro_product-variation-wrapper">
                                 <div class="form-group">

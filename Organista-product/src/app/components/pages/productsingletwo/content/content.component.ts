@@ -79,7 +79,7 @@ export class ContentComponent implements OnInit {
   public counter: number = 1
   increment() {
     this.counter += 1;
-  }
+  }   
   decrement() {
     if (this.counter > 1) {
       this.counter -= 1;
@@ -98,14 +98,14 @@ export class ContentComponent implements OnInit {
       })
     })
   }
-  // getProductByID(){
-  //   //const id = parseInt(this.route.snapshot.paramMap.get('id')!, 10);
-  //   return new Promise( resolve => {
+  // getProductByID(productID){
+  //       console.log('ProductID: ' + productID) 
+  //      return new Promise( resolve => {
   //       this.apiService.getProductByProductID(this.productID).subscribe((res: any) => {
   //           if (res.message){
   //               resolve(res.data)
-  //               console.log('Product Data: ' , res.data)
-  //               this.product = res.data;
+  //               console.log('Product Data: ' , res.data.content)
+  //               this.product = res.data.content;
   //           } 
   //       },) 
   //   })
@@ -113,7 +113,7 @@ export class ContentComponent implements OnInit {
   async getVariantFlow() {
 
     const prodName = await this.getProductDetailsByName(this.seoName, this.storeID)
-
+//  const prodId = await this.getProductByID(this.productID)
   }
 
   async ngOnInit() {

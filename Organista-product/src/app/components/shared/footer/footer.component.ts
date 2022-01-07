@@ -1,4 +1,10 @@
+import { PlatformLocation } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, HostListener, Input } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { resolve } from 'dns';
+import { promise } from 'protractor';
+import { ApiService } from 'src/app/api.service';
 
 @Component({
   selector: 'app-footer',
@@ -6,11 +12,41 @@ import { Component, OnInit, HostListener, Input } from '@angular/core';
   styleUrls: ['./footer.component.css']
 })
 export class FooterComponent implements OnInit {
+  storeInformation: any[];
+  storeNameRaw: any;
+  storeID: any;
+  storeContact: any;
+  storeName: any;
 
-  constructor() { }
+  constructor(
+    private apiService: ApiService,
+    private platformLocation: PlatformLocation,
+    private activatedRoute: ActivatedRoute,
+    private httpClient: HttpClient
+    ) { this.storeID = "McD";
+        this.storeName = "McD"; }
   @Input()  layout: number | string;
   @Input()  logo: number | string;
-  ngOnInit(): void {
+  getVendorInfo(storeID){
+      this.apiService.getStoreInfoByID(storeID).subscribe((res: any)=>{
+        if (res.message) {
+          console.log('Info ', res.data)
+        }
+          let data = res.data
+        let exist = data.length
+        if(res.message){
+          if(exist == 0){
+            return false
+          }
+          this.storeNameRaw = data.name;
+          this.storeID = data.id;
+          this.storeContact = data.phoneNumber
+        }
+   })
+  }
+
+  ngOnInit() {
+    this.getVendorInfo(this.storeID);
   }
   ScrolltoTop() {
     const navbar = document.getElementById('backToTop');
