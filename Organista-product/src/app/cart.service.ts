@@ -1,67 +1,93 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { getEnabledCategories } from 'trace_events';
 import { ApiService } from './api.service';
 import { Cart, CartItem } from './components/models/cart';
-import { Product } from './components/models/product';
+import { Product, ProductInventory } from './components/models/product';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
 
-  storeId: string;
-  cart: Cart;
+  // TODO: Remove hardcoding of storeID
+  private cartIdKey = 'anonym_cart_id';
+  storeId: string = "McD";
+  cart: CartItem[] = [];
+  cartChange: Subject<CartItem[]> = new Subject<CartItem[]>();
 
   constructor(
     private apiService: ApiService
   ) {
-    // TODO: Remove hardcoding of storeID
-    this.storeId = "McD";
+    this.getCartItems();
+    // this.cartChange.subscribe(cart => { this.cart = cart; });
+  }
+
+  private setCartId(cartId: string) {
+    localStorage.setItem(this.cartIdKey, cartId);
+  }
+
+  private getCartId() {
+    return localStorage.getItem(this.cartIdKey);
+  }
+
+  private removeCartId() {
+    localStorage.removeItem(this.cartIdKey);
+  }
+
+  private getCartItems() {
+    if (this.getCartId()) {
+      this.apiService.getCartItemByCartID(this.getCartId()).subscribe((res: any) => {
+        this.cart = res.data.content;
+        this.cartChange.next(this.cart);
+        console.log("getCartItems");
+        console.log(this.cart);
+      }, error => {
+        console.error("Failed to get cart items");
+        console.error(error);
+      });
+    }
   }
 
   addToCart(product: Product, quantity: number) {
     // Create cart if it doesn't exist
-    if (!localStorage.getItem('anonym_cart_id')) {
-      /* data sample : { 
-        "created": "2021-05-26T01:59:19.698Z", 
-        "customerId": "string", 
-        "id": "string", 
-        "isOpen": true, 
-        "storeId": "string", 
-        "updated": "2021-05-26T01:59:19.699Z"} */
+    if (!this.getCartId()) {
       const data = {
         storeId: this.storeId
       };
-      console.log("Sending data");
-      console.log(data);
       this.apiService.postCreateCart(data).subscribe((res: any) => {
-        console.log(res);
-        localStorage.setItem('anonym_cart_id', res.data.id);
-        console.log("New Cart Id");
-        console.log(localStorage.getItem('anonym_cart_id'));
+        this.setCartId(res.data.id);
       }, error => {
-        console.warn("Failed to create cart");
-        console.warn(error);
+        console.error("Failed to create cart");
+        console.error(error);
       });
     }
 
-    const cartItem = {
-      // id: null,
-      quantity: quantity,
-      cartId: localStorage.getItem('anonym_cart_id'),
-      productId: product.id,
-      itemCode: '',
+    const itemCode = product.productInventories.length > 0 ? product.productInventories[0].itemCode : '';
+    const sku = product.productInventories.length > 0 ? product.productInventories[0].sku : '';
+    const cartItem: CartItem = {
+      cartId: this.getCartId(),
+      id: '',
+      itemCode: itemCode,
       price: product.price,
+      productId: product.id,
       productPrice: product.price,
-      weight: 0,
-      SKU: product.sku,
+      quantity: quantity,
+      SKU: sku,
+      specialInstruction: '',
+      discountCalculationType: null,
+      discountCalculationValue: null,
+      discountId: null,
+      discountLabel: null,
       productName: product.name,
-      specialInstruction: ''
+      weight: 0,
+      productInventory: new ProductInventory
     };
 
     // Add to cart, or create one if one doesn't exist
+    // TODO: Delete cart in backend to seee what error you get
     this.apiService.postAddToCart(cartItem).subscribe((res: any) => {
-      console.log("add to cart successful");
-      console.info(res);
+      this.getCartItems();
     }, error => {
       console.log("error adding to cart");
       console.error(error);

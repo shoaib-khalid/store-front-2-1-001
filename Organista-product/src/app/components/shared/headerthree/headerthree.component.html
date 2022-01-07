@@ -40,8 +40,9 @@
             <nav class="navbar">
                 <!-- Logo -->
                 <div>
-                <a class="navbar-brand" routerLink="/"> <img class="logodesign" src="{{assets['logoUrl']}}" alt="Logo"> </a>
-            </div>
+                    <a class="navbar-brand" routerLink="/"> <img class="logodesign" src="{{assets['logoUrl']}}"
+                            alt="Logo"> </a>
+                </div>
                 <!--<div *ngIf="logoExist; else viewLogoDefault" class="Profile-img">
                     <a href="javascript:;">
                         <img src="{{assets['logoUrl']}}" alt="" title="">
@@ -62,7 +63,7 @@
                                 <i class="flaticon-shopping-basket"></i>
                                 <div class="andro_header-cart-content">
                                     <span>{{cart.length}} Items</span>
-                                    <span>{{calculateprice() | number:'1.2-2'}}PKR</span>
+                                    <span>PKR {{calculateprice() | number:'1.2-2'}}</span>
                                 </div>
                             </a>
                         </li>

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CartService } from 'src/app/cart.service';
+import { CartItem } from 'src/app/components/models/cart';
 import cartList from '../../../../data/cart.json';
 import shoppost from '../../../../data/shop.json'
 
@@ -10,9 +12,15 @@ import shoppost from '../../../../data/shop.json'
 })
 export class ContentComponent implements OnInit {
 
+  cart: CartItem[];
+
   closeResult: string;
   modalContent: any;
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal,
+    private cartService: CartService
+  ) {
+
+  }
   open(content: any, item: any) {
     this.modalContent = item
     this.modalService.open(content, { centered: true, size: "lg", windowClass: 'andro_quick-view-modal p-0' });
@@ -23,12 +31,13 @@ export class ContentComponent implements OnInit {
     this.counter += 1;
   }
   decrement() {
-    this.counter -= 1;
+    if (this.counter > 1) {
+      this.counter -= 1;
+    }
   }
   public shopbox: { img: string }[] = shoppost;
-  public cart: { id: number, qty: number, price: number }[] = cartList;
   public calculateprice() {
-    return this.cart.reduce((subtotal, item) => subtotal + item.qty * item.price, 0)
+    return this.cart.reduce((subtotal, item) => subtotal + item.quantity * item.price, 0)
   };
   taxPrice = 9.99;
   upsellConfig = {
@@ -42,6 +51,8 @@ export class ContentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.cart = this.cartService.cart;
+    this.cartService.cartChange.subscribe(cart => { this.cart = cart; });
   }
 
 }

@@ -9,7 +9,6 @@ export class Product {
     status: boolean;
     id: any;
     productInventories: ProductInventory[];
-    sku: string;
 }
 
 export class ProductInventory {
@@ -18,7 +17,8 @@ export class ProductInventory {
     quantity: number;
     productId: string;
     sku: string;
-    productInventoryItems: ProductInventoryItem;
+    productInventoryItems: ProductInventoryItem[];
+    product: Product;
 }
 
 export class ProductInventoryItem {
