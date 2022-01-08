@@ -13,31 +13,28 @@ import shoppost from '../../../../data/shop.json'
 export class ContentComponent implements OnInit {
 
   cart: CartItem[];
-
   closeResult: string;
-  modalContent: any;
+  modalContent: CartItem;
+
   constructor(private modalService: NgbModal,
     private cartService: CartService
-  ) {
-
-  }
-  open(content: any, item: any) {
-    this.modalContent = item
+  ) { }
+  open(content: any, item: CartItem) {
+    this.modalContent = item;
     this.modalService.open(content, { centered: true, size: "lg", windowClass: 'andro_quick-view-modal p-0' });
   }
   // Increment decrement
-  public counter: number = 1
   increment() {
-    this.counter += 1;
+    this.modalContent.quantity += 1;
   }
   decrement() {
-    if (this.counter > 1) {
-      this.counter -= 1;
+    if (this.modalContent.quantity > 1) {
+      this.modalContent.quantity -= 1;
     }
   }
   public shopbox: { img: string }[] = shoppost;
   public calculateprice() {
-    return this.cart.reduce((subtotal, item) => subtotal + item.quantity * item.price, 0)
+    return this.cart.reduce((subtotal: number, item: CartItem) => subtotal + item.price, 0);
   };
   taxPrice = 9.99;
   upsellConfig = {
@@ -53,6 +50,15 @@ export class ContentComponent implements OnInit {
   ngOnInit(): void {
     this.cart = this.cartService.cart;
     this.cartService.cartChange.subscribe(cart => { this.cart = cart; });
+  }
+
+  closeModal() {
+    this.modalService.dismissAll();
+  }
+
+  updateCartItem(cartItem: CartItem) {
+    this.modalService.dismissAll();
+    this.cartService.putCartItem(this.modalContent);
   }
 
 }

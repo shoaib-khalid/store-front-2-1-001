@@ -79,7 +79,7 @@ export class HeaderthreeComponent implements OnInit {
   // Cart
   public cart: CartItem[];
   public calculateprice() {
-    return this.cart.reduce((subtotal, item) => subtotal + item.quantity * item.price, 0)
+    return this.cart.reduce((subtotal: number, item: CartItem) => subtotal + item.price, 0);
   };
   async ngOnInit() {
     // const storeInfo = await this.getMerchantInfo(this.storeName)

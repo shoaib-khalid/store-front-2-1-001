@@ -63,6 +63,7 @@ export class CartService {
       });
     }
 
+    // Not giving option for product variants on frontend right now, so use the first found productvariant
     const itemCode = product.productInventories.length > 0 ? product.productInventories[0].itemCode : '';
     const sku = product.productInventories.length > 0 ? product.productInventories[0].sku : '';
     const cartItem: CartItem = {
@@ -89,8 +90,21 @@ export class CartService {
     this.apiService.postAddToCart(cartItem).subscribe((res: any) => {
       this.getCartItems();
     }, error => {
-      console.log("error adding to cart");
+      console.error("error adding to cart");
       console.error(error);
     });
+  }
+
+  putCartItem(cartItem: CartItem) {
+    if (!this.getCartId()) {
+      this.addToCart(cartItem.productInventory.product, cartItem.quantity);
+    } else {
+      this.apiService.putCartItem(cartItem).subscribe((res: any) => {
+        this.getCartItems();
+      }, error => {
+        console.error("error putting new cart item");
+        console.error(error);
+      });
+    }
   }
 }
