@@ -9,6 +9,7 @@ import { PlatformLocation } from '@angular/common';
 import { Product } from 'src/app/components/models/product';
 import { contains, data, param } from 'jquery';
 import { HttpParams } from '@angular/common/http';
+import { CartService } from 'src/app/cart.service';
 
 @Component({
   selector: 'app-content',
@@ -41,15 +42,35 @@ export class ContentComponent implements OnInit {
   seo_name: any;
   seoName: string;
 
-  constructor(private router: ActivatedRoute,
+  constructor(private route: ActivatedRoute,
     private activatedRoute: ActivatedRoute,
-    private route: Router,
+    private router: Router,
     private apiService: ApiService,
+    private cartService: CartService,
     private platformLocation: PlatformLocation) {
-    //console.log("router value",this.activatedRoute.snapshot.paramMap.get('productID'));
     this.storeID = "McD";
-    //this.productID = this.route.routerState.snapshot.url..get('id');//"2710969f-6cbf-4058-87db-c829bb4012d1"
-    //this.seoName = "4-Piece-Chicken-McNuggets®-Happy-Meal"
+    this.product = {
+      allowOutOfStockPurchases: false,
+      categoryId: '',
+      productid: 0,
+      name: '',
+      description: '',
+      price: 0,
+      thumbnailUrl: '',
+      status: false,
+      id: '',
+      productInventories: [
+        {
+          itemCode: '',
+          price: 0,
+          quantity: 0,
+          productId: '',
+          sku: '',
+          productInventoryItems: [],
+          product: null,
+        }
+      ]
+    };
     this.activatedRoute.params.subscribe(params => {
       this.seoName = params['prodSeoName'];
       this.storeName = (params['storeName']) ? params['storeName'] : this.storeName;
@@ -79,7 +100,7 @@ export class ContentComponent implements OnInit {
   public counter: number = 1
   increment() {
     this.counter += 1;
-  }   
+  }
   decrement() {
     if (this.counter > 1) {
       this.counter -= 1;
@@ -87,55 +108,26 @@ export class ContentComponent implements OnInit {
   }
   getProductDetailsByName(seoName, storeID) {
     console.log('getProductDetailsByName(): ' + seoName)
-    return new Promise(resolve => {
-      this.apiService.getProductByName(seoName, storeID).subscribe((res: any) => {
-        if (res.message) {
-          // resolve(res.data.content[0])
-          resolve(res.data.content)
-          console.log('From Name: ', res.data.content)
-          this.product = res.data.content;
-        }
-      })
-    })
+
+    this.apiService.getProductsByName(seoName, storeID).subscribe((res: any) => {
+      this.product = res.data.content[0];
+    }, error => {
+      console.error(error);
+    });
   }
-  // getProductByID(productID){
-  //       console.log('ProductID: ' + productID) 
-  //      return new Promise( resolve => {
-  //       this.apiService.getProductByProductID(this.productID).subscribe((res: any) => {
-  //           if (res.message){
-  //               resolve(res.data)
-  //               console.log('Product Data: ' , res.data.content)
-  //               this.product = res.data.content;
-  //           } 
-  //       },) 
-  //   })
-  // }
   async getVariantFlow() {
 
     const prodName = await this.getProductDetailsByName(this.seoName, this.storeID)
-//  const prodId = await this.getProductByID(this.productID)
+    //  const prodId = await this.getProductByID(this.productID)
   }
 
   async ngOnInit() {
-    // this.activatedRoute.queryParams.subscribe(params => {
-    //   let productid = params['productid'];
-    //   console.log(productid);
-    // this.activatedRoute.queryParams.subscribe(param => {
-    //   let productId = param['productID'];
-    //   console.log(this.productID);
-    // })
-    //this.getProductByID();
-    await this.getVariantFlow();
-    //   this.activatedRoute.paramMap.subscribe(paramMap => {
-    //     let productID = paramMap.get('productID'); // id gets updated whenever parameters change
-    //     console.log("router value",productID);
-    //     // add or call any code that needs to re-run when a parameter changes here
-    // });
-
-    // this.setProduct(this.router.snapshot.params.id);
-    // await this.getVariantFlow();
-    //console.log('Product' , this.product)
-
+    this.getProductDetailsByName(this.seoName, this.storeID);
   }
 
+  addToCart() {
+    console.log(this.product);
+    this.cartService.addToCart(this.product, this.counter);
+    this.router.navigate(['/cart']);
+  }
 }

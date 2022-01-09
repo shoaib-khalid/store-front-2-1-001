@@ -354,7 +354,7 @@ export class ApiService {
     //         return this.http.get<Category[]>(url, header);
     // }
     // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-product-controller/getStoreProductsUsingGET
-    getProductByName(name, store_id) {
+    getProductsByName(name, store_id) {
         const header = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json', Authorization: 'Bearer accessToken'
@@ -477,6 +477,8 @@ export class ApiService {
 
         const url = this.orderServiceURL + "carts/" + data.cartId + "/items";
 
+        console.log("Posting to add to cart ");
+        console.log(data);
         return this.http.post(url, data, httpOptions);
 
     }

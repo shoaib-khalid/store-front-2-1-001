@@ -61,4 +61,8 @@ export class ContentComponent implements OnInit {
     this.cartService.putCartItem(this.modalContent);
   }
 
+  deleteCartItem(cartItem: CartItem, index: number) {
+    this.cartService.deleteCartItem(cartItem, index);
+  }
+
 }

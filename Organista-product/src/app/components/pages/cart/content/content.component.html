@@ -8,15 +8,16 @@
                     <th class="remove-item"></th>
                     <th>Product</th>
                     <th>Price</th>
-                    <!-- TODO: Change bacck to quantity -->
-                    <th>Xuantity</th>
+                    <!-- TODO: Change back to quantity -->
+                    <th>Quantity</th>
                     <th>Total</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of cart">
+                <tr *ngFor="let item of cart; index as i;">
                     <td class="remove">
-                        <button type="button" class="close-btn close-danger remove-from-cart">
+                        <button type="button" class="close-btn close-danger remove-from-cart"
+                            (click)="deleteCartItem(item, i)">
                             <span></span>
                             <span></span>
                         </button>
@@ -31,9 +32,9 @@
                         </div>
                     </td>
                     <td data-title="Price"> <strong>PKR {{ item.productPrice | number:'1.2-2' }}</strong> </td>
-                    <td class="quantity" data-title="Quantity">
+                    <td class="quantity" data-title="Quantity" class="clickable" (click)="open(shopmodal, item)">
                         <!-- <input type="number" class="qty form-control" value="{{ item.quantity }}"> -->
-                        {{ item.quantity }}
+                        <p class="clickable-text">{{ item.quantity }}</p>
                     </td>
                     <td data-title="Total"> <strong>PKR {{ item.price | number:'1.2-2' }}</strong> </td>
                 </tr>
@@ -113,7 +114,7 @@
                 </ngx-slick-carousel>
                 <!-- Upsells End -->
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6" *ngIf="cart.length > 0">
                 <div class="section-title">
                     <h4 class="title">Cart Total</h4>
                 </div>
@@ -133,7 +134,8 @@
                         </tr>
                     </tbody>
                 </table>
-                <button type="submit" class="andro_btn-custom primary btn-block">Proceed to Checkout</button>
+                <button type="submit" class="andro_btn-custom primary btn-block">Proceed to
+                    Checkout</button>
             </div>
         </div>
     </div>
