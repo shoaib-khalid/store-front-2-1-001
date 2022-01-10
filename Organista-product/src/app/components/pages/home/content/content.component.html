@@ -3,13 +3,13 @@
     <div class="andro_banner banner-2">
         <img class="banner-design" src="{{banner}}">
     </div>
-   <!-- <img class="banner-design" src="{{assets['bannerUrl']}}"> -->
-   <!-- <ngx-slick-carousel #slickModal="slick-carousel" [config]="bannerConfig" class="andro_banner-slider" >
+    <!-- <img class="banner-design" src="{{assets['bannerUrl']}}"> -->
+    <!-- <ngx-slick-carousel #slickModal="slick-carousel" [config]="bannerConfig" class="andro_banner-slider" >
         <div ngxSlickItem class="andro_banner-slider-inner" style="background-image: url('{{item.photo}}');"
             *ngFor="let item of bannerslides">
             <div class="container" ><img src="{{assets['bannerUrl']}}">
                 <div class="andro_banner-slider-text">
-                    <!--<img src="{{item.proimg}}" class="img-1" alt="{{item.title}}">
+                    <img src="{{item.proimg}}" class="img-1" alt="{{item.title}}">
                     <p>Use code <strong class="custom-primary">{{item.couponcode}}</strong> during checkout</p>
                     <h1 style="background-image: url('{{item.ctaimg}}') "> {{item.title}} </h1>
                     <p>{{item.para}}</p>
@@ -20,6 +20,7 @@
     </ngx-slick-carousel>-->
 </div>
 <!-- Banner End -->
+
 <!-- Categories Start -->
 <div class="section section-padding category_section">
     <div>
@@ -38,7 +39,7 @@
     </div>
     <!-- Categories End -->
     <!-- Fresh Arrival Start -->
-   
+
     <!-- Products End -->
     <!-- Featured Product Start -->
     <div class="section pt-0 andro_fresh-arrivals">
@@ -104,50 +105,54 @@
         </div>
     </div>
     <!-- Products End -->
-    <ng-template #shopmodal let-modal>
-        <div class="modal-body">
-            <!-- (click)="modal.dismiss('Cross click')" -->
-            <div class="close-btn close-dark close" (click)="closeModal()">
-                <span></span>
-                <span></span>
-            </div>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-5">
-                        <div class="andro_product">
-                            <!-- <div class="andro_product-badge andro_badge-featured" *ngIf="modalContent.featured">
+</div>
+
+<!-- Modal Start -->
+<ng-template #shopmodal let-modal>
+    <div class="modal-body">
+        <!-- (click)="modal.dismiss('Cross click')" -->
+        <div class="close-btn close-dark close" (click)="closeModal()">
+            <span></span>
+            <span></span>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="andro_product">
+                        <!-- <div class="andro_product-badge andro_badge-featured" *ngIf="modalContent.featured">
                             <i class="fa fa-star"></i>
                             <span>Featured</span>
                         </div>
                         <div class="andro_product-badge andro_badge-sale" *ngIf="modalContent.discount">
                             {{modalContent.discount}}% Off
                         </div> -->
-                            <img [src]="modalContent.thumbnailUrl" alt="{{modalContent.name}}">
-                        </div>
+                        <img [src]="modalContent.thumbnailUrl" alt="{{modalContent.name}}">
                     </div>
-                    <div class="col-md-7">
-                        <div class="andro_product-single-content">
-                            <div class="andro_rating-wrapper">
-                                <div class="andro_rating">
-                                    <!-- <ngb-rating [max]="5" [(rate)]="modalContent.rating" [readonly]="true">
+                </div>
+                <div class="col-md-7">
+                    <div class="andro_product-single-content">
+                        <div class="andro_rating-wrapper">
+                            <div class="andro_rating">
+                                <!-- <ngb-rating [max]="5" [(rate)]="modalContent.rating" [readonly]="true">
                                     <ng-template let-fill="fill" let-index="index">
                                         <i class="fa fa-star" [class.active]="fill === 100"></i>
                                     </ng-template>
                                 </ngb-rating> -->
-                                </div>
-                                <!-- <span>{{modalContent.rating}} Stars</span> -->
                             </div>
-                            <h3> {{modalContent.name}} </h3>
-                            <div class="andro_product-price">
-                                <!-- <span *ngIf="modalContent.discount">${{modalContent.price * (100 - modalContent.discount) /
+                            <!-- <span>{{modalContent.rating}} Stars</span> -->
+                        </div>
+                        <h3> {{modalContent.name}} </h3>
+                        <div class="andro_product-price">
+                            <!-- <span *ngIf="modalContent.discount">${{modalContent.price * (100 - modalContent.discount) /
                                 100 |
                                 number:'1.2-2'}}</span> -->
                             <span>PKR {{modalContent.productInventories[0].price| number:'1.2-2'}}</span>
                         </div>
-                        <div [innerHtml]="modalContent.description"></div>
-                        <!-- <p class="andro_product-excerpt">
-                            {{modalContent.description}}
-                        </p> -->
+                        <div>
+                            <p class="andro_product-excerpt" [innerHtml]="modalContent.description">
+                                {{modalContent.description}}
+                            </p>
+                        </div>
                         <form class="andro_product-atc-form">
                             <!-- <div class="andro_product-variation-wrapper">
                                 <div class="form-group">
@@ -167,25 +172,24 @@
                                     </select>
                                 </div>
                             </div> -->
-                                <div class="qty-outter">
-                                    <!-- (click)="modal.dismiss('Cross click')" -->
-                                    <!-- TODO: Add To Cart -->
-                                    <a (click)="addToCartFromModal(modalContent)" class="andro_btn-custom">Add to
-                                        Fart</a>
-                                    <div class="qty">
-                                        <span class="qty-subtract" (click)="decrement()">
-                                            <i class="fa fa-minus"></i>
-                                        </span>
-                                        <input type="text" name="qty" value="{{counter}}">
-                                        <span class="qty-add" (click)="increment()">
-                                            <i class="fa fa-plus"></i>
-                                        </span>
-                                    </div>
+                            <div class="qty-outter">
+                                <!-- (click)="modal.dismiss('Cross click')" -->
+                                <a (click)="addToCartFromModal(modalContent)" class="andro_btn-custom">Add to Cart</a>
+                                <div class="qty">
+                                    <span class="qty-subtract" (click)="decrement()">
+                                        <i class="fa fa-minus"></i>
+                                    </span>
+                                    <input type="text" name="qty" value="{{counter}}" disabled>
+                                    <span class="qty-add" (click)="increment()">
+                                        <i class="fa fa-plus"></i>
+                                    </span>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </ng-template>
+    </div>
+</ng-template>
+<!-- Modal End -->

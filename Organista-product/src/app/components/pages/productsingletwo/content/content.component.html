@@ -1,13 +1,12 @@
-
 <!-- *ngFor="let item of product" -->
-<div >
+<div>
     <!-- Product Content Start -->
-    <div class="section">
+    <div class="section" *ngIf="product">
         <div class="container">
             <div class="row">
                 <div class="col-md-5">
                     <div class="andro_product-single-thumb">
-                        <img [src]="product[0].thumbnailUrl" alt="{{product.name}}">
+                        <img [src]="product.thumbnailUrl" alt="{{product.name}}">
                     </div>
                     <!-- Pagination Start 
                     <div class="andro_single-pagination">
@@ -38,7 +37,7 @@
                 </div>
                 <div class="col-md-7">
                     <div class="andro_product-single-content andro_product-single-2">
-                       <!-- <div class="andro_product-single-controls andro_post-share">
+                        <!-- <div class="andro_product-single-controls andro_post-share">
                             <a href="#" ngbTooltip="Add to Wishlist" class="andro_add-to-favorite"> <i
                                     class="flaticon-like"></i> </a>
                             <ul class="andro_sm">
@@ -60,14 +59,13 @@
                             </div>
                             <span>{{product.rating}} Stars</span>
                         </div>-->
-                        <h3> {{product[0].name}} </h3>
+                        <h3> {{product.name}} </h3>
                         <div class="andro_product-price">
                             <!--<span *ngIf="product.discount">${{product.price * (100 - product.discount) / 100 |
                                 number:'1.2-2'}}</span>-->
-                            <span>PKR {{product[0].productInventories[0].price| number:'1.2-2'}}</span>
+                            <span>PKR {{product.productInventories[0].price| number:'1.2-2'}}</span>
                         </div>
-                        <div [innerHtml]="product[0].description"></div>
-                        <!--<p class="andro_product-excerpt">{{product[0].description}}</p>-->
+                        <div [innerHtml]="product.description"></div>
                         <form class="andro_product-atc-form">
                             <!-- <div class="andro_product-variation-wrapper">
                                 <div class="form-group">
@@ -88,7 +86,7 @@
                                 </div>
                             </div> -->
                             <div class="qty-outter">
-                                <a routerLink="cart" class="andro_btn-custom">Add to Cart</a>
+                                <a (click)="addToCart()" class="andro_btn-custom">Add to Cart</a>
                                 <div class="qty">
                                     <span class="qty-subtract" (click)="decrement()">
                                         <i class="fa fa-minus"></i>
@@ -98,10 +96,11 @@
                                         <i class="fa fa-plus"></i>
                                     </span>
                                 </div>
+
                             </div>
                         </form>
                         <ul class="andro_product-meta">
-                           <!-- <li>
+                            <!-- <li>
                                 <span>Categories: </span>
                                 <div class="andro_product-meta-item">
                                     <a href="#"
@@ -117,7 +116,13 @@
                             <li>
                                 <span>SKU: </span>
                                 <div class="andro_product-meta-item">
-                                    <span>{{product[0].productInventories[0].sku}}</span>
+                                    <span>{{product.productInventories[0].sku}}</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span>Item Code: </span>
+                                <div class="andro_product-meta-item">
+                                    <span>{{product.productInventories[0].itemCode}}</span>
                                 </div>
                             </li>
                         </ul>
@@ -148,7 +153,7 @@
                                 <a ngbNavLink>Description</a>
                                 <ng-template ngbNavContent>
                                     <h4>Description</h4>
-                                    <div [innerHtml]="product[0].description"></div>
+                                    <div [innerHtml]="product.description"></div>
                                 </ng-template>
                             </li>
                             <!-- <li [ngbNavItem]="2">
@@ -213,7 +218,7 @@
                                         </form>
                                     </div>
                                     <!-- Review Form End -->
-                                    <!-- Reviews Start
+                            <!-- Reviews Start
                                     <div class="comments-list">
                                         <ul>
                                             <li class="comment-item" *ngFor="let item of product.reviews">

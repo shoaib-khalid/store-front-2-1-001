@@ -19,8 +19,10 @@
                 <!-- Product Count & Orderby End -->
                 <div class="row masonry">
                     <!-- Product Start -->
-                    <div class="col-md-4 col-sm-6 masonry-item" *ngFor="let item of product | paginate: { itemsPerPage: 9, currentPage: page } ; let i = index ">
-                        <div class="andro_product andro_product-minimal andro_product-has-controls andro_product-has-buttons">
+                    <div class="col-md-4 col-sm-6 masonry-item"
+                        *ngFor="let item of product | paginate: { itemsPerPage: 9, currentPage: page } ; let i = index ">
+                        <div
+                            class="andro_product andro_product-minimal andro_product-has-controls andro_product-has-buttons">
                             <div class="andro_product-badge andro_badge-featured" *ngIf="item.featured">
                                 <i class="fa fa-star"></i>
                                 <span>Featured</span>
@@ -29,12 +31,13 @@
                                 {{item.discount}}% Off
                             </div>
                             <div class="andro_product-thumb">
-                                <a routerLink="/product-single-v2/{{item.seoName}}"><img (click)="goToDetails(item.seoName)" src="{{item.thumbnailUrl}}"
-                                    alt="{{item.name}}"></a>
+                                <a routerLink="/product-single-v2/{{item.seoName}}"><img
+                                        (click)="goToDetails(item.seoName)" src="{{item.thumbnailUrl}}"
+                                        alt="{{item.name}}"></a>
                             </div>
                             <div class="andro_product-body">
                                 <h6 class="andro_product-title"><a routerLink="/product-single-v2/{{item.seoName}}">
-                                    {{item.name}} </a></h6>
+                                        {{item.name}} </a></h6>
                                 <!--RATING 
                                     <div class="andro_rating-wrapper">
                                     <div class="andro_rating">
@@ -48,13 +51,19 @@
                             </div>
                             <div class="andro_product-footer">
                                 <div class="andro_product-price">
-                                    <span *ngIf="item.discount">PKR {{item.productInventories[0].price * (100 - item.discount) / 100 |
+                                    <span *ngIf="item.discount">PKR {{item.productInventories[0].price * (100 -
+                                        item.discount) / 100 |
                                         number:'1.2-2'}}</span>
                                     <span>PKR {{item.productInventories[0].price| number:'1.2-2'}}</span>
                                 </div>
-                                <div class="andro_product-buttons">
-                                    <a routerLink="/product-single/{{item.id}}" class="andro_btn-custom primary">Add To Cart</a>
-                                    <a href="javascript:void(0)" (click)="open(shopmodal, item)" class="andro_btn-custom light">Quick View</a>
+                                <div class="andro_product-controls">
+                                    <!-- <a routerLink="/product-single/{{item.id}}" class="andro_btn-custom primary">Add To
+                                        Cart</a>
+                                    <a href="javascript:void(0)" (click)="open(shopmodal, item)"
+                                        class="andro_btn-custom light">Quick View</a> -->
+                                    <a href="javascript:void(0)" (click)="open(shopmodal, item)">
+                                        <i ngbTooltip="Quick View" placement="top" class="flaticon-view"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -72,7 +81,8 @@
                     <div class="sidebar-widget widget-search">
                         <form method="post">
                             <div class="andro_search-adv-input">
-                                <input type="text" class="form-control" placeholder="Look for Products" name="search" value="">
+                                <input type="text" class="form-control" placeholder="Look for Products" name="search"
+                                    value="">
                                 <button type="submit" name="button"><i class="fa fa-search"></i></button>
                             </div>
                         </form>
@@ -85,10 +95,11 @@
                             <div id="CategoryList">
                                 <div id="allcategory">
                                     <div class="card-button">
-                                    <a (click)="getAllProduct()" [ngClass]="{'selected' : this.selectedMenu === 'all'}"  id="price" >All</a>
+                                        <a (click)="getAllProduct()"
+                                            [ngClass]="{'selected' : this.selectedMenu === 'all'}" id="price">All</a>
                                     </div>
                                 </div>
-                            <!--<li>
+                                <!--<li>
                                 <div class="custom-control custom-checkbox">
                                     <input type="radio" (click)="getAllProduct()" [ngClass]="{'selected' : this.selectedMenu === 'all'}" class="custom-control-input" id="category">
                                     <label class="custom-control-label" for="category">All Products</label>
@@ -96,26 +107,30 @@
                             </li>-->
                                 <div *ngFor="let item of categories">
                                     <div class="card-button">
-                                    <a (click)="getCategoryProducts(item.id,sortBy)" [ngClass]="{'selected' : this.selectedMenu === item.id}"  id="price">{{ item.name }}</a>
-                                    </div>    
-                                <!--<div class="custom-control custom-checkbox">
+                                        <a (click)="getCategoryProducts(item.id,sortBy)"
+                                            [ngClass]="{'selected' : this.selectedMenu === item.id}" id="price">{{
+                                            item.name }}</a>
+                                    </div>
+                                    <!--<div class="custom-control custom-checkbox">
                                     <input type="radio" (click)="getProduct()" [ngClass]="{'selected' : this.selectedMenu === item.id}" class="custom-control-input" id="category{{item.id}}">
                                     <label class="custom-control-label" for="category{{item.id}}">{{item.name}}</label>
                                 </div>-->
                                 </div>
-                            </div>    
+                            </div>
                         </div>
                     </div>
-                </div>      
+                </div>
             </div>
             <!-- Sidebar End -->
         </div>
     </div>
 </div>
 <!-- Products End -->
+<!-- Modal Start -->
 <ng-template #shopmodal let-modal>
     <div class="modal-body">
-        <div class="close-btn close-dark close" (click)="modal.dismiss('Cross click')">
+        <!-- (click)="modal.dismiss('Cross click')" -->
+        <div class="close-btn close-dark close" (click)="closeModal()">
             <span></span>
             <span></span>
         </div>
@@ -123,40 +138,42 @@
             <div class="row">
                 <div class="col-md-5">
                     <div class="andro_product">
-                        <div class="andro_product-badge andro_badge-featured" *ngIf="modalContent.featured">
+                        <!-- <div class="andro_product-badge andro_badge-featured" *ngIf="modalContent.featured">
                             <i class="fa fa-star"></i>
                             <span>Featured</span>
                         </div>
                         <div class="andro_product-badge andro_badge-sale" *ngIf="modalContent.discount">
                             {{modalContent.discount}}% Off
-                        </div>
+                        </div> -->
                         <img [src]="modalContent.thumbnailUrl" alt="{{modalContent.name}}">
                     </div>
                 </div>
                 <div class="col-md-7">
                     <div class="andro_product-single-content">
-                        <!--RATING
-                            <div class="andro_rating-wrapper">
+                        <div class="andro_rating-wrapper">
                             <div class="andro_rating">
-                                <ngb-rating [max]="5" [(rate)]="modalContent.rating" [readonly]="true">
+                                <!-- <ngb-rating [max]="5" [(rate)]="modalContent.rating" [readonly]="true">
                                     <ng-template let-fill="fill" let-index="index">
                                         <i class="fa fa-star" [class.active]="fill === 100"></i>
                                     </ng-template>
-                                </ngb-rating>
+                                </ngb-rating> -->
                             </div>
-                            <span>{{modalContent.rating}} Stars</span>
-                        </div>-->
+                            <!-- <span>{{modalContent.rating}} Stars</span> -->
+                        </div>
                         <h3> {{modalContent.name}} </h3>
                         <div class="andro_product-price">
-                            <span *ngIf="modalContent.discount">PKR {{modalContent.price * (100 - modalContent.discount) /
+                            <!-- <span *ngIf="modalContent.discount">${{modalContent.price * (100 - modalContent.discount) /
                                 100 |
-                                number:'1.2-2'}}</span>
+                                number:'1.2-2'}}</span> -->
                             <span>PKR {{modalContent.productInventories[0].price| number:'1.2-2'}}</span>
                         </div>
-                        <div [innerHtml]="modalContent.description"></div>
-                        <!--<p class="andro_product-excerpt">{{modalContent.description}}</p>-->
+                        <div>
+                            <p class="andro_product-excerpt" [innerHtml]="modalContent.description">
+                                {{modalContent.description}}
+                            </p>
+                        </div>
                         <form class="andro_product-atc-form">
-                            <!--<div class="andro_product-variation-wrapper">
+                            <!-- <div class="andro_product-variation-wrapper">
                                 <div class="form-group">
                                     <select class="form-control" name="amount">
                                         <option value="">Select Amount</option>
@@ -173,14 +190,15 @@
                                         <option value="egyptian">Egyptian</option>
                                     </select>
                                 </div>
-                            </div>-->
+                            </div> -->
                             <div class="qty-outter">
-                                <a routerLink="/product-single-v2/{{modalContent.id}}" (click)="modal.dismiss('Cross click')" class="andro_btn-custom">Buy Now</a>
+                                <!-- (click)="modal.dismiss('Cross click')" -->
+                                <a (click)="addToCartFromModal(modalContent)" class="andro_btn-custom">Add to Cart</a>
                                 <div class="qty">
                                     <span class="qty-subtract" (click)="decrement()">
                                         <i class="fa fa-minus"></i>
                                     </span>
-                                    <input type="text" name="qty" value="{{counter}}">
+                                    <input type="text" name="qty" value="{{counter}}" disabled>
                                     <span class="qty-add" (click)="increment()">
                                         <i class="fa fa-plus"></i>
                                     </span>
@@ -193,3 +211,4 @@
         </div>
     </div>
 </ng-template>
+<!-- Modal End -->

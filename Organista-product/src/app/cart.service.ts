@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { getEnabledCategories } from 'trace_events';
 import { ApiService } from './api.service';
-import { Cart, CartItem } from './components/models/cart';
+import { Cart, CartItem, CartItemRequest } from './components/models/cart';
 import { Product, ProductInventory } from './components/models/product';
 
 @Injectable({
@@ -57,40 +57,60 @@ export class CartService {
       };
       this.apiService.postCreateCart(data).subscribe((res: any) => {
         this.setCartId(res.data.id);
+        this.addToCart(product, quantity);
       }, error => {
         console.error("Failed to create cart");
         console.error(error);
       });
+    } else {
+
+      // Not giving option for product variants on frontend right now, so use the first found productvariant
+      // const itemCode = product.productInventories.length > 0 ? product.productInventories[0].itemCode : '';
+      // const sku = product.productInventories.length > 0 ? product.productInventories[0].sku : '';
+
+      const cartItemRequest: CartItemRequest = {
+        cartId: this.getCartId(),
+        SKU: product.productInventories[0].sku,
+        itemCode: product.productInventories[0].itemCode,
+        price: product.price,
+        productId: product.id,
+        productPrice: product.price,
+        quantity: quantity,
+        specialInstruction: ''
+      };
+
+      // Add to cart, or create one if one doesn't exist
+      // TODO: Delete cart in backend to seee what error you get
+      this.apiService.postAddToCart(cartItemRequest).subscribe((res: any) => {
+        this.getCartItems();
+      }, error => {
+        console.error("error adding to cart");
+        console.error(error);
+      });
     }
+  }
 
-    const itemCode = product.productInventories.length > 0 ? product.productInventories[0].itemCode : '';
-    const sku = product.productInventories.length > 0 ? product.productInventories[0].sku : '';
-    const cartItem: CartItem = {
-      cartId: this.getCartId(),
-      id: '',
-      itemCode: itemCode,
-      price: product.price,
-      productId: product.id,
-      productPrice: product.price,
-      quantity: quantity,
-      SKU: sku,
-      specialInstruction: '',
-      discountCalculationType: null,
-      discountCalculationValue: null,
-      discountId: null,
-      discountLabel: null,
-      productName: product.name,
-      weight: 0,
-      productInventory: new ProductInventory
-    };
+  putCartItem(cartItem: CartItem) {
+    if (!this.getCartId()) {
+      this.addToCart(cartItem.productInventory.product, cartItem.quantity);
+    } else {
+      this.apiService.putCartItem(cartItem).subscribe((res: any) => {
+        this.getCartItems();
+      }, error => {
+        console.error("error putting new cart item");
+        console.error(error);
+      });
+    }
+  }
 
-    // Add to cart, or create one if one doesn't exist
-    // TODO: Delete cart in backend to seee what error you get
-    this.apiService.postAddToCart(cartItem).subscribe((res: any) => {
+  deleteCartItem(cartItem: CartItem, index: number) {
+    this.cart = this.cart.splice(index, 1);
+
+    this.apiService.deleteCartItemID(cartItem, cartItem.id).subscribe((res: any) => {
       this.getCartItems();
     }, error => {
-      console.log("error adding to cart");
+      console.error("error deleting cart item");
       console.error(error);
-    });
+    })
   }
 }

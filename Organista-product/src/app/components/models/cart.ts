@@ -38,3 +38,14 @@ export interface CartSubItem {
     productName: string;
     specialInstruction: string;
 }
+
+export interface CartItemRequest {
+    cartId: string;
+    SKU: string;
+    itemCode: string;
+    price: number;
+    productId: string;
+    productPrice: number;
+    quantity: number;
+    specialInstruction: string;
+}
