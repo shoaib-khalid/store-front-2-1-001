@@ -55,6 +55,11 @@ export class ContentComponent implements OnInit {
       this.storeName = (params['storeName']) ? params['storeName'] : this.storeName;
       console.log('product name before: ' + this.seoName); // Print the parameter to the console.             
     });
+    // this.activatedRoute.params.subscribe(params => {
+    //   this.productID = params['id'];
+    //   this.storeName = (params['storeName']) ? params['storeName'] : this.storeName;
+    //   console.log('product name before: ' + this.productID); // Print the parameter to the console.             
+    // });
   }
   // public Product: { name: string, productID: number }[] = shoppost;
   // //public tags: { title: string, id: number }[] = blogtags;

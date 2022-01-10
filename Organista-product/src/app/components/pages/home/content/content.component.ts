@@ -52,6 +52,8 @@ export class ContentComponent implements OnInit {
   noPrice: any;
   assets: unknown;
   bannerExist: boolean = false;
+  assetsData: any;
+  banner: any;
 
   constructor(private modalService: NgbModal,
     private apiService: ApiService,
@@ -126,6 +128,9 @@ export class ContentComponent implements OnInit {
         // check count Item in Cart 
         this.apiService.getStoreAssets(storeID).subscribe((res: any) => {
             resolve(res.data)
+            let data = res.data;
+            this.banner = data.bannerUrl;
+            // this.assetsData = res.data;
         }, error => {
             // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 
@@ -205,8 +210,9 @@ export class ContentComponent implements OnInit {
     this.cartService.addToCart(product, this.counter);
   }
   async ngOnInit() {
-    const assetData = await this.getAssets(this.storeID)
-    this.assets = assetData
+    this.getAssets(this.storeID)
+    // const assetData = await this.getAssets(this.storeID)
+    // this.assets = assetData
     // if(this.assets['bannerUrl'] != null){
     //   this.bannerExist = true;
     // }
