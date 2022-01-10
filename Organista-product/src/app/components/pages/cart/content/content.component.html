@@ -103,10 +103,10 @@
                         </div>
                         <div class="andro_product-footer">
                             <div class="andro_product-buttons">
-                                <a routerLink="/product-single/{{item.id}}" class="andro_btn-custom primary">Add To
-                                    Cart</a>
+                                <!-- <a routerLink="/product-single/{{item.id}}" class="andro_btn-custom primary">Add To
+                                    Cart</a> -->
                                 <a href="javascript:void(0)" (click)="open(shopmodal, item)"
-                                    class="andro_btn-custom light">Quick View</a>
+                                    class="andro_btn-custom primary">Quick View</a>
                             </div>
                         </div>
                     </div>
@@ -122,19 +122,32 @@
                     <tbody>
                         <tr>
                             <th>Subtotal</th>
-                            <td>PKR {{ calculateprice() | number:'1.2-2'}}</td>
+                            <td>PKR {{ calculateSubtotal() | number:'1.2-2'}}</td>
                         </tr>
                         <tr>
-                            <th>Tax</th>
-                            <td>PKR {{ taxPrice }} <span class="small">(11%)</span></td>
+                            <th>Order Discount</th>
+                            <td>PKR -{{ orderDiscount }}</td>
+                        </tr>
+                        <tr>
+                            <th>Takeaway Fee</th>
+                            <td>PKR {{ takeAwayFee / 100 * calculateSubtotal() }} <span class="small">({{ takeAwayFee
+                                    }}%)</span></td>
+                        </tr>
+                        <tr>
+                            <th>Delivery Charges</th>
+                            <td>PKR {{ deliveryCharges }}</td>
+                        </tr>
+                        <tr>
+                            <th>Delivery Discount</th>
+                            <td>PKR -{{ deliveryDiscount }}</td>
                         </tr>
                         <tr>
                             <th>Total</th>
-                            <td> <b>PKR {{ calculateprice() + taxPrice | number:'1.2-2' }}</b> </td>
+                            <td> <b>PKR {{ calculateGrandTotal() | number:'1.2-2' }}</b> </td>
                         </tr>
                     </tbody>
                 </table>
-                <button type="submit" class="andro_btn-custom primary btn-block">Proceed to
+                <button type="submit" class="andro_btn-custom primary btn-block" routerLink="/checkout">Proceed to
                     Checkout</button>
             </div>
         </div>

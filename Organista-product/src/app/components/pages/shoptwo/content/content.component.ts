@@ -62,6 +62,9 @@ export class ContentComponent implements OnInit {
     this.modalContent = item
     this.modalService.open(content, { centered: true, size: "lg", windowClass: 'andro_quick-view-modal p-0' });
   }
+  closeModal() {
+    this.modalService.dismissAll();
+  }
   // Increment decrement
   public counter: number = 1
   increment() {

@@ -16,6 +16,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { promise } from 'protractor';
 import { CartService } from 'src/app/cart.service';
 import { CartItem } from 'src/app/components/models/cart';
+import { StoreAsset } from 'src/app/components/models/store';
 //import { resolve } from 'path';
 
 @Component({
@@ -50,7 +51,7 @@ export class ContentComponent implements OnInit {
   popupSKU: any;
   catalogueList: any;
   noPrice: any;
-  assets: unknown;
+  assets: StoreAsset;
   bannerExist: boolean = false;
 
   constructor(private modalService: NgbModal,
@@ -60,7 +61,15 @@ export class ContentComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private cartService: CartService) {
     this.storeID = "McD";
+    this.assets = {
+      bannerMobileUrl: '',
+      bannerUrl: '',
+      logoUrl: '',
+      qrCodeUrl: '',
+      storeId: ''
+    }
   }
+
   open(content: any, item: Product) {
     this.counter = 1;
     this.modalContent = item;
@@ -120,31 +129,20 @@ export class ContentComponent implements OnInit {
     dots: false,
     autoplay: true,
   }
-  //Banner
-  getAssets(storeID){
-    return new Promise(resolve => {
-        // check count Item in Cart 
-        this.apiService.getStoreAssets(storeID).subscribe((res: any) => {
-            resolve(res.data)
-        }, error => {
-            // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-        }) 
-        
-    });
 
-}
+  //Banner
+  getAssets() {
+    this.apiService.getStoreAssets(this.storeID).subscribe((res: any) => {
+      this.assets = res.data;
+    }, error => {
+    });
+  }
   //Categories
   getCategory() {
     this.apiService.getCategoryByStoreID(this.storeID).subscribe((res: any) => {
       console.log('category obj: ', res)
       if (res.message) {
-        if (res.data.content.length > 1) {
-          this.categories = res.data.content;
-        } else {
-          this.categories = res.data.content;
-        }
-        //console.log('newCategories getCategory: ', this.categories);
-      } else {
+        this.categories = res.data.content;
       }
     }, error => {
       console.log(error)
@@ -205,8 +203,7 @@ export class ContentComponent implements OnInit {
     this.cartService.addToCart(product, this.counter);
   }
   async ngOnInit() {
-    const assetData = await this.getAssets(this.storeID)
-    this.assets = assetData
+    this.getAssets();
     // if(this.assets['bannerUrl'] != null){
     //   this.bannerExist = true;
     // }

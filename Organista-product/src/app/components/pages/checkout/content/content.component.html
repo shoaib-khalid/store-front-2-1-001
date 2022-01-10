@@ -375,13 +375,13 @@
                                 <td data-title="Product">
                                     <div class="andro_cart-product-wrapper">
                                         <div class="andro_cart-product-body">
-                                            <h6> <a href="#">{{item.productname}}</a> </h6>
-                                            <p>{{item.qty}} Kilos</p>
+                                            <h6> <a href="#">{{item.productName}}</a> </h6>
+                                            <!-- <p>{{item.qty}} Kilos</p> -->
                                         </div>
                                     </div>
                                 </td>
-                                <td data-title="Quantity">x{{item.qty}}</td>
-                                <td data-title="Total"> <strong>{{item.qty * item.price | number:'1.2-2'}}$</strong>
+                                <td data-title="Quantity">x{{item.quantity}}</td>
+                                <td data-title="Total"> <strong>PKR {{ item.price | number:'1.2-2' }}</strong>
                                 </td>
                             </tr>
                             <tr class="total">
@@ -415,7 +415,8 @@
                     <p class="small">Your personal data will be used to process your order, support your experience
                         throughout this website, and for other purposes described in our <a class="btn-link"
                             href="#">privacy policy.</a> </p>
-                    <button type="submit" class="andro_btn-custom primary btn-block"><a routerLink="/thankyou">Place Order</a></button>
+                    <button type="submit" class="andro_btn-custom primary btn-block" routerLink="/thankyou">Place
+                        Order</button>
                     <!-- Order Details End -->
                 </div>
             </div>

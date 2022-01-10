@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CartService } from 'src/app/cart.service';
+import { CartItem } from 'src/app/components/models/cart';
 import checkoutPst from '../../../../data/checkout.json';
 
 @Component({
@@ -8,14 +10,19 @@ import checkoutPst from '../../../../data/checkout.json';
 })
 export class ContentComponent implements OnInit {
 
-  constructor() { }
+  checkout: CartItem[];
+
+  constructor(
+    private cartService: CartService
+  ) { }
   public isOne = true;
   public isTwo = true;
-  public checkout: { id: number, qty: number, price: number }[] = checkoutPst;
   public calculateprice() {
-    return this.checkout.reduce((subtotal, item) => subtotal + item.qty * item.price, 0)
+    return this.checkout.reduce((subtotal: number, item: CartItem) => subtotal + item.price, 0);
   };
   ngOnInit(): void {
+    this.checkout = this.cartService.cart;
+    this.cartService.cartChange.subscribe(cart => { this.checkout = cart; });
   }
 
 }

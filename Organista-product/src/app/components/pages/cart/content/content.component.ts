@@ -16,6 +16,11 @@ export class ContentComponent implements OnInit {
   closeResult: string;
   modalContent: CartItem;
 
+  orderDiscount: number = 0;
+  takeAwayFee: number = 0;
+  deliveryCharges: number = 0;
+  deliveryDiscount: number = 0;
+
   constructor(private modalService: NgbModal,
     private cartService: CartService
   ) { }
@@ -33,10 +38,13 @@ export class ContentComponent implements OnInit {
     }
   }
   public shopbox: { img: string }[] = shoppost;
-  public calculateprice() {
+  public calculateSubtotal() {
     return this.cart.reduce((subtotal: number, item: CartItem) => subtotal + item.price, 0);
   };
-  taxPrice = 9.99;
+  public calculateGrandTotal() {
+    const subtotal = this.calculateSubtotal();
+    return subtotal - this.orderDiscount + (this.takeAwayFee / 100 * subtotal) + this.deliveryCharges - this.deliveryDiscount;
+  }
   upsellConfig = {
     slidesToShow: 1,
     slidesToScroll: 1,
