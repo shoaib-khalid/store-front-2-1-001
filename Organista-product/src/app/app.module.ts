@@ -19,7 +19,7 @@ import { SharedModule } from './components/shared/shared.module';
   declarations: [
     AppComponent,
     PreloaderComponent,
-    NewsletterComponent
+    NewsletterComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,7 +30,7 @@ import { SharedModule } from './components/shared/shared.module';
     NgbModule,
     SlickCarouselModule,
     HttpClientModule,
-    SharedModule
+    SharedModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

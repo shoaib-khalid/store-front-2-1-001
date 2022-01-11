@@ -7,6 +7,7 @@ import { CheckoutComponent } from './checkout.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { ContentComponent } from './content/content.component'
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [CheckoutComponent, ContentComponent],
@@ -14,7 +15,8 @@ import { ContentComponent } from './content/content.component'
     CommonModule,
     CheckoutRoutingModule,
     NgbModule,
-    SharedModule
+    SharedModule,
+    FormsModule
   ]
 })
 export class CheckoutModule { }

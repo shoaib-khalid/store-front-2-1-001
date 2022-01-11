@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from 'src/app/cart.service';
 import { CartItem } from 'src/app/components/models/cart';
+import { UserDeliveryDetail } from 'src/app/components/models/userDeliveryDetail';
 import checkoutPst from '../../../../data/checkout.json';
 
 @Component({
@@ -11,6 +12,16 @@ import checkoutPst from '../../../../data/checkout.json';
 export class ContentComponent implements OnInit {
 
   checkout: CartItem[];
+  userDeliveryDetail: UserDeliveryDetail = {
+    name: '',
+    address: '',
+    postcode: '',
+    email: '',
+    phone: '',
+    state: '',
+    city: '',
+    country: ''
+  };
 
   constructor(
     private cartService: CartService
@@ -25,4 +36,7 @@ export class ContentComponent implements OnInit {
     this.cartService.cartChange.subscribe(cart => { this.checkout = cart; });
   }
 
+  selectCountry(e): void {
+    this.userDeliveryDetail.country = e.target.value;
+  }
 }

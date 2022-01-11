@@ -1,23 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import shoppost from '../../../../data/shop.json'
-import categorypost from '../../../../data/category.json'
-import blogcategory from '../../../../data/blogcategory.json';
-import blogpost from '../../../../data/blog.json';
 import blogtags from '../../../../data/blogtags.json';
-import testimonialpost from '../../../../data/testimonial.json';
 import { ApiService } from '../../../../api.service';
-import { isNgTemplate } from '@angular/compiler';
 import { Category } from 'src/app/components/models/category';
 import { Product } from 'src/app/components/models/product';
-import { HttpClient } from '@angular/common/http';
-//import { resolve } from 'path';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { promise } from 'protractor';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CartService } from 'src/app/cart.service';
-import { CartItem } from 'src/app/components/models/cart';
 import { StoreAsset } from 'src/app/components/models/store';
-//import { resolve } from 'path';
 
 @Component({
   selector: 'app-content',
@@ -58,7 +48,6 @@ export class ContentComponent implements OnInit {
 
   constructor(private modalService: NgbModal,
     private apiService: ApiService,
-    private httpClient: HttpClient,
     private route: Router,
     private activatedRoute: ActivatedRoute,
     private cartService: CartService) {
