@@ -235,7 +235,7 @@ export class ContentComponent implements OnInit {
 
   ngOnInit() {
     this.catId = localStorage.getItem("category_id")
-    console.log('Catalogue on Page Load');
+    // console.log('Catalogue on Page Load');
     this.getCategory();
     this.getCategoryProducts(this.catId, this.sortBy);
     // this.getAllProduct();

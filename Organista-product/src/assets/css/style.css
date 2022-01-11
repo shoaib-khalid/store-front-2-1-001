@@ -1095,7 +1095,7 @@ table img{
 }
 
 .andro_header.header-2.sticky .andro_header-middle{
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   width: 100%;
