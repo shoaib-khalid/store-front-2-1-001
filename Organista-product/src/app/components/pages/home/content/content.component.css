@@ -6,3 +6,11 @@
     width: 60px;
     height: 60px;
 }
+.category-name:hover{
+    color: #58da58 ;
+    -webkit-transition: .3s;
+    -o-transition: .3s;
+    transition: .3s;
+    font-weight: 800;
+    font-size: 15px;
+}
