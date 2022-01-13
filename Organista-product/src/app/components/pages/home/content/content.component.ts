@@ -190,14 +190,7 @@ export class ContentComponent implements OnInit {
     this.cartService.addToCart(product, this.counter);
   }
   async ngOnInit() {
-<<<<<<< HEAD
     this.getAssets();
-    // if(this.assets['bannerUrl'] != null){
-    //   this.bannerExist = true;
-    // }
-=======
-    this.getAssets(this.storeID)
->>>>>>> 1aa16bb059269559e92934b63fef5a70a471c049
     this.getCategory();
     this.getStoreProductById();
   }

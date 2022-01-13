@@ -74,7 +74,7 @@ export class ContentComponent implements OnInit {
 
   async postGetDelivery() {
     this.isPlacingOrder = true;
-    const delivery = await this.cartService.postGetDelivery(this.userDeliveryDetails);
+    const delivery: any = await this.cartService.postGetDelivery(this.userDeliveryDetails);
     if (delivery.status === 200) {
       this.route.navigate(['/thankyou']);
     }
