@@ -82,28 +82,16 @@ export class HeaderthreeComponent implements OnInit {
     return this.cart.reduce((subtotal: number, item: CartItem) => subtotal + item.price, 0);
   };
   async ngOnInit() {
-    // const storeInfo = await this.getMerchantInfo(this.storeName)
-    // console.log("Banner Receive FUNCTION getMerchantInfo, Store Info: ", storeInfo)
-    // this.storeID = storeInfo['id']
-    // this.storeDescription = storeInfo['storeDescription']
-    // this.storeNameRaw = storeInfo['name']
-
     console.log('StoreID: ' + this.storeID)
-    console.log('Calling Function getAssets')
     const assetData = await this.getAssets(this.storeID)
-    console.log("Recieve Function getAssets, Data: ", assetData)
     this.assets = assetData
-    console.log('assets Data: ', this.assets)
-    //console.log('assets Logo: ', this.assets.data.logoUrl)
     if (this.assets['logoUrl'] != null) {
       this.logoExist = true;
     }
   }
   getMerchantInfo(storename) {
-    console.log('Banner Calling BACKEND getStoreInfo');
     return new Promise(resolve => {
       this.apiService.getStoreInfo(storename).subscribe((res: any) => {
-        console.log('Banner Receive BACKEND getStoreInfo');
         resolve(res.data)
       }), error => {
         console.log('error store')
@@ -112,18 +100,13 @@ export class HeaderthreeComponent implements OnInit {
   }
 
   getAssets(storeID) {
-    console.log('Banner Calling BACKEND getStoreAssets');
     return new Promise(resolve => {
       // check count Item in Cart 
       this.apiService.getStoreAssets(storeID).subscribe((res: any) => {
-        console.log('Banner Receive BACKEND getStoreAssets');
         resolve(res.data)
       }, error => {
         // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
       })
-
     });
-
   }
-
 }

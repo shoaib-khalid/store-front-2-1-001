@@ -89,7 +89,6 @@ export class ApiService {
 
     // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-asset-controller/getStoreAssetsUsingGET
     getStoreAssets(storeID) {
-        console.log(storeID)
         const header = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json', Authorization: 'Bearer accessToken'
@@ -370,9 +369,6 @@ export class ApiService {
         //   "&pageSize=20" +
         //   "&seoName=" +
         //   name;
-
-        console.log('URL: ' + url)
-
         return this.http.get(url, header);
     }
 

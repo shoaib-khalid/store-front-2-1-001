@@ -1,48 +1,19 @@
-<a class="navbar-brand" routerLink="/"> <img src="assets/img/logo.png" alt="logo"> </a>
+<a class="navbar-brand" routerLink="/"> <img style="height: 55px; width: 100px;" src="{{logo}}" alt="logo"> </a>
 <ul>
     <li class="menu-item menu-item-has-children">
-        <a href="#">Home Pages</a>
-        <ul class="sub-menu">
-            <li class="menu-item"> <a routerLink="/">Home v1</a> </li>
-            <li class="menu-item"> <a routerLink="/home-v2">Home v2</a> </li>
-            <li class="menu-item"> <a routerLink="/home-v3">Home v3</a> </li>
-        </ul>
+        <a routerLink="/">Home</a>
     </li>
+   
     <li class="menu-item menu-item-has-children">
-        <a href="#">Blog</a>
+        <a href="#">Category</a>
         <ul class="sub-menu">
-            <li class="menu-item menu-item-has-children">
-                <a routerLink="/blog-grid">Blog Archive</a>
-                <ul class="sub-menu">
-                    <li class="menu-item"> <a routerLink="/blog-grid">Grid View</a> </li>
-                    <li class="menu-item"> <a routerLink="/blog-list">List View</a> </li>
-                    <li class="menu-item"> <a routerLink="/blog-masonry">Masonry View</a> </li>
-                </ul>
+            <li class="menu-item" *ngFor="let item of categories ; let i = index;">
+                <a routerLink="/shop-v2/{{item.id}}">{{item.name}}</a>
             </li>
-            <li class="menu-item"> <a routerLink="/post-single/1">Blog Single</a> </li>
-        </ul>
+        </ul> 
     </li>
+    
     <li class="menu-item menu-item-has-children">
-        <a href="#">Pages</a>
-        <ul class="sub-menu">
-            <li class="menu-item"> <a routerLink="/about">About Us</a> </li>
-            <li class="menu-item"> <a routerLink="/login">Login</a> </li>
-            <li class="menu-item"> <a routerLink="/register">Sign Up</a> </li>
-            <li class="menu-item"> <a routerLink="/checkout">Checkout</a> </li>
-            <li class="menu-item"> <a routerLink="/cart">Cart</a> </li>
-            <li class="menu-item"> <a routerLink="/wishlist">Wish List</a> </li>
-            <li class="menu-item"> <a routerLink="/legal">Legal</a> </li>
-            <li class="menu-item"> <a routerLink="/error">Error 404</a> </li>
-        </ul>
+        <a routerLink="/cart">Cart</a>  
     </li>
-    <li class="menu-item menu-item-has-children">
-        <a href="#">Shop Pages</a>
-        <ul class="sub-menu">
-            <li class="menu-item"> <a routerLink="/shop-v1"> Shop v1 (Default) </a> </li>
-            <li class="menu-item"> <a routerLink="/shop-v2"> Shop v2 (Full Width) </a> </li>
-            <li class="menu-item"> <a routerLink="/shop-v3"> Shop v3 (No Sidebar) </a> </li>
-            <li class="menu-item"> <a routerLink="/shop-v4"> Shop v4 (List view) </a> </li>
-        </ul>
-    </li>
-    <li class="menu-item"> <a routerLink="/contact">Contact Us</a> </li>
 </ul>

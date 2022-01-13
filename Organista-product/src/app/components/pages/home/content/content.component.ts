@@ -148,7 +148,6 @@ export class ContentComponent implements OnInit {
         } else {
           this.categories = res.data.content;
         }
-        //console.log('newCategories getCategory: ', this.categories);
       } else {
       }
     }, error => {
@@ -156,8 +155,6 @@ export class ContentComponent implements OnInit {
     })
   }
   goToDetails(productID) {
-    // alert(prodName)
-    // return false;
     this.activatedRoute.queryParams.subscribe(params => {
       this.productID = params['productID'];
     });
@@ -165,8 +162,6 @@ export class ContentComponent implements OnInit {
   }
   //Navigation to category
   goToCategory(catId) {
-    // alert(catId)
-    // return false;
     this.route.navigate(['shop-v2/' + catId]);// + catId
   }
 
@@ -211,17 +206,8 @@ export class ContentComponent implements OnInit {
   }
   async ngOnInit() {
     this.getAssets(this.storeID)
-    // const assetData = await this.getAssets(this.storeID)
-    // this.assets = assetData
-    // if(this.assets['bannerUrl'] != null){
-    //   this.bannerExist = true;
-    // }
     this.getCategory();
     this.getStoreProductById();
-    //this.getProductByID(this.product_id);
-    // this.api.getCategoryByStoreID("McD").subscribe((data)=>{
-    //   console.log("Category obj",data);
-    // })
   }
 }
 
