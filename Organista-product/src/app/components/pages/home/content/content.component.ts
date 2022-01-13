@@ -140,8 +140,6 @@ export class ContentComponent implements OnInit {
     })
   }
   goToDetails(productID) {
-    // alert(prodName)
-    // return false;
     this.activatedRoute.queryParams.subscribe(params => {
       this.productID = params['productID'];
     });
@@ -149,8 +147,6 @@ export class ContentComponent implements OnInit {
   }
   //Navigation to category
   goToCategory(catId) {
-    // alert(catId)
-    // return false;
     this.route.navigate(['shop-v2/' + catId]);// + catId
   }
 
@@ -194,16 +190,16 @@ export class ContentComponent implements OnInit {
     this.cartService.addToCart(product, this.counter);
   }
   async ngOnInit() {
+<<<<<<< HEAD
     this.getAssets();
     // if(this.assets['bannerUrl'] != null){
     //   this.bannerExist = true;
     // }
+=======
+    this.getAssets(this.storeID)
+>>>>>>> 1aa16bb059269559e92934b63fef5a70a471c049
     this.getCategory();
     this.getStoreProductById();
-    //this.getProductByID(this.product_id);
-    // this.api.getCategoryByStoreID("McD").subscribe((data)=>{
-    //   console.log("Category obj",data);
-    // })
   }
 }
 

@@ -1,8 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import blogtags from '../../../data/blogtags.json';
-import shopcondition from '../../../data/conditionfilter.json';
-import shopbrand from '../../../data/brandfilter.json';
-import blogcategory from '../../../data/blogcategory.json';
 import { ApiService } from 'src/app/api.service';
 import { Category } from '../../models/category';
 import { HttpClient } from '@angular/common/http';
@@ -45,10 +41,7 @@ export class ShopsidebarComponent implements OnInit {
     private activatedRoute: ActivatedRoute) {
       this.storeID = "McD"
      }
-  // public tags: { title: string, id: number }[] = blogtags;
-  // public category: { title: string, id: number }[] = blogcategory;
-  // public brand: { title: string, id: number }[] = shopbrand;
-  // public condition: { title: string, id: number }[] = shopcondition;
+
   // //Categories
   getCategory(){
     this.apiService.getCategoryByStoreID(this.storeID).subscribe((res: any) => {
@@ -171,19 +164,12 @@ getAllProduct(){
   }
 //Navigation to category
 goToCategory(catId){
-
-  // alert(catId)
-
-  // return false;
   this.route.navigate(['shop-v2/' + catId]);
-  // alert('Hello')
 }
 
   ngOnInit(){
     this.getCategory();
-    //this.getAllProduct();
-    //this.getProduct(this.catId,this.sortBy)
-    //this.goToCategory(this.catId);
+  
   }
 
 }
