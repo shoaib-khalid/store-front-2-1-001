@@ -19,6 +19,14 @@
     text-align: -webkit-center;
     font-size: 12px;
     line-height: 1.7;
+    font-weight: 500;  
+}
+.inner-box-text:hover{
+    color: #58da58 ;
+    -webkit-transition: .3s;
+    -o-transition: .3s;
+    transition: .3s;
     font-weight: 700;
-    
+    font-size: 13px;
+
 }

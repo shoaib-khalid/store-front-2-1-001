@@ -1,14 +1,14 @@
 <!-- Checkout Start -->
 <div class="section">
     <div class="container">
-        <form method="post">
+        <form method="post" (ngSubmit)="onSubmit()" #billingForm="ngForm">
             <div class="row">
                 <div class="col-xl-7">
                     <!-- Login -->
-                    <div class="andro_notice">
+                    <!-- <div class="andro_notice">
                         <p>Are you a returning customer? <a href="javascript:void(0)" (click)="isOne = !isOne"
                                 [attr.aria-expanded]="!isOne">Click here to login</a> </p>
-                    </div>
+                    </div> -->
                     <div [ngbCollapse]="isOne" class="collapse">
                         <div class="andro_notice-content d-block">
                             <div class="row">
@@ -36,10 +36,10 @@
                         </div>
                     </div>
                     <!-- Coupon Code -->
-                    <div class="andro_notice">
+                    <!-- <div class="andro_notice">
                         <p>Do you have a coupon code? <a href="javascript:void(0)" (click)="isTwo = !isTwo"
                                 [attr.aria-expanded]="!isTwo">Click here to apply</a> </p>
-                    </div>
+                    </div> -->
                     <div [ngbCollapse]="isTwo" class="collapse">
                         <div class="andro_notice-content d-block">
                             <p>If you have a coupon code, apply it below</p>
@@ -56,38 +56,47 @@
                     <div class="row">
                         <div class="form-group col-xl-12">
                             <label>Full Name <span class="text-danger">*</span></label>
-                            <input type="text" id="userName" placeholder="Full Name" name="username"
-                                [(ngModel)]="userDeliveryDetail.name" [(value)]="userDeliveryDetail.name"
-                                class="form-control" value="" required="">
+                            <input type="text" id="username" placeholder="Full Name" name="username"
+                                [(ngModel)]="userDeliveryDetails.deliveryContactName"
+                                [(value)]="userDeliveryDetails.deliveryContactName" (ngModelChange)="validateName()"
+                                class="form-control" value="" required>
+                            <div class="text-danger" [hidden]="isNameValid">Name cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-12">
                             <label>Address <span class="text-danger">*</span></label>
                             <textarea id="userAddress" placeholder="Address" name="userAddress" rows="5"
-                                [(ngModel)]="userDeliveryDetail.address" class="form-control" value=""
-                                required=""></textarea>
+                                [(ngModel)]="userDeliveryDetails.deliveryAddress" class="form-control" value=""
+                                (ngModelChange)="validateAddress()" required></textarea>
+                            <div class="text-danger" [hidden]="isAddressValid">Address cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>Town / City <span class="text-danger">*</span></label>
                             <input type="text" id="userCity" placeholder="Town/City" name="userCity"
-                                [(ngModel)]="userDeliveryDetail.city" [(value)]="userDeliveryDetail.city"
-                                class="form-control" required="">
+                                [(ngModel)]="userDeliveryDetails.deliveryCity"
+                                [(value)]="userDeliveryDetails.deliveryCity" class="form-control"
+                                (ngModelChange)="validateCity()" required="">
+                            <div class="text-danger" [hidden]="isCityValid">City cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>State <span class="text-danger">*</span></label>
                             <input type="text" id="userState" placeholder="State" name="userState"
-                                [(ngModel)]="userDeliveryDetail.state" [(value)]="userDeliveryDetail.state"
-                                class="form-control" required="">
+                                [(ngModel)]="userDeliveryDetails.deliveryState"
+                                [(value)]="userDeliveryDetails.deliveryState" class="form-control"
+                                (ngModelChange)="validateState()" required="">
+                            <div class="text-danger" [hidden]="isStateValid">State cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-6">
-                            <label>Post Code<span class="text-danger">*</span></label>
-                            <input type="number" id="userPostcode" placeholder="Post Code" name="userPostcode"
-                                [(ngModel)]="userDeliveryDetail.postcode" [(value)]="userDeliveryDetail.postcode"
-                                class="form-control" required="">
+                            <label>Postcode<span class="text-danger">*</span></label>
+                            <input type="text" id="userPostcode" placeholder="Post Code" name="userPostcode"
+                                [(ngModel)]="userDeliveryDetails.deliveryPostcode"
+                                [(value)]="userDeliveryDetails.deliveryPostcode" class="form-control"
+                                (ngModelChange)="validatePostCode()" required="">
+                            <div class="text-danger" [hidden]="isPostCodeValid">{{ postCodeErrorMsg }}</div>
                         </div>
-                        <div class="form-group col-xl-12">
+                        <div class="form-group col-xl-6">
                             <label>Country <span class="text-danger">*</span></label>
                             <select class="form-control" (change)="selectCountry($event)">
-                                <option value="">Select a Country</option>
+                                <option value="" disabled>Select a Country</option>
                                 <option value="Afghanistan">Afghanistan</option>
                                 <option value="Åland Islands">Åland Islands</option>
                                 <option value="Albania">Albania</option>
@@ -341,28 +350,41 @@
                                 <option value="Zambia">Zambia</option>
                                 <option value="Zimbabwe">Zimbabwe</option>
                             </select>
+                            <div class="text-danger" [hidden]="isCountryValid">Country cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>Phone Number <span class="text-danger">*</span></label>
                             <input type="tel" id="userPhone" placeholder="Phone Number" name="userPhone"
-                                [(ngModel)]="userDeliveryDetail.phone" [(value)]="userDeliveryDetail.phone"
-                                class="form-control" value="" required="">
+                                [(ngModel)]="userDeliveryDetails.deliveryContactPhone"
+                                [(value)]="userDeliveryDetails.deliveryContactPhone" class="form-control" value=""
+                                (ngModelChange)="validatePhoneNumber()" required="">
+                            <div class="text-danger" [hidden]="isPhoneNumberValid">{{ phoneNumberErrorMsg }}</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>Email Address <span class="text-danger">*</span></label>
                             <input type="email" id="userEmail" placeholder="Email Address" name="email"
-                                [(ngModel)]="userDeliveryDetail.email" [(value)]="userDeliveryDetail.email"
-                                class="form-control" value="" required="">
+                                [(ngModel)]="userDeliveryDetails.deliveryContactEmail"
+                                [(value)]="userDeliveryDetails.deliveryContactEmail" class="form-control" value=""
+                                (ngModelChange)="validateEmailAddress()" required="">
+                            <div class="text-danger" [hidden]="isEmailValid">{{ emailErrorMsg }}</div>
                         </div>
                         <div class="form-group col-xl-12 mb-0">
                             <label>Order Notes</label>
                             <textarea name="name" rows="5" class="form-control"
                                 placeholder="Order Notes (Optional)"></textarea>
                         </div>
+                        <div class="form-group col-xl-12 mb-0">
+                            <button type="submit" class="andro_btn-custom primary btn-block"
+                                [disabled]="isPlacingOrder">
+                                <span *ngIf="!isPlacingOrder; else loadingAnim">Place Order</span>
+                                <ng-template #loadingAnim><span class="spinner-grow spinner-grow-sm" role="status"
+                                        aria-hidden="true"></span></ng-template>
+                            </button>
+                        </div>
                     </div>
                     <!-- Buyer Info End -->
                 </div>
-                <div class="col-xl-5 checkout-billing">
+                <div class=" col-xl-5 checkout-billing">
                     <!-- Order Details Start -->
                     <table class="andro_responsive-table">
                         <thead>
@@ -377,13 +399,14 @@
                                 <td data-title="Product">
                                     <div class="andro_cart-product-wrapper">
                                         <div class="andro_cart-product-body">
-                                            <h6> <a href="#">{{item.productName}}</a> </h6>
+                                            <h6> {{item.productName}} </h6>
                                             <!-- <p>{{item.qty}} Kilos</p> -->
                                         </div>
                                     </div>
                                 </td>
                                 <td data-title="Quantity">x{{item.quantity}}</td>
-                                <td data-title="Total"> <strong>PKR {{ item.price | number:'1.2-2' }}</strong>
+                                <td data-title="Total"> <strong>PKR {{ item.price | number:'1.2-2'
+                                        }}</strong>
                                 </td>
                             </tr>
                             <tr class="total">
@@ -391,11 +414,11 @@
                                     <h6 class="mb-0">Grand Total</h6>
                                 </td>
                                 <td></td>
-                                <td> <strong>{{calculateprice() | number:'1.2-2'}}$</strong> </td>
+                                <td> <strong>PKR {{calculateprice() | number:'1.2-2'}}</strong> </td>
                             </tr>
                         </tbody>
                     </table>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label>Card Number</label>
                         <input type="text" class="form-control" name="master-number" placeholder="Card Number" value="">
                     </div>
@@ -417,8 +440,8 @@
                     <p class="small">Your personal data will be used to process your order, support your experience
                         throughout this website, and for other purposes described in our <a class="btn-link"
                             href="#">privacy policy.</a> </p>
-                    <button type="submit" class="andro_btn-custom primary btn-block" routerLink="/thankyou">Place
-                        Order</button>
+                    <button type="submit" class="andro_btn-custom primary btn-block">Place
+                        Order</button> -->
                     <!-- Order Details End -->
                 </div>
             </div>

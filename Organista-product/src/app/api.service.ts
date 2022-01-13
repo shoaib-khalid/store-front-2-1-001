@@ -27,6 +27,7 @@ export class ApiService {
     checkBaseUrl() {
         this.productServiceURL = 'https://api.symplified.it/product-service/v1/';
         this.orderServiceURL = 'https://api.symplified.it/order-service/v1/';
+        this.deliveryServiceURL = 'https://api.symplified.it/delivery-service/v1/';
         //this.productServiceURL = AppConfig.settings.serviceUrl.productServiceURL;
         //console.log("appsettings",this.productServiceURL)
     }
@@ -693,6 +694,4 @@ export class ApiService {
         return this.http.post(url, data, httpOptions);
         // return this.http.get(this.payServiceURL + "payments/makePayment", httpOptions);
     }
-
-
 }

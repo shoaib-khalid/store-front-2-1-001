@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ApiService } from 'src/app/api.service';
 import { CartService } from 'src/app/cart.service';
 import { CartItem } from 'src/app/components/models/cart';
+import { Product } from 'src/app/components/models/product';
 import cartList from '../../../../data/cart.json';
 import shoppost from '../../../../data/shop.json'
 
@@ -13,8 +15,10 @@ import shoppost from '../../../../data/shop.json'
 export class ContentComponent implements OnInit {
 
   cart: CartItem[];
+  product: Product[];
   closeResult: string;
   modalContent: CartItem;
+  storeId: string;
 
   orderDiscount: number = 0;
   takeAwayFee: number = 0;
@@ -22,8 +26,11 @@ export class ContentComponent implements OnInit {
   deliveryDiscount: number = 0;
 
   constructor(private modalService: NgbModal,
-    private cartService: CartService
-  ) { }
+    private cartService: CartService,
+    private apiService: ApiService
+  ) {
+    this.storeId = "McD";
+  }
   open(content: any, item: CartItem) {
     this.modalContent = item;
     this.modalService.open(content, { centered: true, size: "lg", windowClass: 'andro_quick-view-modal p-0' });
@@ -58,10 +65,20 @@ export class ContentComponent implements OnInit {
   ngOnInit(): void {
     this.cart = this.cartService.cart;
     this.cartService.cartChange.subscribe(cart => { this.cart = cart; });
+    this.getFeaturedProducts();
   }
 
   closeModal() {
     this.modalService.dismissAll();
+  }
+
+  getFeaturedProducts() {
+    this.apiService.getProductSByStoreID(this.storeId).subscribe((res: any) => {
+      console.log('Product Data', res);
+      if (res.data.content.length > 1) {
+        this.product = res.data.content;
+      }
+    });
   }
 
   updateCartItem(cartItem: CartItem) {

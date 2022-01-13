@@ -65,7 +65,7 @@
         <div class="row andro_cart-form">
             <div class="col-lg-6 andro_upsells">
                 <div class="section-title flex-title">
-                    <h4 class="title">Upsells</h4>
+                    <h4 class="title">Featured Products</h4>
                     <div class="andro_arrows">
                         <i class="fa fa-arrow-left slick-arrow slider-prev"></i>
                         <i class="fa fa-arrow-right slick-arrow slider-next"></i>
@@ -76,13 +76,13 @@
                     <!-- Product Start -->
                     <div ngxSlickItem
                         class="andro_product andro_product-list andro_product-has-controls andro_product-has-buttons"
-                        *ngFor="let item of shopbox">
+                        *ngFor="let item of product">
                         <div class="andro_product-thumb">
-                            <a routerLink="/product-single/{{item.id}}"><img src="{{item.img}}"
-                                    alt="{{item.title}}"></a>
+                            <a routerLink="/product-single-v2/{{item.seoName}}"><img src="{{item.thumbnailUrl}}"
+                                    alt="{{item.name}}"></a>
                         </div>
                         <div class="andro_product-body">
-                            <div class="andro_rating-wrapper">
+                            <!-- <div class="andro_rating-wrapper">
                                 <div class="andro_rating">
                                     <ngb-rating [max]="5" [(rate)]="item.rating" [readonly]="true">
                                         <ng-template let-fill="fill" let-index="index">
@@ -91,22 +91,23 @@
                                     </ngb-rating>
                                 </div>
                                 <span>{{item.rating}} Stars</span>
-                            </div>
-                            <h5 class="andro_product-title"> <a routerLink="/product-single/{{item.id}}"> {{item.title}}
+                            </div> -->
+                            <h5 class="andro_product-title"> <a routerLink="/product-single-v2/{{item.seoName}}">
+                                    {{item.name}}
                                 </a> </h5>
                             <div class="andro_product-price">
-                                <span *ngIf="item.discount">${{item.price * (100 - item.discount) / 100 |
+                                <span *ngIf="item.discount">PKR {{item.price * (100 - item.discount) / 100 |
                                     number:'1.2-2'}}</span>
-                                <span>${{item.price| number:'1.2-2'}}</span>
+                                <span>PKR {{item.productInventories[0].price| number:'1.2-2'}}</span>
                             </div>
-                            <p>{{item.shortdesc}}</p>
+                            <p [innerHtml]="item.description"></p>
                         </div>
                         <div class="andro_product-footer">
                             <div class="andro_product-buttons">
-                                <!-- <a routerLink="/product-single/{{item.id}}" class="andro_btn-custom primary">Add To
+                                <!-- <a routerLink="/product-single-v2/{{item.seoName}}" class="andro_btn-custom primary">Add To
                                     Cart</a> -->
-                                <a href="javascript:void(0)" (click)="open(shopmodal, item)"
-                                    class="andro_btn-custom primary">Quick View</a>
+                                <a routerLink="/product-single-v2/{{ item.seoName }}"
+                                    class="andro_btn-custom primary">Add to Cart</a>
                             </div>
                         </div>
                     </div>

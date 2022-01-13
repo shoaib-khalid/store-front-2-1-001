@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
+import { resolve } from 'dns';
 import { Subject } from 'rxjs';
 import { getEnabledCategories } from 'trace_events';
 import { ApiService } from './api.service';
 import { Cart, CartItem, CartItemRequest } from './components/models/cart';
 import { Product, ProductInventory } from './components/models/product';
+import { UserDeliveryDetail } from './components/models/userDeliveryDetail';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +15,7 @@ export class CartService {
   // TODO: Remove hardcoding of storeID
   private cartIdKey = 'anonym_cart_id';
   storeId: string = "McD";
+  senderId: string = null;
   cart: CartItem[] = [];
   cartChange: Subject<CartItem[]> = new Subject<CartItem[]>();
 
@@ -112,5 +115,28 @@ export class CartService {
       console.error("error deleting cart item");
       console.error(error);
     })
+  }
+
+  postGetDelivery(userDeliveryDetails: UserDeliveryDetail) {
+    return new Promise(resolve => {
+      let data = {
+        customerId: this.senderId,
+        deliveryProviderId: null,
+        cartid: this.getCartId(),
+        storeId: this.storeId,
+        delivery: userDeliveryDetails
+      };
+
+      this.apiService.postTogetDeliveryFee(data).subscribe(async (res: any) => {
+        resolve(res);
+      }, error => {
+        console.error("Error posting to delivery", error);
+        resolve(error);
+      })
+    });
+  }
+
+  getGrandTotal() {
+    return this.cart.reduce((subtotal: number, item: CartItem) => subtotal + item.price, 0);
   }
 }
