@@ -23,7 +23,8 @@ export class ContentComponent implements OnInit {
     deliveryCountry: ''
   };
   isPlacingOrder: boolean = false;
-
+  
+  
   isNameValid: boolean = true;
   isAddressValid: boolean = true;
   isCityValid: boolean = true;
@@ -36,6 +37,7 @@ export class ContentComponent implements OnInit {
   phoneNumberErrorMsg: string;
   emailErrorMsg: string;
   postCodeErrorMsg: string;
+  status: any;
 
   numberRegex;
   emailRegex;
@@ -65,6 +67,7 @@ export class ContentComponent implements OnInit {
   }
 
   onSubmit(): void {
+    
     this.isPlacingOrder = true;
 
     if (this.allFieldsValid()) {
@@ -74,7 +77,8 @@ export class ContentComponent implements OnInit {
 
   async postGetDelivery() {
     this.isPlacingOrder = true;
-    const delivery = await this.cartService.postGetDelivery(this.userDeliveryDetails);
+    const delivery: any = await this.cartService.postGetDelivery(this.userDeliveryDetails);
+    
     if (delivery.status === 200) {
       this.route.navigate(['/thankyou']);
     }

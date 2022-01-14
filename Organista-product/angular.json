@@ -24,6 +24,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/wowjs/css/libs/animate.css",
               "./node_modules/slick-carousel/slick/slick.scss",
@@ -32,7 +33,8 @@
               "src/assets/fonts/flaticon/flaticon.css",
               "src/assets/fonts/font-awesome/css/all.min.css",
               "src/assets/css/style.css",
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/sweetalert2/src/sweetalert2.scss"
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",
@@ -101,6 +103,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.css"
             ],
             "scripts": []

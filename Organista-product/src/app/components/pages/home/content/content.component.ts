@@ -8,6 +8,9 @@ import { Product } from 'src/app/components/models/product';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CartService } from 'src/app/cart.service';
 import { StoreAsset } from 'src/app/components/models/store';
+import Swal from 'sweetalert2';
+
+
 
 @Component({
   selector: 'app-content',
@@ -45,12 +48,17 @@ export class ContentComponent implements OnInit {
   bannerExist: boolean = false;
   assetsData: any;
   banner: any;
+  
+  
 
   constructor(private modalService: NgbModal,
     private apiService: ApiService,
     private route: Router,
     private activatedRoute: ActivatedRoute,
-    private cartService: CartService) {
+    private cartService: CartService,
+    
+    ) {
+
     this.storeID = "McD";
     this.assets = {
       bannerMobileUrl: '',
@@ -60,6 +68,7 @@ export class ContentComponent implements OnInit {
       storeId: ''
     }
   }
+ 
 
   open(content: any, item: Product) {
     this.counter = 1;
@@ -81,12 +90,6 @@ export class ContentComponent implements OnInit {
   }
   public shopbox: { img: string }[] = shoppost;
   public featuredpost: { img: string }[] = shoppost;
-  // categories:any[] = [];
-  //   newCategories:Category[];
-  // //public blogcategory: { title: string }[] = blogcategory;
-  //public testimonial: { photo: string }[] = testimonialpost;
-  //public blogbox: { title: string, id: number }[] = blogpost;
-  //public tags: { title: string, id: number }[] = blogtags;
   public getBlogTags(items: string | any[]) {
     var elems = blogtags.filter((item: { id: string; }) => {
       return items.includes(item.id)
@@ -125,7 +128,12 @@ export class ContentComponent implements OnInit {
   getAssets() {
     this.apiService.getStoreAssets(this.storeID).subscribe((res: any) => {
       this.assets = res.data;
-    }, error => {
+    }, error => { 
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+      })
     });
   }
   //Categories
@@ -136,7 +144,11 @@ export class ContentComponent implements OnInit {
         this.categories = res.data.content;
       }
     }, error => {
-      console.log(error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+      })
     })
   }
   goToDetails(productID) {
@@ -188,18 +200,28 @@ export class ContentComponent implements OnInit {
   addToCartFromModal(product: Product) {
     this.modalService.dismissAll();
     this.cartService.addToCart(product, this.counter);
+    Swal.fire({
+      icon: 'success',
+      title: 'Great',
+      text: 'Item Successgully added to cart',
+      timer: 2000,
+      confirmButtonColor: "#58da58"
+    })
   }
   async ngOnInit() {
-<<<<<<< HEAD
-    this.getAssets();
-    // if(this.assets['bannerUrl'] != null){
-    //   this.bannerExist = true;
-    // }
-=======
-    this.getAssets(this.storeID)
->>>>>>> 1aa16bb059269559e92934b63fef5a70a471c049
+    
+    this.getAssets()
     this.getCategory();
     this.getStoreProductById();
   }
+  // showSuccessMessage(title, message, icon = null, showCancelButton = true) {
+  //   return Swal.fire({
+  //     title: title,
+  //     text: message,
+  //     icon: icon,
+  //     showCancelButton: showCancelButton
+  //   })
+
+  // }
 }
 
