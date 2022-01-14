@@ -121,7 +121,7 @@
                 </div>
                 <table>
                     <tbody>
-                        <tr>
+                        <!-- <tr>
                             <th>Subtotal</th>
                             <td>PKR {{ calculateSubtotal() | number:'1.2-2'}}</td>
                         </tr>
@@ -141,10 +141,10 @@
                         <tr>
                             <th>Delivery Discount</th>
                             <td>PKR -{{ deliveryDiscount }}</td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <th>Total</th>
-                            <td> <b>PKR {{ calculateGrandTotal() | number:'1.2-2' }}</b> </td>
+                            <td> <b>PKR {{ calculateSubtotal() | number:'1.2-2' }}</b> </td>
                         </tr>
                     </tbody>
                 </table>

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from 'src/app/api.service';
 import { CartService } from 'src/app/cart.service';
 import { CartItem } from 'src/app/components/models/cart';
+import { State } from 'src/app/components/models/region';
+import { StoreInfo } from 'src/app/components/models/store';
 import { UserDeliveryDetail } from 'src/app/components/models/userDeliveryDetail';
 
 @Component({
@@ -22,7 +25,13 @@ export class ContentComponent implements OnInit {
     deliveryCity: '',
     deliveryCountry: ''
   };
-  isPlacingOrder: boolean = false;
+  cartSubtotal: number = 0;
+  orderDiscount: number = 0;
+  takeAwayFee: number = 0;
+  deliveryCharges: number = 0;
+  deliveryDiscount: number = 0;
+
+  isProcessing: boolean = false;
 
   isNameValid: boolean = true;
   isAddressValid: boolean = true;
@@ -41,22 +50,38 @@ export class ContentComponent implements OnInit {
   emailRegex;
   phoneNumberRegex;
 
+  submitButtonText: string;
+  hasDeliveryCharges: boolean;
+
+  // Store info
+  storeId: string;
+  currencySymbol: string = "";
+  states: State[] = [];
+
   constructor(
     private cartService: CartService,
-    private route: Router
+    private route: Router,
+    private apiService: ApiService
   ) {
+    this.storeId = "McD";
     this.numberRegex = /[0-9]+/;
     this.emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     this.phoneNumberRegex = /^[+]*[(]?[0-9]{1,4}[)]?[-\s\.\/0-9]*$/;
+    this.submitButtonText = "Get Delivery Charges";
   }
   public isOne = true;
   public isTwo = true;
-  public calculateprice() {
-    return this.cartService.getGrandTotal();
+  public calculateSubtotal() {
+    return this.cartService.getSubTotal();
   };
   ngOnInit(): void {
     this.checkout = this.cartService.cart;
-    this.cartService.cartChange.subscribe(cart => { this.checkout = cart; });
+    this.cartSubtotal = this.cartService.getSubTotal();
+    this.getStoreInfo();
+    this.cartService.cartChange.subscribe(cart => {
+      this.checkout = cart;
+      this.cartSubtotal = this.cartService.getSubTotal();
+    });
   }
 
   selectCountry(e): void {
@@ -64,25 +89,75 @@ export class ContentComponent implements OnInit {
     this.validateCountry();
   }
 
-  onSubmit(): void {
-    this.isPlacingOrder = true;
+  selectState(e): void {
+    console.log("select state: ", e.target.value);
+  }
 
-    if (this.allFieldsValid()) {
-      this.postGetDelivery();
+  onSubmit(): void {
+    if (this.isAllFieldsValid()) {
+      this.isProcessing = true;
+      if (this.hasDeliveryCharges) {
+      } else {
+        this.postGetDelivery();
+      }
     }
   }
 
   async postGetDelivery() {
-    this.isPlacingOrder = true;
+    this.isProcessing = true;
     const delivery: any = await this.cartService.postGetDelivery(this.userDeliveryDetails);
-    if (delivery.status === 200) {
-      this.route.navigate(['/thankyou']);
+    if (delivery[0] && !delivery[0].isError) {
+      // this.route.navigate(['/thankyou']);
+      this.hasDeliveryCharges = true;
+      this.submitButtonText = "Place Order";
+    } else {
+      // Handle error
     }
-    this.isPlacingOrder = false;
+    this.isProcessing = false;
     console.log("Delivery data", delivery);
   }
 
-  allFieldsValid(): boolean {
+  getStoreInfoById(): Promise<StoreInfo> {
+    return new Promise(resolve => {
+      this.apiService.getStoreHoursByID(this.storeId).subscribe((res: any) => {
+        console.log("getStoreInfoBYid: ", res);
+        if (res.status === 200) {
+          resolve(res.data);
+        } else {
+          console.log('getStoreInfoByID operation failed');
+        }
+      }, error => {
+        console.log(error);
+      })
+
+    })
+  }
+
+  getStatesByID(countryID): Promise<State[]> {
+    return new Promise(resolve => {
+      this.apiService.getStateByCountryID(countryID).subscribe(async (res: any) => {
+        if (res.message) {
+          resolve(res.data.content)
+        } else {
+          console.log('getStateByCountryID operation failed')
+        }
+      }, error => {
+        console.log(error)
+      })
+    })
+  }
+
+  async getStoreInfo() {
+    const storeInfo: StoreInfo = await this.getStoreInfoById();
+    this.currencySymbol = storeInfo.regionCountry.currencySymbol;
+    this.userDeliveryDetails.deliveryCountry = storeInfo.regionCountry.name;
+
+    this.states = await this.getStatesByID(storeInfo.regionCountry.id);
+    console.log(this.states);
+  }
+
+  // Validation
+  isAllFieldsValid(): boolean {
     this.validateName();
     this.validateAddress();
     this.validateCity();

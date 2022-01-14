@@ -136,7 +136,7 @@ export class CartService {
     });
   }
 
-  getGrandTotal() {
+  getSubTotal() {
     return this.cart.reduce((subtotal: number, item: CartItem) => subtotal + item.price, 0);
   }
 }
