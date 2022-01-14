@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/api.service';
 import { CartService } from 'src/app/cart.service';
-import { CartItem } from 'src/app/components/models/cart';
+import { CartItem, CartTotals } from 'src/app/components/models/cart';
+import { DeliveryCharge } from 'src/app/components/models/delivery';
 import { State } from 'src/app/components/models/region';
 import { StoreInfo } from 'src/app/components/models/store';
 import { UserDeliveryDetail } from 'src/app/components/models/userDeliveryDetail';
@@ -25,13 +26,10 @@ export class ContentComponent implements OnInit {
     deliveryCity: '',
     deliveryCountry: ''
   };
-  cartSubtotal: number = 0;
-  orderDiscount: number = 0;
-  takeAwayFee: number = 0;
-  deliveryCharges: number = 0;
-  deliveryDiscount: number = 0;
+  cartTotals: CartTotals = null;
 
   isProcessing: boolean = false;
+  isCartTotalAvailable: boolean = false;
 
   isNameValid: boolean = true;
   isAddressValid: boolean = true;
@@ -57,6 +55,9 @@ export class ContentComponent implements OnInit {
   storeId: string;
   currencySymbol: string = "";
   states: State[] = [];
+  storeDeliveryPercentage: number;
+
+  totalServiceCharge: number;
 
   constructor(
     private cartService: CartService,
@@ -76,45 +77,31 @@ export class ContentComponent implements OnInit {
   };
   ngOnInit(): void {
     this.checkout = this.cartService.cart;
-    this.cartSubtotal = this.cartService.getSubTotal();
     this.getStoreInfo();
     this.cartService.cartChange.subscribe(cart => {
       this.checkout = cart;
-      this.cartSubtotal = this.cartService.getSubTotal();
     });
   }
 
-  selectCountry(e): void {
-    this.userDeliveryDetails.deliveryCountry = e.target.value;
-    this.validateCountry();
-  }
-
   selectState(e): void {
-    console.log("select state: ", e.target.value);
+    this.userDeliveryDetails.deliveryState = e.target.value;
   }
 
-  onSubmit(): void {
+  async onSubmit() {
     if (this.isAllFieldsValid()) {
       this.isProcessing = true;
       if (this.hasDeliveryCharges) {
       } else {
-        this.postGetDelivery();
+        const delivery: DeliveryCharge[] = await this.postGetDelivery(this.userDeliveryDetails);
+        this.cartTotals = await this.getDiscount(this.cartService.getCartId(), delivery[0].price);
+        this.isCartTotalAvailable = this.cartTotals ? true : false;
+        console.log("IsCarttotalavailable: ", this.isCartTotalAvailable);
+        this.totalServiceCharge = (this.storeDeliveryPercentage === 0) ? this.storeDeliveryPercentage :
+          ((this.storeDeliveryPercentage / 100) * this.cartTotals.cartSubTotal);
+        console.log("Cart totals: ", this.cartTotals);
+        this.isProcessing = false;
       }
     }
-  }
-
-  async postGetDelivery() {
-    this.isProcessing = true;
-    const delivery: any = await this.cartService.postGetDelivery(this.userDeliveryDetails);
-    if (delivery[0] && !delivery[0].isError) {
-      // this.route.navigate(['/thankyou']);
-      this.hasDeliveryCharges = true;
-      this.submitButtonText = "Place Order";
-    } else {
-      // Handle error
-    }
-    this.isProcessing = false;
-    console.log("Delivery data", delivery);
   }
 
   getStoreInfoById(): Promise<StoreInfo> {
@@ -127,7 +114,8 @@ export class ContentComponent implements OnInit {
           console.log('getStoreInfoByID operation failed');
         }
       }, error => {
-        console.log(error);
+        console.error(error);
+        resolve(error);
       })
 
     })
@@ -136,13 +124,14 @@ export class ContentComponent implements OnInit {
   getStatesByID(countryID): Promise<State[]> {
     return new Promise(resolve => {
       this.apiService.getStateByCountryID(countryID).subscribe(async (res: any) => {
-        if (res.message) {
+        if (res.status === 200) {
           resolve(res.data.content)
         } else {
           console.log('getStateByCountryID operation failed')
         }
       }, error => {
-        console.log(error)
+        console.error(error);
+        resolve(error);
       })
     })
   }
@@ -151,9 +140,41 @@ export class ContentComponent implements OnInit {
     const storeInfo: StoreInfo = await this.getStoreInfoById();
     this.currencySymbol = storeInfo.regionCountry.currencySymbol;
     this.userDeliveryDetails.deliveryCountry = storeInfo.regionCountry.name;
+    this.storeDeliveryPercentage = storeInfo.serviceChargesPercentage;
 
     this.states = await this.getStatesByID(storeInfo.regionCountry.id);
-    console.log(this.states);
+  }
+
+  postGetDelivery(userDeliveryDetails: UserDeliveryDetail): Promise<DeliveryCharge[]> {
+    return new Promise(resolve => {
+      let data = {
+        customerId: null,
+        deliveryProviderId: null,
+        cartid: this.cartService.getCartId(),
+        storeId: this.storeId,
+        delivery: userDeliveryDetails
+      };
+
+      this.apiService.postTogetDeliveryFee(data).subscribe(async (res: any) => {
+        resolve(res.data);
+      }, error => {
+        console.error("Error posting to delivery", error);
+        resolve(error);
+      })
+    });
+  }
+
+  getDiscount(cartId, deliveryCharge): Promise<CartTotals> {
+    return new Promise(resolve => {
+      this.apiService.getDiscount(cartId, deliveryCharge).subscribe(async (res: any) => {
+        if (res.status === 200) {
+          resolve(res.data);
+        }
+      }, error => {
+        console.error("Error getting discount", error);
+        resolve(error);
+      })
+    })
   }
 
   // Validation

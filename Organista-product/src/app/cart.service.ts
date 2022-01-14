@@ -30,7 +30,7 @@ export class CartService {
     localStorage.setItem(this.cartIdKey, cartId);
   }
 
-  private getCartId() {
+  public getCartId() {
     return localStorage.getItem(this.cartIdKey);
   }
 
@@ -128,7 +128,7 @@ export class CartService {
       };
 
       this.apiService.postTogetDeliveryFee(data).subscribe(async (res: any) => {
-        resolve(res);
+        resolve(res.data);
       }, error => {
         console.error("Error posting to delivery", error);
         resolve(error);
