@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from 'src/app/api.service';
 import { CartService } from 'src/app/cart.service';
-import { CartItem } from 'src/app/components/models/cart';
+import { CartItem, CartTotals } from 'src/app/components/models/cart';
+import { DeliveryCharge } from 'src/app/components/models/delivery';
+import { State } from 'src/app/components/models/region';
+import { StoreInfo } from 'src/app/components/models/store';
 import { UserDeliveryDetail } from 'src/app/components/models/userDeliveryDetail';
 
 @Component({
@@ -22,9 +26,14 @@ export class ContentComponent implements OnInit {
     deliveryCity: '',
     deliveryCountry: ''
   };
-  isPlacingOrder: boolean = false;
-  
-  
+  cartTotals: CartTotals = null;
+  deliveryFee: DeliveryCharge = null;
+  userOrderNotes: string = '';
+  isSaved: boolean = false;
+
+  isProcessing: boolean = false;
+  hasDeliveryCharges: boolean = false;
+
   isNameValid: boolean = true;
   isAddressValid: boolean = true;
   isCityValid: boolean = true;
@@ -43,50 +52,176 @@ export class ContentComponent implements OnInit {
   emailRegex;
   phoneNumberRegex;
 
+  submitButtonText: string;
+
+  // Store info
+  storeId: string;
+  currencySymbol: string = "";
+  states: State[] = [];
+  storeDeliveryPercentage: number;
+
+  totalServiceCharge: number;
+
   constructor(
     private cartService: CartService,
-    private route: Router
+    private route: Router,
+    private apiService: ApiService
   ) {
+    this.storeId = "McD";
     this.numberRegex = /[0-9]+/;
     this.emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     this.phoneNumberRegex = /^[+]*[(]?[0-9]{1,4}[)]?[-\s\.\/0-9]*$/;
+    this.submitButtonText = "Get Delivery Charges";
   }
   public isOne = true;
   public isTwo = true;
-  public calculateprice() {
-    return this.cartService.getGrandTotal();
+  public calculateSubtotal() {
+    return this.cartService.getSubTotal();
   };
   ngOnInit(): void {
     this.checkout = this.cartService.cart;
-    this.cartService.cartChange.subscribe(cart => { this.checkout = cart; });
+    this.getStoreInfo();
+    this.cartService.cartChange.subscribe(cart => {
+      this.checkout = cart;
+    });
   }
 
-  selectCountry(e): void {
-    this.userDeliveryDetails.deliveryCountry = e.target.value;
-    this.validateCountry();
+  selectState(e): void {
+    this.userDeliveryDetails.deliveryState = e.target.value;
   }
 
-  onSubmit(): void {
-    
-    this.isPlacingOrder = true;
+  async onSubmit() {
+    if (this.isAllFieldsValid()) {
+      this.isProcessing = true;
+      if (this.hasDeliveryCharges) {
+        const codResult = await this.goCod();
+        console.log("codResult", codResult);
+      } else {
+        this.deliveryFee = await this.postToGetDeliveryFee(this.userDeliveryDetails);
+        this.cartTotals = await this.getDiscount(this.cartService.getCartId(), this.deliveryFee.price);
 
-    if (this.allFieldsValid()) {
-      this.postGetDelivery();
+        this.hasDeliveryCharges = this.cartTotals ? true : false;
+        this.totalServiceCharge = this.storeDeliveryPercentage === 0 ? this.storeDeliveryPercentage :
+          ((this.storeDeliveryPercentage / 100) * this.cartTotals.cartSubTotal);
+        this.submitButtonText = "Confirm Cash On Delivery";
+      }
+      this.isProcessing = false;
     }
   }
 
-  async postGetDelivery() {
-    this.isPlacingOrder = true;
-    const delivery: any = await this.cartService.postGetDelivery(this.userDeliveryDetails);
-    
-    if (delivery.status === 200) {
-      this.route.navigate(['/thankyou']);
-    }
-    this.isPlacingOrder = false;
-    console.log("Delivery data", delivery);
+  getStoreInfoById(): Promise<StoreInfo> {
+    return new Promise(resolve => {
+      this.apiService.getStoreHoursByID(this.storeId).subscribe((res: any) => {
+        if (res.status === 200) {
+          resolve(res.data);
+        } else {
+          console.log('getStoreInfoByID operation failed');
+        }
+      }, error => {
+        console.error(error);
+        resolve(error);
+      })
+
+    })
   }
 
-  allFieldsValid(): boolean {
+  getStatesByID(countryID): Promise<State[]> {
+    return new Promise(resolve => {
+      this.apiService.getStateByCountryID(countryID).subscribe(async (res: any) => {
+        if (res.status === 200) {
+          resolve(res.data.content)
+        } else {
+          console.log('getStateByCountryID operation failed')
+        }
+      }, error => {
+        console.error(error);
+        resolve(error);
+      })
+    })
+  }
+
+  async getStoreInfo() {
+    const storeInfo: StoreInfo = await this.getStoreInfoById();
+    this.currencySymbol = storeInfo.regionCountry.currencySymbol;
+    this.userDeliveryDetails.deliveryCountry = storeInfo.regionCountry.name;
+    this.storeDeliveryPercentage = storeInfo.serviceChargesPercentage;
+
+    this.states = await this.getStatesByID(storeInfo.regionCountry.id);
+  }
+
+  postToGetDeliveryFee(userDeliveryDetails: UserDeliveryDetail): Promise<DeliveryCharge> {
+    return new Promise(resolve => {
+      let data = {
+        customerId: null,
+        deliveryProviderId: null,
+        cartid: this.cartService.getCartId(),
+        storeId: this.storeId,
+        delivery: userDeliveryDetails
+      };
+
+      this.apiService.postTogetDeliveryFee(data).subscribe(async (res: any) => {
+        if (Array.isArray(res.data)) {
+          resolve(res.data[0]);
+        } else {
+          resolve(res.data)
+        }
+      }, error => {
+        console.error("Error posting to delivery", error);
+        resolve(error);
+      })
+    });
+  }
+
+  getDiscount(cartId, deliveryCharge): Promise<CartTotals> {
+    return new Promise(resolve => {
+      this.apiService.getDiscount(cartId, deliveryCharge).subscribe(async (res: any) => {
+        if (res.status === 200) {
+          resolve(res.data);
+        }
+      }, error => {
+        console.error("Error getting discount", error);
+        resolve(error);
+      })
+    })
+  }
+
+  goCod() {
+    const data = {
+      cartId: this.cartService.getCartId(),
+      customerId: "",
+      customerNotes: this.userOrderNotes,
+      orderPaymentDetails: {
+        accountName: "",
+        deliveryQuotationAmount: this.deliveryFee.price,
+        deliveryQuotationReferenceId: this.deliveryFee.refId,
+        gatewayId: ""
+      },
+      orderShipmentDetails: {
+        address: this.userDeliveryDetails.deliveryAddress,
+        city: this.userDeliveryDetails.deliveryCity,
+        country: this.userDeliveryDetails.deliveryCountry,
+        deliveryProviderId: this.deliveryFee.providerId,
+        email: this.userDeliveryDetails.deliveryContactEmail,
+        phoneNumber: this.userDeliveryDetails.deliveryContactPhone,
+        receiverName: this.userDeliveryDetails.deliveryContactName,
+        state: this.userDeliveryDetails.deliveryState,
+        zipcode: this.userDeliveryDetails.deliveryPostcode
+      }
+    }
+
+    return new Promise(resolve => {
+      this.apiService.postConfirmCOD(data, data.cartId, this.isSaved).subscribe((res: any) => {
+        resolve(res);
+      }, error => {
+        console.error("Error confirming Cash on Delivery", error);
+        resolve(error);
+      });
+    })
+
+  }
+
+  // Validation
+  isAllFieldsValid(): boolean {
     this.validateName();
     this.validateAddress();
     this.validateCity();

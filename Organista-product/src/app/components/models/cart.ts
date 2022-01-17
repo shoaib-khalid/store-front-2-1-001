@@ -6,6 +6,7 @@ export interface Cart {
     storeId: string;
     isOpen: boolean;
 }
+
 export interface CartItem {
     SKU: string,
     cartId: string,
@@ -25,6 +26,7 @@ export interface CartItem {
 
     productInventory: ProductInventory,
 }
+
 export interface CartSubItem {
     id: string;
     quantity: number;
@@ -48,4 +50,22 @@ export interface CartItemRequest {
     productPrice: number;
     quantity: number;
     specialInstruction: string;
+}
+
+export interface CartTotals {
+    discountId: string;
+    cartDeliveryCharge: number;
+    cartGrandTotal: number;
+    cartSubTotal: number;
+    deliveryDiscount: number;
+    deliveryDiscountDescription: string;
+    deliveryDiscountMaxAmount: number;
+    discountCalculationType: string;
+    discountCalculationValue: number;
+    discountMaxAmount: number;
+    discountType: string;
+    storeServiceCharge: number;
+    storeServiceChargePercentage: number;
+    subTotalDiscount: number;
+    subTotalDiscountDescription: string;
 }

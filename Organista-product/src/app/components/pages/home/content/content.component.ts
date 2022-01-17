@@ -200,28 +200,12 @@ export class ContentComponent implements OnInit {
   addToCartFromModal(product: Product) {
     this.modalService.dismissAll();
     this.cartService.addToCart(product, this.counter);
-    Swal.fire({
-      icon: 'success',
-      title: 'Great',
-      text: 'Item Successgully added to cart',
-      timer: 2000,
-      confirmButtonColor: "#58da58"
-    })
+    
   }
   async ngOnInit() {
-    
-    this.getAssets()
+    this.getAssets();
     this.getCategory();
     this.getStoreProductById();
   }
-  // showSuccessMessage(title, message, icon = null, showCancelButton = true) {
-  //   return Swal.fire({
-  //     title: title,
-  //     text: message,
-  //     icon: icon,
-  //     showCancelButton: showCancelButton
-  //   })
-
-  // }
 }
 
