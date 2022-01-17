@@ -57,23 +57,21 @@
                         <div class="form-group col-xl-12">
                             <label>Full Name <span class="text-danger">*</span></label>
                             <input type="text" id="username" placeholder="Full Name" name="username"
-                                [(ngModel)]="userDeliveryDetails.deliveryContactName"
-                                [(value)]="userDeliveryDetails.deliveryContactName" (ngModelChange)="validateName()"
-                                class="form-control" value="" required>
+                                [(ngModel)]="userDeliveryDetails.deliveryContactName" (ngModelChange)="validateName()"
+                                class="form-control" required>
                             <div class="text-danger" [hidden]="isNameValid">Name cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-12">
                             <label>Address <span class="text-danger">*</span></label>
                             <textarea id="userAddress" placeholder="Address" name="userAddress" rows="5"
-                                [(ngModel)]="userDeliveryDetails.deliveryAddress" class="form-control" value=""
+                                [(ngModel)]="userDeliveryDetails.deliveryAddress" class="form-control"
                                 (ngModelChange)="validateAddress()" required></textarea>
                             <div class="text-danger" [hidden]="isAddressValid">Address cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>Town / City <span class="text-danger">*</span></label>
                             <input type="text" id="userCity" placeholder="Town/City" name="userCity"
-                                [(ngModel)]="userDeliveryDetails.deliveryCity"
-                                [(value)]="userDeliveryDetails.deliveryCity" class="form-control"
+                                [(ngModel)]="userDeliveryDetails.deliveryCity" class="form-control"
                                 (ngModelChange)="validateCity()" required="">
                             <div class="text-danger" [hidden]="isCityValid">City cannot be blank.</div>
                         </div>
@@ -88,38 +86,34 @@
                         <div class="form-group col-xl-6">
                             <label>Postcode<span class="text-danger">*</span></label>
                             <input type="text" id="userPostcode" placeholder="Post Code" name="userPostcode"
-                                [(ngModel)]="userDeliveryDetails.deliveryPostcode"
-                                [(value)]="userDeliveryDetails.deliveryPostcode" class="form-control"
+                                [(ngModel)]="userDeliveryDetails.deliveryPostcode" class="form-control"
                                 (ngModelChange)="validatePostCode()" required="">
                             <div class="text-danger" [hidden]="isPostCodeValid">{{ postCodeErrorMsg }}</div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                             <input type="text" name="userCountries" class="form-control"
-                                [(ngModel)]="userDeliveryDetails.deliveryCountry"
-                                [(value)]="userDeliveryDetails.deliveryCountry" autocomplete="disabled" readonly
+                                [(ngModel)]="userDeliveryDetails.deliveryCountry" autocomplete="disabled" readonly
                                 placeholder="Countries" required="">
                             <div class="text-danger" [hidden]="isCountryValid">Country cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>Phone Number <span class="text-danger">*</span></label>
                             <input type="tel" id="userPhone" placeholder="Phone Number" name="userPhone"
-                                [(ngModel)]="userDeliveryDetails.deliveryContactPhone"
-                                [(value)]="userDeliveryDetails.deliveryContactPhone" class="form-control" value=""
+                                [(ngModel)]="userDeliveryDetails.deliveryContactPhone" class="form-control" value=""
                                 (ngModelChange)="validatePhoneNumber()" required="">
                             <div class="text-danger" [hidden]="isPhoneNumberValid">{{ phoneNumberErrorMsg }}</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>Email Address <span class="text-danger">*</span></label>
                             <input type="email" id="userEmail" placeholder="Email Address" name="email"
-                                [(ngModel)]="userDeliveryDetails.deliveryContactEmail"
-                                [(value)]="userDeliveryDetails.deliveryContactEmail" class="form-control" value=""
+                                [(ngModel)]="userDeliveryDetails.deliveryContactEmail" class="form-control" value=""
                                 (ngModelChange)="validateEmailAddress()" required="">
                             <div class="text-danger" [hidden]="isEmailValid">{{ emailErrorMsg }}</div>
                         </div>
                         <div class="form-group col-xl-12 mb-0">
-                            <label>Order Notes</label>
-                            <textarea name="name" rows="5" class="form-control"
-                                placeholder="Order Notes (Optional)"></textarea>
+                            <label>Order Notes (Optional)</label>
+                            <textarea id="orderNotes" name="orderNotes" placeholder="Order Notes (Optional)" rows="5"
+                                [(ngModel)]="userOrderNotes" class="form-control"></textarea>
                         </div>
                         <div class="form-group col-xl-12 mb-0">
                             <button type="submit" class="andro_btn-custom primary btn-block" [disabled]="isProcessing">
@@ -156,7 +150,7 @@
                                         }}</strong>
                                 </td>
                             </tr>
-                            <tr *ngIf="isCartTotalAvailable" class="total">
+                            <tr *ngIf="hasDeliveryCharges" class="total">
                                 <td>
                                     <h6>Subtotal</h6>
                                 </td>
@@ -164,12 +158,12 @@
                                 <td><strong>{{ currencySymbol }} {{ cartTotals.cartSubTotal| number:'1.2-2'
                                         }}</strong></td>
                             </tr>
-                            <tr *ngIf="isCartTotalAvailable">
+                            <tr *ngIf="hasDeliveryCharges">
                                 <td>Order Discount</td>
                                 <td></td>
                                 <td>-{{ currencySymbol }} {{ cartTotals.subTotalDiscount| number:'1.2-2' }}</td>
                             </tr>
-                            <tr *ngIf="isCartTotalAvailable">
+                            <tr *ngIf="hasDeliveryCharges">
                                 <td>Service Charge</td>
                                 <td></td>
                                 <td>{{ currencySymbol }} {{ totalServiceCharge| number:'1.2-2' }} <span
@@ -177,17 +171,17 @@
                                         storeDeliveryPercentage
                                         }}%)</span></td>
                             </tr>
-                            <tr *ngIf="isCartTotalAvailable">
+                            <tr *ngIf="hasDeliveryCharges">
                                 <td>Delivery Charges</td>
                                 <td></td>
                                 <td>{{ currencySymbol }} {{ cartTotals.cartDeliveryCharge| number:'1.2-2' }}</td>
                             </tr>
-                            <tr *ngIf="isCartTotalAvailable">
+                            <tr *ngIf="hasDeliveryCharges">
                                 <td>Delivery Discount</td>
                                 <td></td>
                                 <td>-{{ currencySymbol }} {{ cartTotals.deliveryDiscount }}</td>
                             </tr>
-                            <tr *ngIf="isCartTotalAvailable" class="total">
+                            <tr *ngIf="hasDeliveryCharges" class="total">
                                 <td>
                                     <h6 class="mb-0">Grand Total</h6>
                                 </td>

@@ -27,9 +27,12 @@ export class ContentComponent implements OnInit {
     deliveryCountry: ''
   };
   cartTotals: CartTotals = null;
+  deliveryFee: DeliveryCharge = null;
+  userOrderNotes: string = '';
+  isSaved: boolean = false;
 
   isProcessing: boolean = false;
-  isCartTotalAvailable: boolean = false;
+  hasDeliveryCharges: boolean = false;
 
   isNameValid: boolean = true;
   isAddressValid: boolean = true;
@@ -49,7 +52,6 @@ export class ContentComponent implements OnInit {
   phoneNumberRegex;
 
   submitButtonText: string;
-  hasDeliveryCharges: boolean;
 
   // Store info
   storeId: string;
@@ -91,23 +93,24 @@ export class ContentComponent implements OnInit {
     if (this.isAllFieldsValid()) {
       this.isProcessing = true;
       if (this.hasDeliveryCharges) {
+        const codResult = await this.goCod();
+        console.log("codResult", codResult);
       } else {
-        const delivery: DeliveryCharge[] = await this.postGetDelivery(this.userDeliveryDetails);
-        this.cartTotals = await this.getDiscount(this.cartService.getCartId(), delivery[0].price);
-        this.isCartTotalAvailable = this.cartTotals ? true : false;
-        console.log("IsCarttotalavailable: ", this.isCartTotalAvailable);
-        this.totalServiceCharge = (this.storeDeliveryPercentage === 0) ? this.storeDeliveryPercentage :
+        this.deliveryFee = await this.postToGetDeliveryFee(this.userDeliveryDetails);
+        this.cartTotals = await this.getDiscount(this.cartService.getCartId(), this.deliveryFee.price);
+
+        this.hasDeliveryCharges = this.cartTotals ? true : false;
+        this.totalServiceCharge = this.storeDeliveryPercentage === 0 ? this.storeDeliveryPercentage :
           ((this.storeDeliveryPercentage / 100) * this.cartTotals.cartSubTotal);
-        console.log("Cart totals: ", this.cartTotals);
-        this.isProcessing = false;
+        this.submitButtonText = "Confirm Cash On Delivery";
       }
+      this.isProcessing = false;
     }
   }
 
   getStoreInfoById(): Promise<StoreInfo> {
     return new Promise(resolve => {
       this.apiService.getStoreHoursByID(this.storeId).subscribe((res: any) => {
-        console.log("getStoreInfoBYid: ", res);
         if (res.status === 200) {
           resolve(res.data);
         } else {
@@ -145,7 +148,7 @@ export class ContentComponent implements OnInit {
     this.states = await this.getStatesByID(storeInfo.regionCountry.id);
   }
 
-  postGetDelivery(userDeliveryDetails: UserDeliveryDetail): Promise<DeliveryCharge[]> {
+  postToGetDeliveryFee(userDeliveryDetails: UserDeliveryDetail): Promise<DeliveryCharge> {
     return new Promise(resolve => {
       let data = {
         customerId: null,
@@ -156,7 +159,11 @@ export class ContentComponent implements OnInit {
       };
 
       this.apiService.postTogetDeliveryFee(data).subscribe(async (res: any) => {
-        resolve(res.data);
+        if (Array.isArray(res.data)) {
+          resolve(res.data[0]);
+        } else {
+          resolve(res.data)
+        }
       }, error => {
         console.error("Error posting to delivery", error);
         resolve(error);
@@ -175,6 +182,41 @@ export class ContentComponent implements OnInit {
         resolve(error);
       })
     })
+  }
+
+  goCod() {
+    const data = {
+      cartId: this.cartService.getCartId(),
+      customerId: "",
+      customerNotes: this.userOrderNotes,
+      orderPaymentDetails: {
+        accountName: "",
+        deliveryQuotationAmount: this.deliveryFee.price,
+        deliveryQuotationReferenceId: this.deliveryFee.refId,
+        gatewayId: ""
+      },
+      orderShipmentDetails: {
+        address: this.userDeliveryDetails.deliveryAddress,
+        city: this.userDeliveryDetails.deliveryCity,
+        country: this.userDeliveryDetails.deliveryCountry,
+        deliveryProviderId: this.deliveryFee.providerId,
+        email: this.userDeliveryDetails.deliveryContactEmail,
+        phoneNumber: this.userDeliveryDetails.deliveryContactPhone,
+        receiverName: this.userDeliveryDetails.deliveryContactName,
+        state: this.userDeliveryDetails.deliveryState,
+        zipcode: this.userDeliveryDetails.deliveryPostcode
+      }
+    }
+
+    return new Promise(resolve => {
+      this.apiService.postConfirmCOD(data, data.cartId, this.isSaved).subscribe((res: any) => {
+        resolve(res);
+      }, error => {
+        console.error("Error confirming Cash on Delivery", error);
+        resolve(error);
+      });
+    })
+
   }
 
   // Validation
