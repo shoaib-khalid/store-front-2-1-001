@@ -46,6 +46,7 @@ export class ContentComponent implements OnInit {
   phoneNumberErrorMsg: string;
   emailErrorMsg: string;
   postCodeErrorMsg: string;
+  status: any;
 
   numberRegex;
   emailRegex;

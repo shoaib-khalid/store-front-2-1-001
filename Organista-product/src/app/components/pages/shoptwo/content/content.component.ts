@@ -7,8 +7,9 @@ import { Product } from 'src/app/components/models/product';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PlatformLocation } from '@angular/common';
-import { contains } from 'jquery';
+import { contains, removeData } from 'jquery';
 import { CartService } from 'src/app/cart.service';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
@@ -95,7 +96,11 @@ export class ContentComponent implements OnInit {
       } else {
       }
     }, error => {
-      console.log(error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!'
+        })
     })
   }
   goToDetails(prodName) {
@@ -123,6 +128,13 @@ export class ContentComponent implements OnInit {
   addToCartFromModal(product: Product) {
     this.modalService.dismissAll();
     this.cartService.addToCart(product, this.counter);
+    Swal.fire({
+      icon: 'success',
+      title: 'Great',
+      text: 'Item Successgully added to cart',
+      timer: 2000,
+      confirmButtonColor: "#58da58"
+    })
   }
 
   ngOnInit() {

@@ -10,6 +10,7 @@ import { Product } from 'src/app/components/models/product';
 import { contains, data, param } from 'jquery';
 import { HttpParams } from '@angular/common/http';
 import { CartService } from 'src/app/cart.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-content',
@@ -76,31 +77,9 @@ export class ContentComponent implements OnInit {
       this.storeName = (params['storeName']) ? params['storeName'] : this.storeName;
       console.log('product name before: ' + this.seoName); // Print the parameter to the console.             
     });
-    // this.activatedRoute.params.subscribe(params => {
-    //   this.productID = params['id'];
-    //   this.storeName = (params['storeName']) ? params['storeName'] : this.storeName;
-    //   console.log('product name before: ' + this.productID); // Print the parameter to the console.             
-    // });
-  }
-  // public Product: { name: string, productID: number }[] = shoppost;
-  // //public tags: { title: string, id: number }[] = blogtags;
-  // //public category: { title: string, id: number }[] = blogcategory;
 
-  // public setProduct(id: any) {
-  //   this.product = shoppost.filter((item: { id: any; }) => { return data == id });
-  // }
-  // public getBlogTags(items: string | any[]) {
-  //   var elems = blogtags.filter((item: { id: string; }) => {
-  //     return items.includes(item.id)
-  //   });
-  //   return elems;
-  // }
-  // public getBlogCategory(items: string | any[]) {
-  //   var elems = blogcategory.filter((item: { id: string; }) => {
-  //     return items.includes(item.id)
-  //   });
-  //   return elems;
-  // }
+  }
+
   // Increment decrement
   public counter: number = 1
   increment() {
@@ -117,7 +96,11 @@ export class ContentComponent implements OnInit {
     this.apiService.getProductsByName(seoName, storeID).subscribe((res: any) => {
       this.product = res.data.content[0];
     }, error => {
-      console.error(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+      })
     });
   }
   async getVariantFlow() {
@@ -133,6 +116,13 @@ export class ContentComponent implements OnInit {
   addToCart() {
     console.log(this.product);
     this.cartService.addToCart(this.product, this.counter);
+    Swal.fire({
+      icon: 'success',
+      title: 'Great',
+      text: 'Item Successgully added to cart',
+      timer: 2000,
+      confirmButtonColor: "#58da58"
+    })
     this.router.navigate(['/cart']);
   }
 }
