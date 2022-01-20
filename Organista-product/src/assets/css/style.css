@@ -741,7 +741,28 @@ textarea{
 	color: #fff;
 	font-size: 14px;
 	font-weight: 600;
-	padding: 12px 30px;
+	padding: 12px 115px;
+	-webkit-transition: 0.3s;
+	-o-transition: 0.3s;
+	transition: 0.3s;
+  text-transform: uppercase;
+  border-radius: 25px;
+  z-index: 1;
+  box-shadow: 0 3px 24px rgba(0,0,0,.1);
+}
+.quick-view-btn{
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  position: relative;
+	background-color: #50BD4D;
+  border: 0;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 600;
+	padding: 12px 75px;
 	-webkit-transition: 0.3s;
 	-o-transition: 0.3s;
 	transition: 0.3s;
@@ -3364,7 +3385,7 @@ td.remove{
   margin: 0 auto 20px;
   color: transparent;  /* Fallback: assume this color ON TOP of image */
   background-repeat: no-repeat;
-  -webkit-background-clip: text;
+  
   -webkit-text-fill-color: transparent;
 }
 .banner-2.andro_banner .slick-track,
@@ -3636,7 +3657,7 @@ td.remove{
   margin-bottom: 10px;
   text-align: center;
   white-space: nowrap;
-  vertical-align: middle;
+  
   line-height: 24px;
   border: 0;
   font-size: 14px;
@@ -3897,8 +3918,7 @@ td.remove{
   font-size: 30px;
   margin: 0 0 10px;
 }
-.andro_newsletter-popup-modal .modal-body p{
-}
+
 .andro_newsletter-popup-text-wrapper{
   text-align: center;
 }
