@@ -125,15 +125,19 @@ export class ContentComponent implements OnInit {
     })
   }
 
-  addToCartFromModal(product: Product) {
+  async addToCartFromModal(product: Product) {
     this.modalService.dismissAll();
-    this.cartService.addToCart(product, this.counter);
-    Swal.fire({
-      icon: 'success',
-      title: 'Great!',
-      text: 'Item successfully added to cart.',
-      confirmButtonColor: '#50BD4D'
-    })
+    const addToCartResponse: any = await this.cartService.addToCart(product, this.counter);
+    if (addToCartResponse.status === 201) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Great!',
+        text: 'Item successfully added to cart.',
+        confirmButtonColor: '#50BD4D'
+      })
+    } else {
+      // show error message
+    }
   }
 
   ngOnInit() {

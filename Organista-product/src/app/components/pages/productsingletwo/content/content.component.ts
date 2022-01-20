@@ -113,15 +113,19 @@ export class ContentComponent implements OnInit {
     this.getProductDetailsByName(this.seoName, this.storeID);
   }
 
-  addToCart() {
+  async addToCart() {
     console.log(this.product);
-    this.cartService.addToCart(this.product, this.counter);
-    Swal.fire({
-      icon: 'success',
-      title: 'Great!',
-      text: 'Item successfully added to cart.',
-      confirmButtonColor: '#50BD4D'
-    })
+    const addToCartResponse: any = await this.cartService.addToCart(this.product, this.counter);
+    if (addToCartResponse.status === 201) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Great!',
+        text: 'Item successfully added to cart.',
+        confirmButtonColor: '#50BD4D'
+      })
+    } else {
+      // show error message
+    }
     this.router.navigate(['/cart']);
   }
 }

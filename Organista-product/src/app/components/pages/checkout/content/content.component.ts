@@ -94,35 +94,22 @@ export class ContentComponent implements OnInit {
     if (this.isAllFieldsValid()) {
       this.isProcessing = true;
       if (this.hasDeliveryCharges) {
-        const codResult = await this.goCod();
+        const codResult: any = await this.goCod();
+        if (codResult.status === 201) {
+          this.route.navigate(['/thankyou']);
+        }
         console.log("codResult", codResult);
       } else {
-        this.deliveryFee = await this.postToGetDeliveryFee(this.userDeliveryDetails);
-        this.cartTotals = await this.getDiscount(this.cartService.getCartId(), this.deliveryFee.price);
+        this.deliveryFee = await this.cartService.getDeliveryFee(this.userDeliveryDetails);
+        this.cartTotals = await this.cartService.getDiscount(this.deliveryFee.price);
 
         this.hasDeliveryCharges = this.cartTotals ? true : false;
         this.totalServiceCharge = this.storeDeliveryPercentage === 0 ? this.storeDeliveryPercentage :
           ((this.storeDeliveryPercentage / 100) * this.cartTotals.cartSubTotal);
-        this.submitButtonText = "Confirm Cash On Delivery";
+        this.submitButtonText = "Place Order";
       }
       this.isProcessing = false;
     }
-  }
-
-  getStoreInfoById(): Promise<StoreInfo> {
-    return new Promise(resolve => {
-      this.apiService.getStoreHoursByID(this.storeId).subscribe((res: any) => {
-        if (res.status === 200) {
-          resolve(res.data);
-        } else {
-          console.log('getStoreInfoByID operation failed');
-        }
-      }, error => {
-        console.error(error);
-        resolve(error);
-      })
-
-    })
   }
 
   getStatesByID(countryID): Promise<State[]> {
@@ -141,51 +128,22 @@ export class ContentComponent implements OnInit {
   }
 
   async getStoreInfo() {
-    const storeInfo: StoreInfo = await this.getStoreInfoById();
-    this.currencySymbol = storeInfo.regionCountry.currencySymbol;
-    this.userDeliveryDetails.deliveryCountry = storeInfo.regionCountry.name;
-    this.storeDeliveryPercentage = storeInfo.serviceChargesPercentage;
+    try {
+      const storeInfo: StoreInfo = await this.cartService.getStoreInfoById();
+      this.currencySymbol = storeInfo.regionCountry.currencySymbol;
+      this.userDeliveryDetails.deliveryCountry = storeInfo.regionCountry.name;
+      this.storeDeliveryPercentage = storeInfo.serviceChargesPercentage;
 
-    this.states = await this.getStatesByID(storeInfo.regionCountry.id);
+      this.states = await this.getStatesByID(storeInfo.regionCountry.id);
+    } catch (error) {
+      console.error("Error getting storeInfo", error);
+    }
   }
 
-  postToGetDeliveryFee(userDeliveryDetails: UserDeliveryDetail): Promise<DeliveryCharge> {
-    return new Promise(resolve => {
-      let data = {
-        customerId: null,
-        deliveryProviderId: null,
-        cartid: this.cartService.getCartId(),
-        storeId: this.storeId,
-        delivery: userDeliveryDetails
-      };
+  async goCod() {
+    const deliveryOption: any = await this.cartService.getDeliveryOption();
+    console.log("Delivery option: ", deliveryOption);
 
-      this.apiService.postTogetDeliveryFee(data).subscribe(async (res: any) => {
-        if (Array.isArray(res.data)) {
-          resolve(res.data[0]);
-        } else {
-          resolve(res.data)
-        }
-      }, error => {
-        console.error("Error posting to delivery", error);
-        resolve(error);
-      })
-    });
-  }
-
-  getDiscount(cartId, deliveryCharge): Promise<CartTotals> {
-    return new Promise(resolve => {
-      this.apiService.getDiscount(cartId, deliveryCharge).subscribe(async (res: any) => {
-        if (res.status === 200) {
-          resolve(res.data);
-        }
-      }, error => {
-        console.error("Error getting discount", error);
-        resolve(error);
-      })
-    })
-  }
-
-  goCod() {
     const data = {
       cartId: this.cartService.getCartId(),
       customerId: null,
@@ -206,8 +164,7 @@ export class ContentComponent implements OnInit {
         state: this.userDeliveryDetails.deliveryState,
         zipcode: this.userDeliveryDetails.deliveryPostcode,
         deliveryProviderId: this.deliveryFee.providerId,
-        // TODO: Remove hardcoding of deliveryType
-        deliveryType: "SCHEDULED"
+        deliveryType: deliveryOption.type
       }
     }
 
