@@ -7,10 +7,9 @@ import { Category } from 'src/app/components/models/category';
 import { Product } from 'src/app/components/models/product';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CartService } from 'src/app/cart.service';
-import { StoreAsset } from 'src/app/components/models/store';
+import { CartItem } from 'src/app/components/models/cart';
+//import { resolve } from 'path';
 import Swal from 'sweetalert2';
-
-
 
 @Component({
   selector: 'app-content',
@@ -48,16 +47,16 @@ export class ContentComponent implements OnInit {
   bannerExist: boolean = false;
   assetsData: any;
   banner: any;
-  
-  
+
+
 
   constructor(private modalService: NgbModal,
     private apiService: ApiService,
     private route: Router,
     private activatedRoute: ActivatedRoute,
     private cartService: CartService,
-    
-    ) {
+
+  ) {
 
     this.storeID = "McD";
     this.assets = {
@@ -68,7 +67,7 @@ export class ContentComponent implements OnInit {
       storeId: ''
     }
   }
- 
+
 
   open(content: any, item: Product) {
     this.counter = 1;
@@ -128,7 +127,7 @@ export class ContentComponent implements OnInit {
   getAssets() {
     this.apiService.getStoreAssets(this.storeID).subscribe((res: any) => {
       this.assets = res.data;
-    }, error => { 
+    }, error => {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -200,7 +199,12 @@ export class ContentComponent implements OnInit {
   addToCartFromModal(product: Product) {
     this.modalService.dismissAll();
     this.cartService.addToCart(product, this.counter);
-    
+    Swal.fire({
+      icon: 'success',
+      title: 'Great!',
+      text: 'Item successfully added to cart.',
+      confirmButtonColor: '#50BD4D'
+    })
   }
   async ngOnInit() {
     this.getAssets();

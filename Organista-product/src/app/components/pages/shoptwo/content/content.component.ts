@@ -99,14 +99,14 @@ export class ContentComponent implements OnInit {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Something went wrong!'
-        })
+        text: 'Something went wrong!',
+      })
     })
   }
   goToDetails(prodName) {
     this.route.navigate(['shop-v2/' + prodName]);
   }
-  
+
   getCategoryProducts(categoryId, sortId) {
     if (!categoryId && !sortId) {
       this.selectedMenu = 'all';
@@ -130,10 +130,9 @@ export class ContentComponent implements OnInit {
     this.cartService.addToCart(product, this.counter);
     Swal.fire({
       icon: 'success',
-      title: 'Great',
-      text: 'Item Successgully added to cart',
-      timer: 2000,
-      confirmButtonColor: "#58da58"
+      title: 'Great!',
+      text: 'Item successfully added to cart.',
+      confirmButtonColor: '#50BD4D'
     })
   }
 
@@ -141,6 +140,6 @@ export class ContentComponent implements OnInit {
     this.catId = localStorage.getItem("category_id")
     this.getCategory();
     this.getCategoryProducts(this.catId, this.sortBy);
-      
+
   }
 }

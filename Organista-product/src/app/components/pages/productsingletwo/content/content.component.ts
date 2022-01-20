@@ -118,10 +118,9 @@ export class ContentComponent implements OnInit {
     this.cartService.addToCart(this.product, this.counter);
     Swal.fire({
       icon: 'success',
-      title: 'Great',
-      text: 'Item Successgully added to cart',
-      timer: 2000,
-      confirmButtonColor: "#58da58"
+      title: 'Great!',
+      text: 'Item successfully added to cart.',
+      confirmButtonColor: '#50BD4D'
     })
     this.router.navigate(['/cart']);
   }
