@@ -188,10 +188,10 @@ export class ContentComponent implements OnInit {
   goCod() {
     const data = {
       cartId: this.cartService.getCartId(),
-      customerId: "",
+      customerId: null,
       customerNotes: this.userOrderNotes,
       orderPaymentDetails: {
-        accountName: "",
+        accountName: this.userDeliveryDetails.deliveryContactName,
         deliveryQuotationAmount: this.deliveryFee.price,
         deliveryQuotationReferenceId: this.deliveryFee.refId,
         gatewayId: ""
@@ -200,12 +200,14 @@ export class ContentComponent implements OnInit {
         address: this.userDeliveryDetails.deliveryAddress,
         city: this.userDeliveryDetails.deliveryCity,
         country: this.userDeliveryDetails.deliveryCountry,
-        deliveryProviderId: this.deliveryFee.providerId,
         email: this.userDeliveryDetails.deliveryContactEmail,
         phoneNumber: this.userDeliveryDetails.deliveryContactPhone,
         receiverName: this.userDeliveryDetails.deliveryContactName,
         state: this.userDeliveryDetails.deliveryState,
-        zipcode: this.userDeliveryDetails.deliveryPostcode
+        zipcode: this.userDeliveryDetails.deliveryPostcode,
+        deliveryProviderId: this.deliveryFee.providerId,
+        // TODO: Remove hardcoding of deliveryType
+        deliveryType: "SCHEDULED"
       }
     }
 

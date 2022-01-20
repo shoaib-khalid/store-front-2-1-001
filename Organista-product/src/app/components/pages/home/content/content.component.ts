@@ -10,6 +10,7 @@ import { CartService } from 'src/app/cart.service';
 import { CartItem } from 'src/app/components/models/cart';
 //import { resolve } from 'path';
 import Swal from 'sweetalert2';
+import { StoreAsset } from 'src/app/components/models/store';
 
 @Component({
   selector: 'app-content',
