@@ -9,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { PlatformLocation } from '@angular/common';
 import { contains } from 'jquery';
 import { CartService } from 'src/app/cart.service';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
@@ -92,7 +93,11 @@ export class ContentComponent implements OnInit {
       } else {
       }
     }, error => {
-      console.log(error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+      })
     })
   }
   goToDetails(prodName) {
@@ -120,6 +125,12 @@ export class ContentComponent implements OnInit {
   addToCartFromModal(product: Product) {
     this.modalService.dismissAll();
     this.cartService.addToCart(product, this.counter);
+    Swal.fire({
+      icon: 'success',
+      title: 'Great!',
+      text: 'Item successfully added to cart.',
+      confirmButtonColor: '#50BD4D'
+    })
   }
 
   ngOnInit() {

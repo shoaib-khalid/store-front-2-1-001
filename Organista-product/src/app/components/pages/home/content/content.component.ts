@@ -17,6 +17,7 @@ import { promise } from 'protractor';
 import { CartService } from 'src/app/cart.service';
 import { CartItem } from 'src/app/components/models/cart';
 //import { resolve } from 'path';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-content',
@@ -132,7 +133,11 @@ export class ContentComponent implements OnInit {
             this.banner = data.bannerUrl;
             // this.assetsData = res.data;
         }, error => {
-            // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!',
+          })
         }) 
         
     });
@@ -151,7 +156,11 @@ export class ContentComponent implements OnInit {
       } else {
       }
     }, error => {
-      console.log(error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+      })
     })
   }
   goToDetails(productID) {
@@ -203,6 +212,12 @@ export class ContentComponent implements OnInit {
   addToCartFromModal(product: Product) {
     this.modalService.dismissAll();
     this.cartService.addToCart(product, this.counter);
+    Swal.fire({
+      icon: 'success',
+      title: 'Great!',
+      text: 'Item successfully added to cart.',
+      confirmButtonColor: '#50BD4D'
+    })
   }
   async ngOnInit() {
     this.getAssets(this.storeID)

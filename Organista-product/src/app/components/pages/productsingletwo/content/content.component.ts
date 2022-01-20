@@ -10,6 +10,7 @@ import { Product } from 'src/app/components/models/product';
 import { contains, data, param } from 'jquery';
 import { HttpParams } from '@angular/common/http';
 import { CartService } from 'src/app/cart.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-content',
@@ -117,7 +118,11 @@ export class ContentComponent implements OnInit {
     this.apiService.getProductsByName(seoName, storeID).subscribe((res: any) => {
       this.product = res.data.content[0];
     }, error => {
-      console.error(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+      })
     });
   }
   async getVariantFlow() {
@@ -133,6 +138,12 @@ export class ContentComponent implements OnInit {
   addToCart() {
     console.log(this.product);
     this.cartService.addToCart(this.product, this.counter);
+    Swal.fire({
+      icon: 'success',
+      title: 'Great!',
+      text: 'Item successfully added to cart.',
+      confirmButtonColor: '#50BD4D'
+    })
     this.router.navigate(['/cart']);
   }
 }
