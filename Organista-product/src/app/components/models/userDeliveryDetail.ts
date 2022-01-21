@@ -7,4 +7,5 @@ export interface UserDeliveryDetail {
     deliveryState: string;
     deliveryCity: string;
     deliveryCountry: string;
+    deliveryNotes: string;
 }

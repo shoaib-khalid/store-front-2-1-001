@@ -24,11 +24,11 @@ export class ContentComponent implements OnInit {
     deliveryContactPhone: '',
     deliveryState: '',
     deliveryCity: '',
-    deliveryCountry: ''
+    deliveryCountry: '',
+    deliveryNotes: ''
   };
   cartTotals: CartTotals = null;
   deliveryFee: DeliveryCharge = null;
-  userOrderNotes: string = '';
   isSaved: boolean = false;
 
   isProcessing: boolean = false;
@@ -94,11 +94,13 @@ export class ContentComponent implements OnInit {
     if (this.isAllFieldsValid()) {
       this.isProcessing = true;
       if (this.hasDeliveryCharges) {
-        const codResult: any = await this.goCod();
+        const codResult: any = await this.cartService.confirmCashOnDelivery(
+          this.userDeliveryDetails, this.deliveryFee);
         if (codResult.status === 201) {
           this.route.navigate(['/thankyou']);
+        } else {
+          // TODO: Show error message
         }
-        console.log("codResult", codResult);
       } else {
         this.deliveryFee = await this.cartService.getDeliveryFee(this.userDeliveryDetails);
         this.cartTotals = await this.cartService.getDiscount(this.deliveryFee.price);
@@ -138,45 +140,6 @@ export class ContentComponent implements OnInit {
     } catch (error) {
       console.error("Error getting storeInfo", error);
     }
-  }
-
-  async goCod() {
-    const deliveryOption: any = await this.cartService.getDeliveryOption();
-    console.log("Delivery option: ", deliveryOption);
-
-    const data = {
-      cartId: this.cartService.getCartId(),
-      customerId: null,
-      customerNotes: this.userOrderNotes,
-      orderPaymentDetails: {
-        accountName: this.userDeliveryDetails.deliveryContactName,
-        deliveryQuotationAmount: this.deliveryFee.price,
-        deliveryQuotationReferenceId: this.deliveryFee.refId,
-        gatewayId: ""
-      },
-      orderShipmentDetails: {
-        address: this.userDeliveryDetails.deliveryAddress,
-        city: this.userDeliveryDetails.deliveryCity,
-        country: this.userDeliveryDetails.deliveryCountry,
-        email: this.userDeliveryDetails.deliveryContactEmail,
-        phoneNumber: this.userDeliveryDetails.deliveryContactPhone,
-        receiverName: this.userDeliveryDetails.deliveryContactName,
-        state: this.userDeliveryDetails.deliveryState,
-        zipcode: this.userDeliveryDetails.deliveryPostcode,
-        deliveryProviderId: this.deliveryFee.providerId,
-        deliveryType: deliveryOption.type
-      }
-    }
-
-    return new Promise(resolve => {
-      this.apiService.postConfirmCOD(data, data.cartId, this.isSaved).subscribe((res: any) => {
-        resolve(res);
-      }, error => {
-        console.error("Error confirming Cash on Delivery", error);
-        resolve(error);
-      });
-    })
-
   }
 
   // Validation

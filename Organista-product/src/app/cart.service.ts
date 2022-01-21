@@ -43,32 +43,13 @@ export class CartService {
     localStorage.removeItem(this.cartIdKey);
   }
 
-  getDeliveryOption() {
-    return new Promise(resolve => {
-      this.apiService.getDeliveryOption(this.storeId).subscribe(async (res: any) => {
-        if (res.message) {
-          this.deliveryOption = res.data;
-          resolve(res.data);
-        } else {
-          console.log('getDeliveryOption operation failed')
-        }
-
-      }, error => {
-        console.log(error)
-      })
-    })
-  }
-
   private getCartItems() {
     if (this.getCartId()) {
       this.apiService.getCartItemByCartID(this.getCartId()).subscribe((res: any) => {
         this.cart = res.data.content;
         this.cartChange.next(this.cart);
-        console.log("getCartItems");
-        console.log(this.cart);
       }, error => {
-        console.error("Failed to get cart items");
-        console.error(error);
+        console.error("Failed to get cart items", error);
       });
     }
   }
@@ -80,8 +61,8 @@ export class CartService {
 
     return new Promise((resolve, reject) => {
       this.apiService.postCreateCart(data).subscribe((res: any) => {
-        this.setCartId(res.data.id);
         resolve(res.data);
+        this.setCartId(res.data.id);
       }, error => {
         console.error("Failed to create cart", error);
         reject(error);
@@ -92,12 +73,7 @@ export class CartService {
   async addToCart(product: Product, quantity: number) {
     // Create cart if it doesn't exist
     if (!this.getCartId()) {
-      const createdCart: any = await this.createCart();
-      try {
-        this.setCartId(createdCart.id);
-      } catch (error) {
-        console.error("Error creating and adding to cart", error);
-      }
+      await this.createCart();
     }
 
     const cartItemRequest: CartItemRequest = {
@@ -141,12 +117,15 @@ export class CartService {
   deleteCartItem(cartItem: CartItem, index: number) {
     this.cart = this.cart.splice(index, 1);
 
-    this.apiService.deleteCartItemID(cartItem, cartItem.id).subscribe((res: any) => {
-      this.getCartItems();
-    }, error => {
-      console.error("error deleting cart item");
-      console.error(error);
-    })
+    return new Promise((resolve, reject) => {
+      this.apiService.deleteCartItemID(cartItem, cartItem.id).subscribe((res: any) => {
+        resolve(res);
+        this.getCartItems();
+      }, error => {
+        console.error("Error deleting cart item", error);
+        reject(error);
+      })
+    });
   }
 
   getDeliveryFee(userDeliveryDetails: UserDeliveryDetail): Promise<DeliveryCharge> {
@@ -158,17 +137,16 @@ export class CartService {
       delivery: userDeliveryDetails
     };
 
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       this.apiService.postTogetDeliveryFee(data).subscribe(async (res: any) => {
         if (Array.isArray(res.data)) {
           resolve(res.data[0]);
         } else {
-          resolve(res.data)
+          resolve(res.data);
         }
-        console.log("Received Delivery fee");
       }, error => {
         console.error("Error posting to delivery", error);
-        resolve(error);
+        reject(error);
       })
     });
   }
@@ -191,13 +169,64 @@ export class CartService {
   getDiscount(deliveryCharge): Promise<CartTotals> {
     return new Promise((resolve, reject) => {
       this.apiService.getDiscount(this.getCartId(), deliveryCharge).subscribe(async (res: any) => {
-        if (res.status === 200) {
-          resolve(res.data);
-        }
+        resolve(res.data);
       }, error => {
         console.error("Error getting discount", error);
         reject(error);
       })
     })
   }
+
+  getDeliveryOption() {
+    return new Promise((resolve, reject) => {
+      this.apiService.getDeliveryOption(this.storeId).subscribe(async (res: any) => {
+        resolve(res.data);
+      }, error => {
+        reject(error);
+      })
+    })
+  }
+
+  async confirmCashOnDelivery(userDeliveryDetails: UserDeliveryDetail, deliveryFee: DeliveryCharge) {
+    const deliveryOption: any = await this.getDeliveryOption();
+
+    const data = {
+      cartId: this.getCartId(),
+      customerId: null,
+      customerNotes: userDeliveryDetails.deliveryNotes,
+      orderPaymentDetails: {
+        accountName: userDeliveryDetails.deliveryContactName,
+        deliveryQuotationAmount: deliveryFee.price,
+        deliveryQuotationReferenceId: deliveryFee.refId,
+        gatewayId: ""
+      },
+      orderShipmentDetails: {
+        address: userDeliveryDetails.deliveryAddress,
+        city: userDeliveryDetails.deliveryCity,
+        country: userDeliveryDetails.deliveryCountry,
+        email: userDeliveryDetails.deliveryContactEmail,
+        phoneNumber: userDeliveryDetails.deliveryContactPhone,
+        receiverName: userDeliveryDetails.deliveryContactName,
+        state: userDeliveryDetails.deliveryState,
+        zipcode: userDeliveryDetails.deliveryPostcode,
+        deliveryProviderId: deliveryFee.providerId,
+        deliveryType: deliveryOption.type
+      }
+    }
+
+    return new Promise((resolve, reject) => {
+      this.apiService.postConfirmCOD(data, data.cartId, false).subscribe((res: any) => {
+        resolve(res);
+        if (res.status === 201) {
+          this.cart = [];
+          this.removeCartId();
+        }
+      }, error => {
+        console.error("Error confirming Cash on Delivery", error);
+        reject(error);
+      });
+    })
+  }
+
+
 }

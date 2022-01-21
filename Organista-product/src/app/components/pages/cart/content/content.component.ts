@@ -81,13 +81,25 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  updateCartItem(cartItem: CartItem) {
+  async updateCartItem(cartItem: CartItem) {
     this.modalService.dismissAll();
-    this.cartService.putCartItem(this.modalContent);
+    const putResult: any
+      = await this.cartService.putCartItem(this.modalContent);
+    console.log("Put result: ", putResult);
+    if (putResult.status === 202) {
+      // Show success message
+    } else {
+      // Show failure message
+    }
   }
 
-  deleteCartItem(cartItem: CartItem, index: number) {
-    this.cartService.deleteCartItem(cartItem, index);
+  async deleteCartItem(cartItem: CartItem, index: number) {
+    const deleteResult: any
+      = await this.cartService.deleteCartItem(cartItem, index);
+    console.log("deleteResult: ", deleteResult);
+    if (deleteResult.status !== 200) {
+      // Show failure message
+    }
   }
 
 }
