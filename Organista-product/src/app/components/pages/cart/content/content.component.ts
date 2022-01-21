@@ -5,7 +5,10 @@ import { CartService } from 'src/app/cart.service';
 import { CartItem } from 'src/app/components/models/cart';
 import { Product } from 'src/app/components/models/product';
 import cartList from '../../../../data/cart.json';
-import shoppost from '../../../../data/shop.json'
+import shoppost from '../../../../data/shop.json';
+import Swal from 'sweetalert2';
+
+
 
 @Component({
   selector: 'app-content',
@@ -80,6 +83,7 @@ export class ContentComponent implements OnInit {
       }
     });
   }
+  
 
   async updateCartItem(cartItem: CartItem) {
     this.modalService.dismissAll();
@@ -88,17 +92,56 @@ export class ContentComponent implements OnInit {
     console.log("Put result: ", putResult);
     if (putResult.status === 202) {
       // Show success message
+      Swal.fire({
+        toast: true,
+        title: 'Item updated',
+        icon: 'success',
+        
+        showConfirmButton: false,
+        position: 'bottom-end',
+        timer: 2000,
+        width: '20%',
+        
+        padding: '0.75rem'
+      })
     } else {
       // Show failure message
+      Swal.fire({
+        toast: true,
+        icon: 'error',
+        text: 'Something is wrong',
+        timer: 2000,
+        padding: '0.75rem'
+
+      })
     }
   }
 
   async deleteCartItem(cartItem: CartItem, index: number) {
     const deleteResult: any
       = await this.cartService.deleteCartItem(cartItem, index);
+      Swal.fire({
+        toast: true,
+        icon: 'success',
+        title: 'Item deleted',
+        showConfirmButton: false,
+        position: 'bottom-end',
+        width: '20%',
+        timer: 2000,
+        padding: '0.75rem'
+      })
     console.log("deleteResult: ", deleteResult);
     if (deleteResult.status !== 200) {
       // Show failure message
+      Swal.fire({
+        toast: true,
+        icon: 'error',
+        text: 'Item is still here',
+        showConfirmButton: false,
+        width: '20%',
+        timer: 2000,
+        padding: '0.75rem'
+      })
     }
   }
 

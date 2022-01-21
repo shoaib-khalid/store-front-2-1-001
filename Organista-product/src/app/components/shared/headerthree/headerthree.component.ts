@@ -1,9 +1,9 @@
 import { Component, OnInit, HostListener, Inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, PlatformLocation } from '@angular/common';
 import cartList from '../../../data/cart.json';
 import { ApiService } from 'src/app/api.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PlatformLocation } from '@angular/common';
+// import { PlatformLocation } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CartItem } from '../../models/cart';
 import { CartService } from 'src/app/cart.service';

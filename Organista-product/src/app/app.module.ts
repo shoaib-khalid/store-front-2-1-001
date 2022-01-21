@@ -15,7 +15,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './components/shared/shared.module';
 
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,6 +31,7 @@ import { SharedModule } from './components/shared/shared.module';
     SlickCarouselModule,
     HttpClientModule,
     SharedModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent],
