@@ -13,11 +13,16 @@ export class MobilemenuComponent implements OnInit {
   storeID: any;
   categories: any;
   logo: any;
+  catId: any;
 
   constructor( private apiService: ApiService,
     private httpClient: HttpClient,
     private route: Router,
-    private activatedRoute: ActivatedRoute) { this.storeID = "McD" }
+    private activatedRoute: ActivatedRoute) { this.storeID = "McD" 
+    this.activatedRoute.params.subscribe(params => {
+      this.catId = params['catId']
+      localStorage.setItem('category_id', this.catId)
+    })}
 
     //Logo
   getAssets(storeID){
