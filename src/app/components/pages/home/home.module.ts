@@ -10,9 +10,10 @@ import { HomeComponent } from './home.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { ContentComponent } from './content/content.component'
+import { PreloaderComponent } from 'src/app/preloader/preloader.component';
 
 @NgModule({
-  declarations: [HomeComponent, ContentComponent],
+  declarations: [HomeComponent, ContentComponent, PreloaderComponent],
   imports: [
     CommonModule,
     HomeRoutingModule,

@@ -124,7 +124,7 @@ export class ContentComponent implements OnInit {
         confirmButtonColor: '#50BD4D'
       })
     } else {
-      // show error message
+      // TODO: Show error message
     }
     this.router.navigate(['/cart']);
   }

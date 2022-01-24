@@ -8,7 +8,6 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { PreloaderComponent } from './preloader/preloader.component';
 import { NewsletterComponent } from './newsletter/newsletter.component';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -18,7 +17,6 @@ import { SharedModule } from './components/shared/shared.module';
 @NgModule({
   declarations: [
     AppComponent,
-    PreloaderComponent,
     NewsletterComponent,
   ],
   imports: [
@@ -31,7 +29,7 @@ import { SharedModule } from './components/shared/shared.module';
     SlickCarouselModule,
     HttpClientModule,
     SharedModule,
-    
+
   ],
   providers: [],
   bootstrap: [AppComponent],

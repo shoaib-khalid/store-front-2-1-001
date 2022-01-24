@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-preloader',
@@ -7,16 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PreloaderComponent implements OnInit {
 
-   // Loader
-   isLoading: boolean;
-   constructor() { }
- 
-   ngOnInit() {
-     this.isLoading = true;
- 
-     setTimeout(() => {
-       this.isLoading = false;
-     }, 600);
-   }
+  // Loader
+  @Input() isLoading: boolean;
+  constructor() { }
+
+  ngOnInit() {
+    //  this.isLoading = true;
+
+    //  setTimeout(() => {
+    //    this.isLoading = false;
+    //  }, 600);
+  }
 
 }

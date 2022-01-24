@@ -19,6 +19,8 @@ import { StoreAsset } from 'src/app/components/models/store';
 })
 export class ContentComponent implements OnInit {
 
+  isLoading: boolean;
+
   closeResult: string;
   public categoryArray: Category[];
   modalContent: Product;
@@ -28,7 +30,6 @@ export class ContentComponent implements OnInit {
 
   storeID: any;
   categories: Category[];
-  category: Category[];
   product: Product[];
   requestParamVarianNew: any;
   detailsObj: any;
@@ -125,32 +126,55 @@ export class ContentComponent implements OnInit {
   }
 
   //Banner
-  getAssets() {
-    this.apiService.getStoreAssets(this.storeID).subscribe((res: any) => {
-      this.assets = res.data;
-    }, error => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong!',
-      })
+  getAssets(): Promise<StoreAsset> {
+    return new Promise((resolve, reject) => {
+      this.apiService.getStoreAssets(this.storeID).subscribe((res: any) => {
+        resolve(res.data);
+      }, error => {
+        console.error("Failed to get store assets", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'An error occurred while fetching store assets. Please refresh the page',
+        });
+        reject(error);
+      });
     });
   }
   //Categories
-  getCategory() {
-    this.apiService.getCategoryByStoreID(this.storeID).subscribe((res: any) => {
-      console.log('category obj: ', res)
-      if (res.message) {
-        this.categories = res.data.content;
-      }
-    }, error => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong!',
+  getCategory(): Promise<Category[]> {
+    return new Promise((resolve, reject) => {
+      this.apiService.getCategoryByStoreID(this.storeID).subscribe((res: any) => {
+        resolve(res.data.content);
+      }, error => {
+        console.error("Error getting category", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'An error occurred while fetching product categories. Please refresh the page.',
+        });
+        reject(error);
+      })
+    });
+  }
+  getStoreProducts(): Promise<Product[]> {
+    return new Promise((resolve, reject) => {
+      this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
+        console.log("Product data", res);
+        resolve(res.data.content);
+        // this.goToDetails(this.product);
+      }, error => {
+        console.error("Error getting store products", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'An error occurred while fetching the store product. Please try again',
+        });
+        reject(error);
       })
     })
   }
+
   goToDetails(productID) {
     this.activatedRoute.queryParams.subscribe(params => {
       this.productID = params['productID'];
@@ -188,19 +212,11 @@ export class ContentComponent implements OnInit {
     ]
   }
 
-  getStoreProductById() {
-    this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
-      console.log('Product Data', res);
-      if (res.data.content.length > 1) {
-        this.product = res.data.content;
-        this.goToDetails(this.product);
-      }
-    });
-  }
-
   async addToCartFromModal(product: Product) {
+    this.isLoading = true;
     this.modalService.dismissAll();
     const addToCartResponse: any = await this.cartService.addToCart(product, this.counter);
+    this.isLoading = false;
     if (addToCartResponse.status === 201) {
       Swal.fire({
         icon: 'success',
@@ -209,14 +225,16 @@ export class ContentComponent implements OnInit {
         confirmButtonColor: '#50BD4D'
       });
     } else {
-      // Show Error message
+      // TODO: Show Error message
     }
   }
 
   async ngOnInit() {
-    this.getAssets();
-    this.getCategory();
-    this.getStoreProductById();
+    this.isLoading = true;
+    this.assets = await this.getAssets();
+    this.categories = await this.getCategory();
+    this.product = await this.getStoreProducts();
+    this.isLoading = false;
   }
 }
 

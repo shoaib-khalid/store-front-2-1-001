@@ -1,3 +1,5 @@
+<app-preloader [isLoading]="isLoading"></app-preloader>
+
 <!-- Banner Start -->
 <div>
     <div class="andro_banner banner-2">
@@ -68,12 +70,12 @@
                         {{item.discount}}% Off
                     </div>
                     <div class="andro_product-thumb thumb-sm">
-                        <a routerLink="/product-single-v2/{{item.seoName}}"><img (click)="goToDetails(item.seoName)"
-                                src="{{item.thumbnailUrl}}" alt="{{item.name}}"></a>
+                        <a routerLink="/product-single-v2/{{item.seoName}}"><img src="{{item.thumbnailUrl}}"
+                                alt="{{item.name}}"></a>
                     </div>
                     <div class="andro_product-body">
-                        <h5 (click)="goToDetails(item.seoName)" class="andro_product-title"><a
-                                routerLink="/product-single-v2/{{item.seoName}}">
+                        <!-- (click)="goToDetails(item.seoName)" -->
+                        <h5 class="andro_product-title"><a routerLink="/product-single-v2/{{item.seoName}}">
                                 {{item.name}} </a> </h5>
                         <div class="andro_product-price">
                             <span *ngIf="item.discount">PKR {{item.productInventories[0].price * (100 - item.discount) /
@@ -98,7 +100,8 @@
                             <!-- <a routerLink= "/product-single-v2/{{item.seoName}}">
                                 <i ngbTooltip="Add To Cart" placement="top" class="flaticon-shopping-basket"></i>
                             </a> -->
-                            <a href="javascript:void(0)" (click)="open(shopmodal, item)" class="andro_btn-custom light" >Quick View</a>
+                            <a href="javascript:void(0)" (click)="open(shopmodal, item)"
+                                class="andro_btn-custom light">Quick View</a>
                         </div>
                     </div>
                 </div>
@@ -176,7 +179,7 @@
                             </div> -->
                             <div class="qty-outter">
                                 <!-- (click)="modal.dismiss('Cross click')" -->
-                                <a (click)="addToCartFromModal(modalContent)" class="andro_btn-custom" >Add to Cart</a>
+                                <a (click)="addToCartFromModal(modalContent)" class="andro_btn-custom">Add to Cart</a>
                                 <div class="qty">
                                     <span class="qty-subtract" (click)="decrement()">
                                         <i class="fa fa-minus"></i>
