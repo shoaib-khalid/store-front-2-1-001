@@ -160,7 +160,6 @@ export class ContentComponent implements OnInit {
   getStoreProducts(): Promise<Product[]> {
     return new Promise((resolve, reject) => {
       this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
-        console.log("Product data", res);
         resolve(res.data.content);
         // this.goToDetails(this.product);
       }, error => {

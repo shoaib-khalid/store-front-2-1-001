@@ -8,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class PreloaderComponent implements OnInit {
 
   // Loader
-  @Input() isLoading: boolean;
+  @Input() isLoading!: boolean;
   constructor() { }
 
   ngOnInit() {
