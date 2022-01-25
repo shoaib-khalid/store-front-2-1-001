@@ -1335,8 +1335,8 @@ table img {
 .andro_header-bottom-inner {
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-end;
+  justify-content: end;
 }
 .andro_header-bottom-inner .navbar-nav,
 .andro_header-middle .navbar-nav {
@@ -1837,7 +1837,7 @@ table img {
 .andro_header.header-2 .andro_header-bottom {
   background-color: rgb(93 93 93);
   border-top: 1px solid #f0f2f3;
-  padding-left: 1150px;
+  
 }
 
 /* 2.2. Header Style 3 */
