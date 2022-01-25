@@ -1,4 +1,4 @@
-# Organista
+# Storefront Organic
 
 Store front application themed using the Organista Product theme:
 http://preview.themeforest.net/item/organista-organic-store-angular-template/full_screen_preview/27765407?_ga=2.206217371.908196402.1637749034-102488695.1637154641

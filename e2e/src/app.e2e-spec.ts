@@ -10,7 +10,7 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('Organista app is running!');
+    expect(page.getTitleText()).toEqual('Storefront Organic is running!');
   });
 
   afterEach(async () => {
