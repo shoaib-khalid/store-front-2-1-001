@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { BreadcrumbService, Breadcrumb } from 'angular-crumbs';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { CartService } from './cart.service';
+import { StoreInfo } from './components/models/store';
 
 @Component({
   selector: 'app-root',
@@ -16,18 +18,28 @@ import { Location, LocationStrategy, PathLocationStrategy } from '@angular/commo
 })
 export class AppComponent implements OnInit {
   title: any;
-  constructor(private titleService: Title, private breadcrumbService: BreadcrumbService) {
+  storeId: string;
+
+  constructor(private titleService: Title,
+    private breadcrumbService: BreadcrumbService,
+    private cartService: CartService
+  ) {
   }
   ngOnInit(): void {
-    this.breadcrumbService.breadcrumbChanged.subscribe(crumbs => {
-      this.titleService.setTitle(this.createTitle(crumbs));
+    this.storeId = "McD";
+    this.breadcrumbService.breadcrumbChanged.subscribe(async crumbs => {
+      this.titleService.setTitle(await this.createTitle(crumbs));
     });
   }
-  onActivate(event){
-    window.scroll(0,0);
+  onActivate(event) {
+    window.scroll(0, 0);
   }
-  private createTitle(routesCollection: Breadcrumb[]) {
-    const title = 'Organista Angular';
+  private async createTitle(routesCollection: Breadcrumb[]) {
+    let title = 'Symplified';
+    const storeInfo: StoreInfo = await this.cartService.getStoreInfoById();
+
+    title = storeInfo.name;
+    console.log("RoutesCollection", routesCollection);
     const titles = routesCollection.filter((route) => route.displayName);
 
     if (!titles.length) { return title; }
