@@ -40,8 +40,8 @@
             <nav class="navbar">
                 <!-- Logo -->
                 <div>
-                    <a class="navbar-brand" routerLink="/"> <img class="logodesign" src="{{assets['logoUrl']}}"
-                            alt="Logo"> </a>
+                    <a class="navbar-brand" routerLink="/"> <img class="logodesign" [src]="assets.logoUrl" alt="Logo">
+                    </a>
                 </div>
                 <!--<div *ngIf="logoExist; else viewLogoDefault" class="Profile-img">
                     <a href="javascript:;">
@@ -56,9 +56,10 @@
                 -->
                 <!-- Menu -->
                 <app-navigation></app-navigation>
-                <div class="andro_header-controls"  >
+                <div class="andro_header-controls">
                     <ul class="andro_header-controls-inner">
-                        <li class="andro_header-cart" matBadge={{cart.length} matBadgePosition="before" matBadgeColor="accent">
+                        <li class="andro_header-cart" matBadge={{cart.length} matBadgePosition="before"
+                            matBadgeColor="accent">
                             <a routerLink="/cart" title="Your Cart">
                                 <i class="flaticon-shopping-basket"></i>
                                 <div class="andro_header-cart-content">

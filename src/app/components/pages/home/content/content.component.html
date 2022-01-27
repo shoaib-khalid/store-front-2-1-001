@@ -70,12 +70,12 @@
                         {{item.discount}}% Off
                     </div>
                     <div class="andro_product-thumb thumb-sm">
-                        <a routerLink="/product-single-v2/{{item.seoName}}"><img src="{{item.thumbnailUrl}}"
+                        <a routerLink="/product/{{item.seoName}}"><img src="{{item.thumbnailUrl}}"
                                 alt="{{item.name}}"></a>
                     </div>
                     <div class="andro_product-body">
                         <!-- (click)="goToDetails(item.seoName)" -->
-                        <h5 class="andro_product-title"><a routerLink="/product-single-v2/{{item.seoName}}">
+                        <h5 class="andro_product-title"><a routerLink="/product/{{item.seoName}}">
                                 {{item.name}} </a> </h5>
                         <div class="andro_product-price">
                             <span *ngIf="item.discount">PKR {{item.productInventories[0].price * (100 - item.discount) /
@@ -97,7 +97,7 @@
                     </div>
                     <div class="andro_product-footer">
                         <div class="andro_product-buttons">
-                            <!-- <a routerLink= "/product-single-v2/{{item.seoName}}">
+                            <!-- <a routerLink= "/product/{{item.seoName}}">
                                 <i ngbTooltip="Add To Cart" placement="top" class="flaticon-shopping-basket"></i>
                             </a> -->
                             <a href="javascript:void(0)" (click)="open(shopmodal, item)"

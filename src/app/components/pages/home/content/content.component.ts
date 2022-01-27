@@ -11,6 +11,8 @@ import { CartItem } from 'src/app/components/models/cart';
 //import { resolve } from 'path';
 import Swal from 'sweetalert2';
 import { StoreAsset } from 'src/app/components/models/store';
+import { PlatformLocation } from '@angular/common';
+import { StoreService } from 'src/app/store.service';
 
 @Component({
   selector: 'app-content',
@@ -28,7 +30,6 @@ export class ContentComponent implements OnInit {
   product_id: any;
   productID: any;
 
-  storeID: any;
   categories: Category[];
   product: Product[];
   requestParamVarianNew: any;
@@ -50,26 +51,20 @@ export class ContentComponent implements OnInit {
   assetsData: any;
   banner: any;
 
-
-
   constructor(private modalService: NgbModal,
-    private apiService: ApiService,
     private route: Router,
     private activatedRoute: ActivatedRoute,
     private cartService: CartService,
-
+    private storeService: StoreService
   ) {
-    this.cartService.startSaveHistory();
-    this.storeID = "McD";
     this.assets = {
       bannerMobileUrl: '',
       bannerUrl: '',
       logoUrl: '',
       qrCodeUrl: '',
       storeId: ''
-    }
+    };
   }
-
 
   open(content: any, item: Product) {
     this.counter = 1;
@@ -125,60 +120,11 @@ export class ContentComponent implements OnInit {
     autoplay: true,
   }
 
-  //Banner
-  getAssets(): Promise<StoreAsset> {
-    return new Promise((resolve, reject) => {
-      this.apiService.getStoreAssets(this.storeID).subscribe((res: any) => {
-        resolve(res.data);
-      }, error => {
-        console.error("Failed to get store assets", error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'An error occurred while fetching store assets. Please refresh the page',
-        });
-        reject(error);
-      });
-    });
-  }
-  //Categories
-  getCategory(): Promise<Category[]> {
-    return new Promise((resolve, reject) => {
-      this.apiService.getCategoryByStoreID(this.storeID).subscribe((res: any) => {
-        resolve(res.data.content);
-      }, error => {
-        console.error("Error getting category", error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'An error occurred while fetching product categories. Please refresh the page.',
-        });
-        reject(error);
-      })
-    });
-  }
-  getStoreProducts(): Promise<Product[]> {
-    return new Promise((resolve, reject) => {
-      this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
-        resolve(res.data.content);
-        // this.goToDetails(this.product);
-      }, error => {
-        console.error("Error getting store products", error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'An error occurred while fetching the store product. Please try again',
-        });
-        reject(error);
-      })
-    })
-  }
-
   goToDetails(productID) {
     this.activatedRoute.queryParams.subscribe(params => {
       this.productID = params['productID'];
     });
-    this.route.navigate(['product-single-v2/:prodSeoName/'] + productID);
+    this.route.navigate(['product/:prodSeoName/'] + productID);
   }
   //Navigation to category
   goToCategory(catId) {
@@ -229,12 +175,31 @@ export class ContentComponent implements OnInit {
     }
   }
 
+  resolveLoading() {
+    if (this.product && this.assets && this.categories) {
+      this.isLoading = false;
+    }
+  }
+
   async ngOnInit() {
     this.isLoading = true;
-    this.assets = await this.getAssets();
-    this.categories = await this.getCategory();
-    this.product = await this.getStoreProducts();
-    this.isLoading = false;
+
+    this.storeService.parseStoreIdFromUrl();
+    Promise.all([this.storeService.getAssets(), this.storeService.getCategories(), this.storeService.getStoreProducts()])
+      .then((values) => {
+        this.assets = values[0];
+        this.categories = values[1];
+        this.product = values[2];
+        this.isLoading = false;
+      }).catch(error => {
+        console.error("Error getting values for homepage" + error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'An error occurred while fetching store details. Please refresh the page.',
+        });
+      }
+      );
   }
 
   // goToProductPage() {

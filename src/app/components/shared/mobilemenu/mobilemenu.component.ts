@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import $ from 'jquery'
 import { ApiService } from 'src/app/api.service';
+import { StoreService } from 'src/app/store.service';
+import { Category } from '../../models/category';
+import { StoreAsset } from '../../models/store';
 
 @Component({
   selector: 'app-mobilemenu',
@@ -10,52 +13,29 @@ import { ApiService } from 'src/app/api.service';
   styleUrls: ['./mobilemenu.component.css']
 })
 export class MobilemenuComponent implements OnInit {
-  storeID: any;
-  categories: any;
-  logo: any;
+  assets: StoreAsset;
+  categories: Category[];
   catId: any;
 
-  constructor( private apiService: ApiService,
-    private httpClient: HttpClient,
+  constructor(
     private route: Router,
-    private activatedRoute: ActivatedRoute) { this.storeID = "McD" 
+    private activatedRoute: ActivatedRoute,
+    private storeService: StoreService
+  ) {
+    this.assets = {
+      storeId: '',
+      bannerUrl: '',
+      bannerMobileUrl: '',
+      logoUrl: '',
+      qrCodeUrl: ''
+    }
+
     this.activatedRoute.params.subscribe(params => {
       this.catId = params['catId']
       localStorage.setItem('category_id', this.catId)
-    })}
-
-    //Logo
-  getAssets(storeID){
-    return new Promise(resolve => {
-        // check count Item in Cart 
-        this.apiService.getStoreAssets(storeID).subscribe((res: any) => {
-            resolve(res.data)
-            let data = res.data;
-            this.logo = data.logoUrl;
-            // this.assetsData = res.data;
-        }, error => {
-            // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-        }) 
-        
-    });
-
-}
-   //Categories
-   getCategory() {
-    this.apiService.getCategoryByStoreID(this.storeID).subscribe((res: any) => {
-      if (res.message) {
-        if (res.data.content.length > 1) {
-          this.categories = res.data.content;
-        } else {
-          this.categories = res.data.content;
-        }
-        //console.log('newCategories getCategory: ', this.categories);
-      } else {
-      }
-    }, error => {
-      console.log(error)
     })
   }
+
   //Navigation to category
   goToCategory(catId) {
     // alert(catId)
@@ -64,7 +44,7 @@ export class MobilemenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
     function mobilemenu() {
       ($(".andro_aside .menu-item-has-children > a") as any).on('click', function (e) {
         var submenu = $(this).next(".sub-menu");
@@ -73,9 +53,15 @@ export class MobilemenuComponent implements OnInit {
         submenu.slideToggle(200);
       });
     }
-    mobilemenu()
-    this.getAssets(this.storeID);
-    this.getCategory();
+    mobilemenu();
+    Promise.all([this.storeService.getAssets(), this.storeService.getCategories()])
+      .then((values) => {
+        this.assets = values[0];
+        this.categories = values[1];
+      }).catch(error => {
+        console.error("Error getting values for mobile menu", error);
+      }
+      );
   }
 
 }

@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/api.service';
 import { CartService } from 'src/app/cart.service';
 import { CartItem, CartTotals } from 'src/app/components/models/cart';
-import { DeliveryCharge } from 'src/app/components/models/delivery';
+import { DeliveryCharge, DeliveryDetails } from 'src/app/components/models/delivery';
 import { State } from 'src/app/components/models/region';
 import { StoreInfo } from 'src/app/components/models/store';
-import { UserDeliveryDetail } from 'src/app/components/models/userDeliveryDetail';
+import { StoreService } from 'src/app/store.service';
 
 @Component({
   selector: 'app-content',
@@ -16,17 +16,7 @@ import { UserDeliveryDetail } from 'src/app/components/models/userDeliveryDetail
 export class ContentComponent implements OnInit {
 
   checkout: CartItem[];
-  userDeliveryDetails: UserDeliveryDetail = {
-    deliveryContactName: '',
-    deliveryAddress: '',
-    deliveryPostcode: '',
-    deliveryContactEmail: '',
-    deliveryContactPhone: '',
-    deliveryState: '',
-    deliveryCity: '',
-    deliveryCountry: '',
-    deliveryNotes: ''
-  };
+  userDeliveryDetails: DeliveryDetails;
   cartTotals: CartTotals = null;
   deliveryFee: DeliveryCharge = null;
   isSaved: boolean = false;
@@ -55,7 +45,6 @@ export class ContentComponent implements OnInit {
   submitButtonText: string;
 
   // Store info
-  storeId: string;
   currencySymbol: string = "";
   states: State[] = [];
   storeDeliveryPercentage: number;
@@ -64,14 +53,25 @@ export class ContentComponent implements OnInit {
 
   constructor(
     private cartService: CartService,
+    private storeService: StoreService,
     private route: Router,
     private apiService: ApiService
   ) {
-    this.storeId = "McD";
     this.numberRegex = /[0-9]+/;
     this.emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     this.phoneNumberRegex = /^[+]*[(]?[0-9]{1,4}[)]?[-\s\.\/0-9]*$/;
     this.submitButtonText = "Get Delivery Charges";
+    this.userDeliveryDetails = {
+      deliveryContactName: '',
+      deliveryAddress: '',
+      deliveryPostcode: '',
+      deliveryContactEmail: '',
+      deliveryContactPhone: '',
+      deliveryState: '',
+      deliveryCity: '',
+      deliveryCountry: '',
+      deliveryNotes: ''
+    };
   }
   public isOne = true;
   public isTwo = true;
@@ -131,7 +131,7 @@ export class ContentComponent implements OnInit {
 
   async getStoreInfo() {
     try {
-      const storeInfo: StoreInfo = await this.cartService.getStoreInfoById();
+      const storeInfo: StoreInfo = await this.storeService.getStoreInfo();
       this.currencySymbol = storeInfo.regionCountry.currencySymbol;
       this.userDeliveryDetails.deliveryCountry = storeInfo.regionCountry.name;
       this.storeDeliveryPercentage = storeInfo.serviceChargesPercentage;

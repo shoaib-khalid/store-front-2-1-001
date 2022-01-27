@@ -1,12 +1,10 @@
 import { Component, OnInit, HostListener, Inject } from '@angular/core';
-import { DOCUMENT, PlatformLocation } from '@angular/common';
-import cartList from '../../../data/cart.json';
+import { DOCUMENT } from '@angular/common';
 import { ApiService } from 'src/app/api.service';
-import { Router, ActivatedRoute } from '@angular/router';
-// import { PlatformLocation } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { CartItem } from '../../models/cart';
 import { CartService } from 'src/app/cart.service';
+import { StoreService } from 'src/app/store.service';
+import { StoreAsset } from '../../models/store';
 
 @Component({
   selector: 'app-headerthree',
@@ -18,10 +16,8 @@ export class HeaderthreeComponent implements OnInit {
   currBaseURL: any;
   localURL: any;
   senderID: any;
-  storeID: any;
   storeName: String = 'McD';
-  has_storeId: boolean = false;
-  assets = {};
+  assets: StoreAsset;
   bannerExist: boolean = false;
   logoExist: boolean = false;
   storeDescription: any;
@@ -39,12 +35,17 @@ export class HeaderthreeComponent implements OnInit {
 
   constructor(@Inject(DOCUMENT) private document: Document,
     private apiService: ApiService,
-    private platformLocation: PlatformLocation,
-    private activatedRoute: ActivatedRoute,
-    private httpClient: HttpClient,
-    private cartService: CartService
+    private cartService: CartService,
+    private storeService: StoreService
   ) {
-    this.storeID = "McD";
+    this.assets = {
+      storeId: '',
+      bannerUrl: '',
+      bannerMobileUrl: '',
+      logoUrl: '',
+      qrCodeUrl: ''
+    }
+
     this.cart = cartService.cart;
     cartService.cartChange.subscribe(cart => { this.cart = cart; });
   }
@@ -82,31 +83,9 @@ export class HeaderthreeComponent implements OnInit {
     return this.cart.reduce((subtotal: number, item: CartItem) => subtotal + item.price, 0);
   };
   async ngOnInit() {
-    console.log('StoreID: ' + this.storeID)
-    const assetData = await this.getAssets(this.storeID)
-    this.assets = assetData
-    if (this.assets['logoUrl'] != null) {
+    this.assets = await this.storeService.getAssets();
+    if (this.assets.logoUrl != null) {
       this.logoExist = true;
     }
-  }
-  getMerchantInfo(storename) {
-    return new Promise(resolve => {
-      this.apiService.getStoreInfo(storename).subscribe((res: any) => {
-        resolve(res.data)
-      }), error => {
-        console.log('error store')
-      }
-    })
-  }
-
-  getAssets(storeID) {
-    return new Promise(resolve => {
-      // check count Item in Cart 
-      this.apiService.getStoreAssets(storeID).subscribe((res: any) => {
-        resolve(res.data)
-      }, error => {
-        // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-      })
-    });
   }
 }
