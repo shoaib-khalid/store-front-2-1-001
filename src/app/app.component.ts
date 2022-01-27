@@ -4,6 +4,7 @@ import { BreadcrumbService, Breadcrumb } from 'angular-crumbs';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { CartService } from './cart.service';
 import { StoreInfo } from './components/models/store';
+import { StoreService } from './store.service';
 
 @Component({
   selector: 'app-root',
@@ -18,15 +19,14 @@ import { StoreInfo } from './components/models/store';
 })
 export class AppComponent implements OnInit {
   title: any;
-  storeId: string;
 
   constructor(private titleService: Title,
     private breadcrumbService: BreadcrumbService,
-    private cartService: CartService
+    private cartService: CartService,
+    private storeService: StoreService
   ) {
   }
   ngOnInit(): void {
-    this.storeId = "McD";
     this.breadcrumbService.breadcrumbChanged.subscribe(async crumbs => {
       this.titleService.setTitle(await this.createTitle(crumbs));
     });
@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
   }
   private async createTitle(routesCollection: Breadcrumb[]) {
     let title = 'Symplified';
-    const storeInfo: StoreInfo = await this.cartService.getStoreInfoById();
+    const storeInfo: StoreInfo = await this.storeService.getStoreInfo();
 
     title = storeInfo.name;
     console.log("RoutesCollection", routesCollection);

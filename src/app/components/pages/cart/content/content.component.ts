@@ -7,6 +7,7 @@ import { Product } from 'src/app/components/models/product';
 import cartList from '../../../../data/cart.json';
 import shoppost from '../../../../data/shop.json';
 import Swal from 'sweetalert2';
+import { StoreService } from 'src/app/store.service';
 
 
 
@@ -21,7 +22,6 @@ export class ContentComponent implements OnInit {
   product: Product[];
   closeResult: string;
   modalContent: CartItem;
-  storeId: string;
 
   orderDiscount: number = 0;
   takeAwayFee: number = 0;
@@ -30,9 +30,9 @@ export class ContentComponent implements OnInit {
 
   constructor(private modalService: NgbModal,
     private cartService: CartService,
+    private storeService: StoreService,
     private apiService: ApiService
   ) {
-    this.storeId = "McD";
   }
   open(content: any, item: CartItem) {
     this.modalContent = item;
@@ -75,15 +75,9 @@ export class ContentComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-  getFeaturedProducts() {
-    this.apiService.getProductSByStoreID(this.storeId).subscribe((res: any) => {
-      console.log('Product Data', res);
-      if (res.data.content.length > 1) {
-        this.product = res.data.content;
-      }
-    });
+  async getFeaturedProducts() {
+    this.product = await this.storeService.getStoreProducts();
   }
-  
 
   async updateCartItem(cartItem: CartItem) {
     this.modalService.dismissAll();
@@ -96,12 +90,12 @@ export class ContentComponent implements OnInit {
         toast: true,
         title: 'Item updated',
         icon: 'success',
-        
+
         showConfirmButton: false,
         position: 'bottom-end',
         timer: 2000,
         width: '20%',
-        
+
         padding: '0.75rem'
       })
     } else {
@@ -120,16 +114,16 @@ export class ContentComponent implements OnInit {
   async deleteCartItem(cartItem: CartItem, index: number) {
     const deleteResult: any
       = await this.cartService.deleteCartItem(cartItem, index);
-      Swal.fire({
-        toast: true,
-        icon: 'success',
-        title: 'Item deleted',
-        showConfirmButton: false,
-        position: 'bottom-end',
-        width: '20%',
-        timer: 2000,
-        padding: '0.75rem'
-      })
+    Swal.fire({
+      toast: true,
+      icon: 'success',
+      title: 'Item deleted',
+      showConfirmButton: false,
+      position: 'bottom-end',
+      width: '20%',
+      timer: 2000,
+      padding: '0.75rem'
+    })
     console.log("deleteResult: ", deleteResult);
     if (deleteResult.status !== 200) {
       // Show failure message

@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/app/api.service';
+import { StoreAsset } from 'src/app/components/models/store';
+import { StoreService } from 'src/app/store.service';
 
 @Component({
   selector: 'app-content',
@@ -9,32 +11,26 @@ import { ApiService } from 'src/app/api.service';
   styleUrls: ['./content.component.css']
 })
 export class ContentComponent implements OnInit {
-  storeID: string;
-  banner: any;
+  assets: StoreAsset;
 
-  constructor(private apiService: ApiService,
-    private httpClient: HttpClient,
-    private route: Router,
-    private activatedRoute: ActivatedRoute) { this.storeID = "McD" }
+  constructor(
+    private storeService: StoreService
+  ) {
+    this.assets = {
+      storeId: '',
+      bannerUrl: '',
+      bannerMobileUrl: '',
+      logoUrl: '',
+      qrCodeUrl: ''
+    }
+  }
 
-     //Banner
-  getAssets(storeID){
-    return new Promise(resolve => {
-        // check count Item in Cart 
-        this.apiService.getStoreAssets(storeID).subscribe((res: any) => {
-            resolve(res.data)
-            let data = res.data;
-            this.banner = data.bannerUrl;
-            // this.assetsData = res.data;
-        }, error => {
-            // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-        }) 
-        
-    });
-
-}
+  //Banner
+  async getAssets() {
+    this.assets = await this.storeService.getAssets();
+  }
   ngOnInit(): void {
-    this.getAssets(this.storeID)
+    this.getAssets();
   }
 
 }

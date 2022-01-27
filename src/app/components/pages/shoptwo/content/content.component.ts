@@ -10,6 +10,7 @@ import { PlatformLocation } from '@angular/common';
 import { contains, removeData } from 'jquery';
 import { CartService } from 'src/app/cart.service';
 import Swal from 'sweetalert2';
+import { StoreService } from 'src/app/store.service';
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
@@ -21,7 +22,6 @@ export class ContentComponent implements OnInit {
   closeResult: string;
   modalContent: any;
   categories: any;
-  storeID: any;
   catId: any;
   sortBy: any = 0;
   selectedMenu: string = "";
@@ -51,8 +51,7 @@ export class ContentComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private apiService: ApiService,
     private cartService: CartService,
-    private platformLocation: PlatformLocation) {
-    this.storeID = "McD";
+    private storeService: StoreService) {
     this.activatedRoute.params.subscribe(params => {
       this.catId = params['catId']
       localStorage.setItem('category_id', this.catId)
@@ -80,49 +79,28 @@ export class ContentComponent implements OnInit {
   getAllProduct() {
     this.catId = null
     this.sortBy = null
-    this.getCategoryProducts(this.catId, this.sortBy)
+    this.getProductsByCategory(this.catId, this.sortBy)
   }
 
   //SideBar Categories
-  getCategory() {
-    this.apiService.getCategoryByStoreID(this.storeID).subscribe((res: any) => {
-      console.log('category obj: ', res)
-      if (res.message) {
-        if (res.data.content.length > 1) {
-          this.categories = res.data.content;
-        } else {
-          this.categories = res.data.content;
-        }
-      } else {
-      }
-    }, error => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong!',
-      })
-    })
+  async getStoreCategories() {
+    this.categories = await this.storeService.getCategories();
   }
   goToDetails(prodName) {
     this.route.navigate(['shop-v2/' + prodName]);
   }
 
-  getCategoryProducts(categoryId, sortId) {
+  async getProductsByCategory(categoryId, sortId) {
     if (!categoryId && !sortId) {
       this.selectedMenu = 'all';
     } else {
       this.selectedMenu = categoryId;
     }
-    console.log('this.selectedMenu', this.selectedMenu)
+    console.log('this.selectedMenu', this.selectedMenu);
     this.catId = categoryId;
-    localStorage.setItem('category_id', this.catId)
-    this.catalogueList = []
-    this.apiService.getProductSByCategory(categoryId, this.storeID, sortId, this.page_no).subscribe((res: any) => {
-      console.log('This category product:', res)
-      if (res.message) {
-        this.product = res.data.content;
-      }
-    })
+    localStorage.setItem('category_id', this.catId);
+    this.catalogueList = [];
+    this.product = await this.storeService.getProductsByCategory(categoryId, sortId, this.page_no);
   }
 
   async addToCartFromModal(product: Product) {
@@ -142,8 +120,7 @@ export class ContentComponent implements OnInit {
 
   ngOnInit() {
     this.catId = localStorage.getItem("category_id")
-    this.getCategory();
-    this.getCategoryProducts(this.catId, this.sortBy);
-
+    this.getStoreCategories();
+    this.getProductsByCategory(this.catId, this.sortBy);
   }
 }

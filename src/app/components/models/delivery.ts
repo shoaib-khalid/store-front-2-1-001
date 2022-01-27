@@ -8,3 +8,15 @@ export interface DeliveryCharge {
     refId: number;
     validUpTo: string;
 }
+
+export interface DeliveryDetails {
+    deliveryContactName: string;
+    deliveryAddress: string;
+    deliveryPostcode: string;
+    deliveryContactEmail: string;
+    deliveryContactPhone: string;
+    deliveryState: string;
+    deliveryCity: string;
+    deliveryCountry: string;
+    deliveryNotes: string;
+}

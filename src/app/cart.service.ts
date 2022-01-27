@@ -1,34 +1,27 @@
 import { Injectable } from '@angular/core';
-import { rejects } from 'assert';
-import { resolve } from 'dns';
 import { Subject } from 'rxjs';
-import { getEnabledCategories } from 'trace_events';
 import { ApiService } from './api.service';
-import { Cart, CartItem, CartItemRequest, CartTotals } from './components/models/cart';
-import { DeliveryCharge } from './components/models/delivery';
+import { CartItem, CartItemRequest, CartTotals } from './components/models/cart';
+import { DeliveryCharge, DeliveryDetails } from './components/models/delivery';
 import { Product, ProductInventory } from './components/models/product';
 import { StoreInfo } from './components/models/store';
-import { UserDeliveryDetail } from './components/models/userDeliveryDetail';
+import { StoreService } from './store.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
 
-  // TODO: Remove hardcoding of storeID
   private cartIdKey = 'anonym_cart_id';
-  storeId: string = "McD";
   senderId: string = null;
   cart: CartItem[] = [];
   cartChange: Subject<CartItem[]> = new Subject<CartItem[]>();
 
-  deliveryOption: string;
-
   constructor(
+    private storeService: StoreService,
     private apiService: ApiService
   ) {
     this.getCartItems();
-    this.getDeliveryOption();
   }
 
   private setCartId(cartId: string) {
@@ -56,7 +49,7 @@ export class CartService {
 
   private createCart() {
     const data = {
-      storeId: this.storeId
+      storeId: this.storeService.getStoreId()
     };
 
     return new Promise((resolve, reject) => {
@@ -128,13 +121,13 @@ export class CartService {
     });
   }
 
-  getDeliveryFee(userDeliveryDetails: UserDeliveryDetail): Promise<DeliveryCharge> {
+  getDeliveryFee(DeliveryDetails: DeliveryDetails): Promise<DeliveryCharge> {
     let data = {
       customerId: null,
       deliveryProviderId: null,
       cartid: this.getCartId(),
-      storeId: this.storeId,
-      delivery: userDeliveryDetails
+      storeId: this.storeService.getStoreId(),
+      delivery: DeliveryDetails
     };
 
     return new Promise((resolve, reject) => {
@@ -155,17 +148,6 @@ export class CartService {
     return this.cart.reduce((subtotal: number, item: CartItem) => subtotal + item.price, 0);
   }
 
-  getStoreInfoById(): Promise<StoreInfo> {
-    return new Promise((resolve, reject) => {
-      this.apiService.getStoreHoursByID(this.storeId).subscribe((res: any) => {
-        resolve(res.data);
-      }, error => {
-        console.error(error);
-        reject(error);
-      })
-    })
-  }
-
   getDiscount(deliveryCharge): Promise<CartTotals> {
     return new Promise((resolve, reject) => {
       this.apiService.getDiscount(this.getCartId(), deliveryCharge).subscribe(async (res: any) => {
@@ -177,38 +159,28 @@ export class CartService {
     })
   }
 
-  getDeliveryOption() {
-    return new Promise((resolve, reject) => {
-      this.apiService.getDeliveryOption(this.storeId).subscribe(async (res: any) => {
-        resolve(res.data);
-      }, error => {
-        reject(error);
-      })
-    })
-  }
-
-  async confirmCashOnDelivery(userDeliveryDetails: UserDeliveryDetail, deliveryFee: DeliveryCharge) {
-    const deliveryOption: any = await this.getDeliveryOption();
+  async confirmCashOnDelivery(deliveryDetails: DeliveryDetails, deliveryFee: DeliveryCharge) {
+    const deliveryOption: any = await this.storeService.getDeliveryOption();
 
     const data = {
       cartId: this.getCartId(),
       customerId: null,
-      customerNotes: userDeliveryDetails.deliveryNotes,
+      customerNotes: deliveryDetails.deliveryNotes,
       orderPaymentDetails: {
-        accountName: userDeliveryDetails.deliveryContactName,
+        accountName: deliveryDetails.deliveryContactName,
         deliveryQuotationAmount: deliveryFee.price,
         deliveryQuotationReferenceId: deliveryFee.refId,
         gatewayId: ""
       },
       orderShipmentDetails: {
-        address: userDeliveryDetails.deliveryAddress,
-        city: userDeliveryDetails.deliveryCity,
-        country: userDeliveryDetails.deliveryCountry,
-        email: userDeliveryDetails.deliveryContactEmail,
-        phoneNumber: userDeliveryDetails.deliveryContactPhone,
-        receiverName: userDeliveryDetails.deliveryContactName,
-        state: userDeliveryDetails.deliveryState,
-        zipcode: userDeliveryDetails.deliveryPostcode,
+        address: deliveryDetails.deliveryAddress,
+        city: deliveryDetails.deliveryCity,
+        country: deliveryDetails.deliveryCountry,
+        email: deliveryDetails.deliveryContactEmail,
+        phoneNumber: deliveryDetails.deliveryContactPhone,
+        receiverName: deliveryDetails.deliveryContactName,
+        state: deliveryDetails.deliveryState,
+        zipcode: deliveryDetails.deliveryPostcode,
         deliveryProviderId: deliveryFee.providerId,
         deliveryType: deliveryOption.type
       }
@@ -227,6 +199,4 @@ export class CartService {
       });
     })
   }
-
-
 }

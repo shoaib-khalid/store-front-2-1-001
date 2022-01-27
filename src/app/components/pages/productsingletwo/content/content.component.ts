@@ -5,12 +5,13 @@ import blogcategory from '../../../../data/blogcategory.json';
 import blogtags from '../../../../data/blogtags.json';
 import { ApiService } from 'src/app/api.service';
 import { Category } from 'src/app/components/models/category';
-import { PlatformLocation } from '@angular/common';
+import { PlatformLocation, Location } from '@angular/common';
 import { Product } from 'src/app/components/models/product';
 import { contains, data, param } from 'jquery';
 import { HttpParams } from '@angular/common/http';
 import { CartService } from 'src/app/cart.service';
 import Swal from 'sweetalert2';
+import { StoreService } from 'src/app/store.service';
 
 @Component({
   selector: 'app-content',
@@ -19,10 +20,8 @@ import Swal from 'sweetalert2';
 })
 export class ContentComponent implements OnInit {
   productId: any;
-  productSeoName: any;
   detailsObj: any = {};
   productAssets: any;
-  storeName: any;
   //product: any[] = [];
   itemWithinProduct: any;
   requestParamVariant: any = [];
@@ -30,7 +29,6 @@ export class ContentComponent implements OnInit {
   variantOfSelected: any;
   productPrice: any = 0;
   productItemCode: any;
-  storeID: any;
   storeDeliveryPercentage: any;
   inputQty: any;
   product: Product;
@@ -41,15 +39,14 @@ export class ContentComponent implements OnInit {
   galleryImages: any;
   productID: any;
   seo_name: any;
-  seoName: string;
+  productSeoName: string;
 
-  constructor(private route: ActivatedRoute,
+  constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private apiService: ApiService,
     private cartService: CartService,
-    private platformLocation: PlatformLocation) {
-    this.storeID = "McD";
+    private storeService: StoreService,
+    private location: Location) {
     this.product = {
       allowOutOfStockPurchases: false,
       categoryId: '',
@@ -73,11 +70,14 @@ export class ContentComponent implements OnInit {
       ]
     };
     this.activatedRoute.params.subscribe(params => {
-      this.seoName = params['prodSeoName'];
-      this.storeName = (params['storeName']) ? params['storeName'] : this.storeName;
-      console.log('product name before: ' + this.seoName); // Print the parameter to the console.             
+      this.productSeoName = params['prodSeoName'];
+      console.log('product name before: ' + this.productSeoName); // Print the parameter to the console.             
     });
 
+  }
+
+  back(): void {
+    this.location.back();
   }
 
   // Increment decrement
@@ -90,27 +90,15 @@ export class ContentComponent implements OnInit {
       this.counter -= 1;
     }
   }
-  getProductDetailsByName(seoName, storeID) {
+
+  async getProductDetailsByName(seoName) {
     console.log('getProductDetailsByName(): ' + seoName)
 
-    this.apiService.getProductsByName(seoName, storeID).subscribe((res: any) => {
-      this.product = res.data.content[0];
-    }, error => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong!',
-      })
-    });
-  }
-  async getVariantFlow() {
-
-    const prodName = await this.getProductDetailsByName(this.seoName, this.storeID)
-    //  const prodId = await this.getProductByID(this.productID)
+    this.product = await this.storeService.getProductDetailsByName(seoName);
   }
 
-  async ngOnInit() {
-    this.getProductDetailsByName(this.seoName, this.storeID);
+  ngOnInit() {
+    this.getProductDetailsByName(this.productSeoName);
   }
 
   async addToCart() {
