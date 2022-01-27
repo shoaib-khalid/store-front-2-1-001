@@ -164,7 +164,7 @@ getAllProduct(){
   }
 //Navigation to category
 goToCategory(catId){
-  this.route.navigate(['shop-v2/' + catId]);
+  this.route.navigate(['catalogue/' + catId]);
 }
 
   ngOnInit(){

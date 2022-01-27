@@ -5,7 +5,7 @@ import blogcategory from '../../../../data/blogcategory.json';
 import blogtags from '../../../../data/blogtags.json';
 import { ApiService } from 'src/app/api.service';
 import { Category } from 'src/app/components/models/category';
-import { PlatformLocation } from '@angular/common';
+import { PlatformLocation, Location } from '@angular/common';
 import { Product } from 'src/app/components/models/product';
 import { contains, data, param } from 'jquery';
 import { HttpParams } from '@angular/common/http';
@@ -47,8 +47,9 @@ export class ContentComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private apiService: ApiService,
-    private cartService: CartService,
-    private platformLocation: PlatformLocation) {
+    public cartService: CartService,
+    private platformLocation: PlatformLocation,
+    private location: Location) {
     this.storeID = "McD";
     this.product = {
       allowOutOfStockPurchases: false,
@@ -90,6 +91,9 @@ export class ContentComponent implements OnInit {
       this.counter -= 1;
     }
   }
+  // goBack(): void {
+  //   this.location.back();
+  // }
   getProductDetailsByName(seoName, storeID) {
     console.log('getProductDetailsByName(): ' + seoName)
 
@@ -101,7 +105,7 @@ export class ContentComponent implements OnInit {
         title: 'Oops...',
         text: 'Something went wrong!',
       })
-    });
+    });   
   }
   async getVariantFlow() {
 

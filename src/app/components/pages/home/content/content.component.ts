@@ -59,7 +59,7 @@ export class ContentComponent implements OnInit {
     private cartService: CartService,
 
   ) {
-
+    this.cartService.startSaveHistory();
     this.storeID = "McD";
     this.assets = {
       bannerMobileUrl: '',
@@ -182,12 +182,11 @@ export class ContentComponent implements OnInit {
   }
   //Navigation to category
   goToCategory(catId) {
-    this.route.navigate(['shop-v2/' + catId]);// + catId
+    this.route.navigate(['catalogue/' + catId]);// + catId
   }
 
   // Fresharrivals
   freshConfig = {
-
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: true,
@@ -219,9 +218,11 @@ export class ContentComponent implements OnInit {
     if (addToCartResponse.status === 201) {
       Swal.fire({
         icon: 'success',
-        title: 'Great!',
-        text: 'Item successfully added to cart.',
-        confirmButtonColor: '#50BD4D'
+        title: 'Item added to Cart',
+        toast: true,
+        showConfirmButton: false,
+        timer: 2000,
+        position: 'bottom-right'
       });
     } else {
       // TODO: Show Error message
@@ -235,5 +236,10 @@ export class ContentComponent implements OnInit {
     this.product = await this.getStoreProducts();
     this.isLoading = false;
   }
+
+  // goToProductPage() {
+  //   this.cartService.previousUrl = location.href;
+  //   this.route.nav
+  // }
 }
 

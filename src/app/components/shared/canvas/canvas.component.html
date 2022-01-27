@@ -5,7 +5,7 @@
         <div class="row">
             <div class="sidebar-box" *ngFor="let item of categories ; let i = index;">
                 <div class="sidebar-box-inner" (click)="goToCategory(item.id)" >
-                    <a routerLink="/shop-v2/{{item.id}}">
+                    <a routerLink="/catalogue/{{item.id}}">
                         <img src="{{item.thumbnailUrl}}" />
                         <h6 class="inner-box-text">{{item.name}}</h6>
                     </a>

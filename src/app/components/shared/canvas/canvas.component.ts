@@ -43,7 +43,7 @@ export class CanvasComponent implements OnInit {
   goToCategory(catId) {
     // alert(catId)
     // return false;
-    this.route.navigate(['shop-v2/'+ catId] );// + catId
+    this.route.navigate(['catalogue/'+ catId] );// + catId
   }
 
   ngOnInit(): void {

@@ -52,6 +52,7 @@ export class ContentComponent implements OnInit {
     private apiService: ApiService,
     private cartService: CartService,
     private platformLocation: PlatformLocation) {
+    this.cartService.startSaveHistory();
     this.storeID = "McD";
     this.activatedRoute.params.subscribe(params => {
       this.catId = params['catId']
@@ -104,7 +105,7 @@ export class ContentComponent implements OnInit {
     })
   }
   goToDetails(prodName) {
-    this.route.navigate(['shop-v2/' + prodName]);
+    this.route.navigate(['catalogue/' + prodName]);
   }
 
   getCategoryProducts(categoryId, sortId) {

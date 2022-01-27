@@ -1,5 +1,6 @@
 <!-- *ngFor="let item of product" -->
 <div>
+    <button (click)="cartService.goBack()">Back to {{cartService.getPreviousUrl()}} </button>
     <!-- Product Content Start -->
     <div class="section" *ngIf="product">
         <div class="container">
