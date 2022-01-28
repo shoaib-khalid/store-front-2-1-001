@@ -1,8 +1,9 @@
 .card-button{
     display: inline-block;
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: 500;
     padding: 3px 12px;
-    color: #5af066;
+    color: #51bc4d;
     border: 1px solid #5af066;
     -webkit-transition: .3s;
     -o-transition: .3s;
