@@ -47,8 +47,8 @@ export class StoreService {
       this.storeDomainName = "mcd";
     } else {
       this.storeDomainName = currBaseUrl.split('.')[0].replace(/^(https?:|)\/\//, '');
-      console.log('Catalogue Storename: ' + this.storeDomainName);
     }
+    console.log('Catalogue Storename: ' + this.storeDomainName);
 
     this.activatedRoute.queryParams.subscribe(params => {
       let storeID = params['storeId'];
@@ -56,6 +56,7 @@ export class StoreService {
         storeID = this.defaultStoreId;
       }
       this.setStoreId(storeID);
+      console.log("Store ID: ", this.getStoreId());
     });
   }
 
