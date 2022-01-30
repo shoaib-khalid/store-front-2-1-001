@@ -152,7 +152,7 @@
                             </tr>
                             <tr *ngIf="hasDeliveryCharges" class="total">
                                 <td>
-                                    <h6>Subtotal</h6>
+                                   Subtotal
                                 </td>
                                 <td></td>
                                 <td><strong>{{ currencySymbol }} {{ cartTotals.cartSubTotal| number:'1.2-2'
@@ -161,7 +161,7 @@
                             <tr *ngIf="hasDeliveryCharges">
                                 <td>Order Discount</td>
                                 <td></td>
-                                <td>-{{ currencySymbol }} {{ cartTotals.subTotalDiscount| number:'1.2-2' }}</td>
+                                <td>{{ currencySymbol }} {{ cartTotals.subTotalDiscount| number:'1.2-2' }}</td>
                             </tr>
                             <tr *ngIf="hasDeliveryCharges">
                                 <td>Service Charge</td>
@@ -179,11 +179,11 @@
                             <tr *ngIf="hasDeliveryCharges">
                                 <td>Delivery Discount</td>
                                 <td></td>
-                                <td>-{{ currencySymbol }} {{ cartTotals.deliveryDiscount }}</td>
+                                <td>{{ currencySymbol }} {{ cartTotals.deliveryDiscount }}</td>
                             </tr>
                             <tr *ngIf="hasDeliveryCharges" class="total">
                                 <td>
-                                    <h6 class="mb-0">Grand Total</h6>
+                                    Grand Total
                                 </td>
                                 <td></td>
                                 <td><strong>{{ currencySymbol }} {{ cartTotals.cartGrandTotal| number:'1.2-2'

@@ -4375,7 +4375,7 @@ td.remove {
 }
 
 .accordion .card-header[aria-expanded="true"] i {
-  color: #50bd49;
+  color: #1b1d1b;
 }
 
 .accordion .card {
