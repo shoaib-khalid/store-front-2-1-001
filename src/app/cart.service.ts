@@ -5,7 +5,7 @@ import { ApiService } from './api.service';
 import { CartItem, CartItemRequest, CartTotals } from './components/models/cart';
 import { DeliveryCharge, DeliveryDetails } from './components/models/delivery';
 import { Product, ProductInventory } from './components/models/product';
-import { StoreInfo } from './components/models/store';
+import { Store } from './components/models/store';
 import { StoreService } from './store.service';
 
 @Injectable({
@@ -23,6 +23,10 @@ export class CartService {
     private apiService: ApiService
   ) {
     this.getCartItems();
+    storeService.storeIdChange.subscribe(storeId => {
+      // Create new cart if store changes
+      this.createCart();
+    });
   }
 
   //Routing
@@ -56,8 +60,6 @@ export class CartService {
   //   return '';
   // }
 
-
-  
   private setCartId(cartId: string) {
     localStorage.setItem(this.cartIdKey, cartId);
   }
@@ -70,7 +72,7 @@ export class CartService {
     localStorage.removeItem(this.cartIdKey);
   }
 
-  private getCartItems() {
+  getCartItems() {
     if (this.getCartId()) {
       this.apiService.getCartItemByCartID(this.getCartId()).subscribe((res: any) => {
         this.cart = res.data.content;
@@ -81,7 +83,7 @@ export class CartService {
     }
   }
 
-  private createCart() {
+  createCart() {
     const data = {
       storeId: this.storeService.getStoreId()
     };
@@ -90,6 +92,7 @@ export class CartService {
       this.apiService.postCreateCart(data).subscribe((res: any) => {
         resolve(res.data);
         this.setCartId(res.data.id);
+        this.getCartItems();
       }, error => {
         console.error("Failed to create cart", error);
         reject(error);

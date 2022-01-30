@@ -1,6 +1,6 @@
 import { RegionCountry } from "./region";
 
-export interface StoreInfo {
+export interface Store {
     id: string;
     name: string;
     storeDescription: string;

@@ -1,63 +1,47 @@
 import { PlatformLocation } from '@angular/common';
 import { Injectable, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs/internal/Subject';
 import { ApiService } from './api.service';
+import { CartService } from './cart.service';
 import { Category } from './components/models/category';
 import { Product } from './components/models/product';
-import { StoreAsset, StoreInfo } from './components/models/store';
+import { StoreAsset, Store } from './components/models/store';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StoreService {
 
-  store: StoreInfo;
+  store: Store;
 
   storeIdKey: string = "store_id";
   storeNameKey: string = "store_name";
-
-  storeDomainName: string = "";
+  storeIdChange: Subject<string> = new Subject<string>();
 
   // defaultStoreId: string = "217cc14c-fbf0-4af7-b927-9328458a61d0";
   defaultStoreId: string = "McD";
   defaultStoreDomainName: string = "mcd";
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private cartService: CartService
   ) {
   }
 
-  getStoreNameFromUrl(): string {
+  async parseStoreFromUrl() {
     let currBaseUrl = location.origin;
-    if (currBaseUrl.match(/localhost/g)) {
-      return this.defaultStoreDomainName;
+
+    // For testing purposes
+    // let currBaseUrl = "awan-tech.dev-pk2.symplified.ai";
+
+    const domainName = currBaseUrl.split('.')[0].replace(/^(https?:|)\/\//, '');
+    const store: Store = await this.getStoreByDomainName(domainName);
+    console.log("StoreInfo: ", store.id);
+    if (this.getStoreId() !== store.id) {
+      this.setStoreId(store.id);
+      this.storeIdChange.next();
     }
-
-    return currBaseUrl.split('.')[0];
-    // return location.origin.split('.')[0];
-  }
-
-  parseStoreIdFromUrl() {
-    let currBaseUrl = location.origin;
-    let localURL = currBaseUrl.match(/localhost/g);
-
-    if (localURL != null) {
-      // use this for localhost
-      this.storeDomainName = "mcd";
-    } else {
-      this.storeDomainName = currBaseUrl.split('.')[0].replace(/^(https?:|)\/\//, '');
-    }
-    console.log('Catalogue Storename: ' + this.storeDomainName);
-
-    this.activatedRoute.queryParams.subscribe(params => {
-      let storeID = params['storeId'];
-      if (!storeID) {
-        storeID = this.defaultStoreId;
-      }
-      this.setStoreId(storeID);
-      console.log("Store ID: ", this.getStoreId());
-    });
   }
 
   private setStoreId(storeId: string) {
@@ -65,21 +49,10 @@ export class StoreService {
   }
 
   getStoreId() {
-    // let storeId = localStorage.getItem(this.storeIdKey);
-    // let localStoreName = localStorage.getItem(this.storeNameKey);
-
-    // if (localStoreName !== this.getStoreNameFromUrl) {
-    //   this.parseStoreIdFromUrl();
-    // }
-
-    if (!localStorage.getItem(this.storeIdKey)) {
-      this.parseStoreIdFromUrl();
-    }
-
     return localStorage.getItem(this.storeIdKey);
   }
 
-  getStoreInfo(): Promise<StoreInfo> {
+  getStoreInfo(): Promise<Store> {
     return new Promise((resolve, reject) => {
       this.apiService.getStoreHoursByID(this.getStoreId()).subscribe((res: any) => {
         resolve(res.data);
@@ -148,6 +121,16 @@ export class StoreService {
     return new Promise((resolve, reject) => {
       this.apiService.getDeliveryOption(this.getStoreId()).subscribe(async (res: any) => {
         resolve(res.data);
+      }, error => {
+        reject(error);
+      })
+    })
+  }
+
+  getStoreByDomainName(domainName: string): Promise<Store> {
+    return new Promise((resolve, reject) => {
+      this.apiService.getStoreInfoByDomainName(domainName).subscribe((res: any) => {
+        resolve(res.data.content[0]);
       }, error => {
         reject(error);
       })

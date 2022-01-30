@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { StoreService } from 'src/app/store.service';
-import { StoreInfo } from '../../models/store';
+import { Store } from '../../models/store';
 
 @Component({
   selector: 'app-footer',
@@ -20,7 +20,7 @@ export class FooterComponent implements OnInit {
   @Input() layout: number | string;
   @Input() logo: number | string;
   async getVendorInfo() {
-    const store: StoreInfo = await this.storeService.getStoreInfo();
+    const store: Store = await this.storeService.getStoreInfo();
     this.storeNameRaw = store.name;
     this.storeContact = store.phoneNumber;
   }

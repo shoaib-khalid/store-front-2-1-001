@@ -184,7 +184,7 @@ export class ContentComponent implements OnInit {
   async ngOnInit() {
     this.isLoading = true;
 
-    this.storeService.parseStoreIdFromUrl();
+    await this.storeService.parseStoreFromUrl();
     Promise.all([this.storeService.getAssets(), this.storeService.getCategories(), this.storeService.getStoreProducts()])
       .then((values) => {
         this.assets = values[0];

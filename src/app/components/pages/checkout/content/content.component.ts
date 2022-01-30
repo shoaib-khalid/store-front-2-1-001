@@ -5,7 +5,7 @@ import { CartService } from 'src/app/cart.service';
 import { CartItem, CartTotals } from 'src/app/components/models/cart';
 import { DeliveryCharge, DeliveryDetails } from 'src/app/components/models/delivery';
 import { State } from 'src/app/components/models/region';
-import { StoreInfo } from 'src/app/components/models/store';
+import { Store } from 'src/app/components/models/store';
 import { StoreService } from 'src/app/store.service';
 
 @Component({
@@ -131,7 +131,7 @@ export class ContentComponent implements OnInit {
 
   async getStoreInfo() {
     try {
-      const storeInfo: StoreInfo = await this.storeService.getStoreInfo();
+      const storeInfo: Store = await this.storeService.getStoreInfo();
       this.currencySymbol = storeInfo.regionCountry.currencySymbol;
       this.userDeliveryDetails.deliveryCountry = storeInfo.regionCountry.name;
       this.storeDeliveryPercentage = storeInfo.serviceChargesPercentage;

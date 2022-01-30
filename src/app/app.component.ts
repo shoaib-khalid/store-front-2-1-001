@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { BreadcrumbService, Breadcrumb } from 'angular-crumbs';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { CartService } from './cart.service';
-import { StoreInfo } from './components/models/store';
+import { Store } from './components/models/store';
 import { StoreService } from './store.service';
 
 @Component({
@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
   }
   private async createTitle(routesCollection: Breadcrumb[]) {
     let title = 'Symplified';
-    const storeInfo: StoreInfo = await this.storeService.getStoreInfo();
+    const storeInfo: Store = await this.storeService.getStoreInfo();
 
     title = storeInfo.name;
     console.log("RoutesCollection", routesCollection);

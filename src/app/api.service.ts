@@ -116,14 +116,30 @@ export class ApiService {
 
     // Ref : https://api.symplified.biz/product-service/v1/stores/McD
 
-    getStoreInfoByID(storeID) {
+    getStoreInfoByID(storeID: string) {
         const header = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json', Authorization: 'Bearer accessToken'
             })
         };
         const url =
-            "https://api.symplified.it/product-service/v1/stores/" + storeID;
+            this.productServiceURL + 'stores/' + storeID;
+
+        return this.http.get(url, header);
+    }
+
+    getStoreInfoByDomainName(domainName: string) {
+        const header = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.token}`
+            }),
+            params: {
+                "domain": domainName
+            }
+        };
+
+        const url = this.productServiceURL + 'stores';
 
         return this.http.get(url, header);
     }
@@ -447,7 +463,6 @@ export class ApiService {
 
         return this.http.get(this.orderServiceURL + url, header);
     }
-
 
     // Ref : https://api.symplified.biz/order-service/v1/orders/000e0d1a-ed1a-4741-8a55-d5e598421364
     getOrdersByID(order_id) {
