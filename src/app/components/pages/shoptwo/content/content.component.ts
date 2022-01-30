@@ -47,15 +47,15 @@ export class ContentComponent implements OnInit {
 
   constructor(
     private modalService: NgbModal,
-    private route: Router,
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private apiService: ApiService,
     private cartService: CartService,
-    private storeService: StoreService) {
+    private storeService: StoreService,
+  ) {
     this.activatedRoute.params.subscribe(params => {
       this.catId = params['catId']
       localStorage.setItem('category_id', this.catId)
-      console.log('Category ID: ', this.catId)
     })
   }
   open(content: any, item: any) {
@@ -87,7 +87,7 @@ export class ContentComponent implements OnInit {
     this.categories = await this.storeService.getCategories();
   }
   goToDetails(prodName) {
-    this.route.navigate(['catalogue/' + prodName]);
+    this.router.navigate(['/product/' + prodName]);
   }
 
   async getProductsByCategory(categoryId, sortId) {

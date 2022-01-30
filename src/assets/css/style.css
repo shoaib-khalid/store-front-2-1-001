@@ -127,7 +127,6 @@ Version: 1.0.0
 /*======================
 1.0. General
 ========================*/
-
 .andro_preloader {
   position: fixed;
   top: 0;
@@ -1837,7 +1836,6 @@ table img {
 .andro_header.header-2 .andro_header-bottom {
   background-color: rgb(93 93 93);
   border-top: 1px solid #f0f2f3;
-  
 }
 
 /* 2.2. Header Style 3 */

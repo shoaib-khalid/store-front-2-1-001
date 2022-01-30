@@ -34,6 +34,7 @@ export class StoreService {
 
     // For testing purposes
     // let currBaseUrl = "awan-tech.dev-pk2.symplified.ai";
+    // let currBaseUrl = "mcd.dev-pk2.symplified.ai";
 
     const domainName = currBaseUrl.split('.')[0].replace(/^(https?:|)\/\//, '');
     const store: Store = await this.getStoreByDomainName(domainName);
@@ -109,7 +110,6 @@ export class StoreService {
   getProductsByCategory(categoryId: string, sortId: string, pageNo: number): Promise<Product[]> {
     return new Promise((resolve, reject) => {
       this.apiService.getProductSByCategory(categoryId, this.getStoreId(), sortId, pageNo).subscribe((res: any) => {
-        console.log("Received Products by Category: ", res);
         resolve(res.data.content);
       }, error => {
         reject(error);

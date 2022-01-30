@@ -24,8 +24,8 @@ export class CartService {
   ) {
     this.getCartItems();
     storeService.storeIdChange.subscribe(storeId => {
-      // Create new cart if store changes
-      this.createCart();
+      // Remove cart if store changes
+      this.removeCart();
     });
   }
 
@@ -68,8 +68,10 @@ export class CartService {
     return localStorage.getItem(this.cartIdKey);
   }
 
-  private removeCartId() {
+  private removeCart() {
     localStorage.removeItem(this.cartIdKey);
+    this.cart = [];
+    this.cartChange.next(this.cart);
   }
 
   getCartItems() {
@@ -227,8 +229,7 @@ export class CartService {
       this.apiService.postConfirmCOD(data, data.cartId, false).subscribe((res: any) => {
         resolve(res);
         if (res.status === 201) {
-          this.cart = [];
-          this.removeCartId();
+          this.removeCart();
         }
       }, error => {
         console.error("Error confirming Cash on Delivery", error);
