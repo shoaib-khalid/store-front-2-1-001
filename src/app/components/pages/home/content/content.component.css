@@ -6,6 +6,11 @@
     width: 60px;
     height: 60px;
 }
+.category-name{
+    font-family: "Montserrat", serif;
+    font-size: 14px;
+    font-weight: 500;
+}
 .category-name:hover{
     color: #58da58 ;
     -webkit-transition: .3s;
@@ -13,4 +18,5 @@
     transition: .3s;
     font-weight: 800;
     font-size: 15px;
+    
 }
