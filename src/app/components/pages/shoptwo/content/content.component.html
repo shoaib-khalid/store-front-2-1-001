@@ -19,7 +19,16 @@
                 <!-- Product Count & Orderby End -->
                 <div class="row masonry">
                     <!-- Product Start -->
+                    <div class="wrapper">
+                    <div class="overlay" *ngIf="isLoading">
+                        <div class="spinner-wrapper">
+                            <div class="dot1"></div>
+                            <div class="dot2"></div>
+                        </div>
+                    </div>
+                    </div>
                     <div class="col-md-4 col-sm-6 masonry-item"
+                    
                         *ngFor="let item of product | paginate: { itemsPerPage: 9, currentPage: page } ; let i = index ">
                         <div
                             class="andro_product andro_product-minimal andro_product-has-controls andro_product-has-buttons">

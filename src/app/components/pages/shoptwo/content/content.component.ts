@@ -44,6 +44,7 @@ export class ContentComponent implements OnInit {
   priceObj: any;
   catID: any;
   storeName: any;
+  isLoading: boolean;
 
   constructor(
     private modalService: NgbModal,
@@ -93,14 +94,18 @@ export class ContentComponent implements OnInit {
   async getProductsByCategory(categoryId, sortId) {
     if (!categoryId && !sortId) {
       this.selectedMenu = 'all';
+      
     } else {
       this.selectedMenu = categoryId;
+      
     }
     console.log('this.selectedMenu', this.selectedMenu);
+    this.isLoading = true;
     this.catId = categoryId;
     localStorage.setItem('category_id', this.catId);
     this.catalogueList = [];
     this.product = await this.storeService.getProductsByCategory(categoryId, sortId, this.page_no);
+    this.isLoading = false
   }
 
   async addToCartFromModal(product: Product) {
