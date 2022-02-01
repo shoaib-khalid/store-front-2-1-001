@@ -5,6 +5,7 @@ import { Location, LocationStrategy, PathLocationStrategy } from '@angular/commo
 import { CartService } from './cart.service';
 import { Store } from './components/models/store';
 import { StoreService } from './store.service';
+import { version } from '../../package.json';
 
 @Component({
   selector: 'app-root',
@@ -30,6 +31,8 @@ export class AppComponent implements OnInit {
     this.breadcrumbService.breadcrumbChanged.subscribe(async crumbs => {
       this.titleService.setTitle(await this.createTitle(crumbs));
     });
+
+    console.log("Project version: " + version);
   }
   onActivate(event) {
     window.scroll(0, 0);
