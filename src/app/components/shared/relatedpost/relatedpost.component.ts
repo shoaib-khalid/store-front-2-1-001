@@ -12,12 +12,6 @@ export class RelatedpostComponent implements OnInit {
   constructor() { }
   public blogbox: { title: string, id: number }[] = blogpost;
   public tags: { title: string, id: number }[] = blogtags;
-  public getBlogTags(items: string | any[]) {
-    var elems = blogtags.filter((item: { id: string; }) => {
-      return items.includes(item.id)
-    });
-    return elems;
-  }
   // 
   relatedConfig = {
     slidesToShow: 3,
