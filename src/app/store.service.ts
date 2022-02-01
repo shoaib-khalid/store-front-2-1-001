@@ -29,11 +29,11 @@ export class StoreService {
   }
 
   async parseStoreFromUrl() {
-    // let currBaseUrl = location.origin;
+    let currBaseUrl = location.origin;
 
     // For testing purposes
     // let currBaseUrl = "awan-tech.dev-pk2.symplified.ai";
-    let currBaseUrl = "mcd.dev-pk2.symplified.ai";
+    // let currBaseUrl = "mcd.dev-pk2.symplified.ai";
 
     const domainName = currBaseUrl.split('.')[0].replace(/^(https?:|)\/\//, '');
     const store: Store = await this.getStoreByDomainName(domainName);
