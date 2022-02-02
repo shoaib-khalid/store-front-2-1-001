@@ -118,29 +118,29 @@ export class ContentComponent implements OnInit {
   }
 
   // Fresharrivals
-  // freshConfig = {
-  //   slidesToShow: 3,
-  //   slidesToScroll: 1,
-  //   arrows: true,
-  //   dots: false,
-  //   autoplay: false,
-  //   prevArrow: '.andro_fresh-arrivals .slider-prev',
-  //   nextArrow: '.andro_fresh-arrivals .slider-next',
-  //   responsive: [
-  //     {
-  //       breakpoint: 991,
-  //       settings: {
-  //         slidesToShow: 2,
-  //       }
-  //     },
-  //     {
-  //       breakpoint: 575,
-  //       settings: {
-  //         slidesToShow: 1,
-  //       }
-  //     }
-  //   ]
-  // }
+  freshConfig = {
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    arrows: true,
+    dots: false,
+    autoplay: false,
+    prevArrow: '.andro_fresh-arrivals .slider-prev',
+    nextArrow: '.andro_fresh-arrivals .slider-next',
+    responsive: [
+      {
+        breakpoint: 991,
+        settings: {
+          slidesToShow: 2,
+        }
+      },
+      {
+        breakpoint: 575,
+        settings: {
+          slidesToShow: 1,
+        }
+      }
+    ]
+  }
 
   async addToCartFromModal(product: Product) {
     this.isLoading = true;

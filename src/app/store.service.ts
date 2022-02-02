@@ -32,7 +32,7 @@ export class StoreService {
     let currBaseUrl = location.origin;
 
     // For testing purposes
-    // let currBaseUrl = "awan-tech.dev-pk2.symplified.ai";
+    // currBaseUrl = "awan-tech.dev-pk2.symplified.ai";
     // currBaseUrl = "mcd.dev-pk2.symplified.ai";
 
     const domainName = currBaseUrl.split('.')[0].replace(/^(https?:|)\/\//, '');
