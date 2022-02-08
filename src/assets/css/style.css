@@ -356,7 +356,7 @@ hr {
   margin: 30px 0;
 }
 img {
-  max-width: 100%;
+  max-width: auto;
   height: auto;
 }
 .imgs-wrapper {
@@ -803,6 +803,38 @@ textarea {
   font-size: 14px;
 }
 .form-control:focus {
+  border: 1px solid #efefef;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.form-control-1::-webkit-input-placeholder {
+  color: #a5a5a5;
+}
+.form-control-1::-moz-placeholder {
+  color: #a5a5a5;
+}
+.form-control-1:-ms-input-placeholder {
+  color: #a5a5a5;
+}
+.form-control-1::-ms-input-placeholder {
+  color: #a5a5a5;
+}
+.form-control-1::placeholder {
+  color: #a5a5a5;
+}
+.form-control-1 {
+  height: 50px;
+  padding: 8px 15px;
+  border-radius: 0;
+  border: 1px solid #f0f2f3;
+  border-radius: 25px;
+  width: 20%;
+  color: #6e6e6e;
+  background-color: #fff;
+  letter-spacing: 0.1px;
+  font-size: 14px;
+}
+.form-control-1:focus {
   border: 1px solid #efefef;
   -webkit-box-shadow: none;
   box-shadow: none;

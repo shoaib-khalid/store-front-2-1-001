@@ -5,16 +5,15 @@
             <div class="col-lg-9">
                 <!-- Product Count & Orderby Start -->
                 <div class="andro_shop-global">
-                    <p>Showing <b>9</b> of <b>{{shopbox.length}}</b> products </p>
-                    <form method="post">
-                        <select class="form-control" name="orderby">
-                            <option value="default">Default sorting</option>
-                            <option value="latest">Latest release</option>
-                            <option value="price-down">Price: High - Low</option>
-                            <option value="price-up">Price: Low - High</option>
-                            <option value="popularity">Popularity Sorting</option>
-                        </select>
-                    </form>
+                    <p>Showing <b>{{name}}</b> products </p>
+                    <select name="sortId" class="form-control-1" [(ngClass)]="sortId" (change)="sortByValue()">
+                        <option value="0">Default sorting</option>
+                        <option value="1">Cheapest</option>
+                        <option value="2">Most Expensive</option>
+                        <option value="3">Name A-Z</option>
+                        <option value="4">Name Z-A</option>
+                        <option value="4">Most Recent</option>
+                    </select>
                 </div>
                 <!-- Product Count & Orderby End -->
                 <div class="row masonry">
@@ -86,13 +85,13 @@
                 <div class="sidebar">
                     <!-- Search Start -->
                     <div class="sidebar-widget widget-search">
-                        <form method="post">
+                        <!-- <form method="post"> -->
                             <div class="andro_search-adv-input">
                                 <input type="text" class="form-control" placeholder="Look for Products" name="search"
-                                    value="">
+                                    value="" [(ngClass)]="searchedKeyword" autocomplete="off">
                                 <button type="submit" name="button"><i class="fa fa-search"></i></button>
                             </div>
-                        </form>
+                        <!-- </form> -->
                     </div>
                     <!-- Search End -->
                     <!-- Filter: Categories Start -->

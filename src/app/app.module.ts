@@ -12,6 +12,7 @@ import { NewsletterComponent } from './newsletter/newsletter.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './components/shared/shared.module';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 
 @NgModule({
@@ -29,7 +30,7 @@ import { SharedModule } from './components/shared/shared.module';
     SlickCarouselModule,
     HttpClientModule,
     SharedModule,
-
+    Ng2SearchPipeModule
   ],
   providers: [],
   bootstrap: [AppComponent],
