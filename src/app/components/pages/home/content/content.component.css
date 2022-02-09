@@ -3,12 +3,12 @@
     height: 100%;
 }
 .cat-img{
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
 }
 .category-name{
     font-family: "Montserrat", serif;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
 }
 .category-name:hover{

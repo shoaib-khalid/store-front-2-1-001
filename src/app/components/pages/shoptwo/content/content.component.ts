@@ -47,7 +47,7 @@ export class ContentComponent implements OnInit {
   isLoading: boolean;
   name: any;
   sortId: any;
-  searchedKeyword: string;
+
   
 
   constructor(
