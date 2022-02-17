@@ -56,7 +56,6 @@ export class ShopsidebarComponent implements OnInit {
     } else {
       this.selectedMenu = catId;
     }
-    console.log("Selected Menu", this.selectedMenu);
     this.categoryId = catId;
     localStorage.setItem("category_id", this.catId);
     this.catalogueList = [];

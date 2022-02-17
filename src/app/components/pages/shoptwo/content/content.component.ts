@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import shoppost from '../../../../data/shop.json';
-import { ApiService } from 'src/app/api.service';
-import { Category } from 'src/app/components/models/category';
-import { Product } from 'src/app/components/models/product';
-import { HttpClient } from '@angular/common/http';
-import { Router, ActivatedRoute } from '@angular/router';
-import { PlatformLocation } from '@angular/common';
-import { contains, removeData } from 'jquery';
-import { CartService } from 'src/app/cart.service';
-import Swal from 'sweetalert2';
-import { StoreService } from 'src/app/store.service';
+import { Component, OnInit } from "@angular/core";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import shoppost from "../../../../data/shop.json";
+import { ApiService } from "src/app/api.service";
+import { Category } from "src/app/components/models/category";
+import { Product } from "src/app/components/models/product";
+import { HttpClient } from "@angular/common/http";
+import { Router, ActivatedRoute } from "@angular/router";
+import { PlatformLocation } from "@angular/common";
+import { contains, removeData } from "jquery";
+import { CartService } from "src/app/cart.service";
+import Swal from "sweetalert2";
+import { StoreService } from "src/app/store.service";
 @Component({
-  selector: 'app-content',
-  templateUrl: './content.component.html',
-  styleUrls: ['./content.component.css']
+  selector: "app-content",
+  templateUrl: "./content.component.html",
+  styleUrls: ["./content.component.css"],
 })
 export class ContentComponent implements OnInit {
   // pagination
@@ -48,30 +48,32 @@ export class ContentComponent implements OnInit {
   name: any;
   sortId: any;
 
-  
-
   constructor(
     private modalService: NgbModal,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private apiService: ApiService,
     private cartService: CartService,
-    private storeService: StoreService,
+    private storeService: StoreService
   ) {
-    this.activatedRoute.params.subscribe(params => {
-      this.catId = params['catId']
-      localStorage.setItem('category_id', this.catId)
-    })
+    this.activatedRoute.params.subscribe((params) => {
+      this.catId = params["catId"];
+      localStorage.setItem("category_id", this.catId);
+    });
   }
   open(content: any, item: any) {
-    this.modalContent = item
-    this.modalService.open(content, { centered: true, size: "lg", windowClass: 'andro_quick-view-modal p-0' });
+    this.modalContent = item;
+    this.modalService.open(content, {
+      centered: true,
+      size: "lg",
+      windowClass: "andro_quick-view-modal p-0",
+    });
   }
   closeModal() {
     this.modalService.dismissAll();
   }
   // Increment decrement
-  public counter: number = 1
+  public counter: number = 1;
   increment() {
     this.counter += 1;
   }
@@ -82,9 +84,9 @@ export class ContentComponent implements OnInit {
 
   //categories
   getAllProduct() {
-    this.catId = null
-    this.sortBy = null
-    this.getProductsByCategory(this.catId, this.sortBy)
+    this.catId = null;
+    this.sortBy = null;
+    this.getProductsByCategory(this.catId, this.sortBy);
   }
 
   //SideBar Categories
@@ -92,48 +94,51 @@ export class ContentComponent implements OnInit {
     this.categories = await this.storeService.getCategories();
   }
   goToDetails(prodName) {
-    this.router.navigate(['/product/' + prodName]);
+    this.router.navigate(["/product/" + prodName]);
   }
 
   async getProductsByCategory(categoryId, sortId) {
     if (!categoryId && !sortId) {
-      this.selectedMenu = 'all';
-      
+      this.selectedMenu = "all";
     } else {
       this.selectedMenu = categoryId;
-      
     }
-    console.log('this.selectedMenu', this.selectedMenu);
     this.isLoading = true;
     this.catId = categoryId;
-    localStorage.setItem('category_id', this.catId);
+    localStorage.setItem("category_id", this.catId);
     this.name = this.selectedMenu;
     this.catalogueList = [];
-    this.product = await this.storeService.getProductsByCategory(categoryId, sortId, this.page_no);
-    this.isLoading = false
+    this.product = await this.storeService.getProductsByCategory(
+      categoryId,
+      sortId,
+      this.page_no
+    );
+    this.isLoading = false;
   }
-  sortByValue(){
-        this.getProductsByCategory(this.catId ,this.sortId)
-    }
-
+  sortByValue() {
+    this.getProductsByCategory(this.catId, this.sortId);
+  }
 
   async addToCartFromModal(product: Product) {
     this.modalService.dismissAll();
-    const addToCartResponse: any = await this.cartService.addToCart(product, this.counter);
+    const addToCartResponse: any = await this.cartService.addToCart(
+      product,
+      this.counter
+    );
     if (addToCartResponse.status === 201) {
       Swal.fire({
-        icon: 'success',
-        title: 'Great!',
-        text: 'Item successfully added to cart.',
-        confirmButtonColor: '#50BD4D'
-      })
+        icon: "success",
+        title: "Great!",
+        text: "Item successfully added to cart.",
+        confirmButtonColor: "#50BD4D",
+      });
     } else {
       // TODO: Show error message
     }
   }
 
   ngOnInit() {
-    this.catId = localStorage.getItem("category_id")
+    this.catId = localStorage.getItem("category_id");
     this.getStoreCategories();
     this.getProductsByCategory(this.catId, this.sortBy);
   }

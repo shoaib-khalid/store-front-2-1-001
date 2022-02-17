@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ApiService } from 'src/app/api.service';
-import { CartService } from 'src/app/cart.service';
-import { CartItem, CartTotals } from 'src/app/components/models/cart';
-import { DeliveryCharge, DeliveryDetails } from 'src/app/components/models/delivery';
-import { State } from 'src/app/components/models/region';
-import { Store } from 'src/app/components/models/store';
-import { StoreService } from 'src/app/store.service';
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { ApiService } from "src/app/api.service";
+import { CartService } from "src/app/cart.service";
+import { CartItem, CartTotals } from "src/app/components/models/cart";
+import {
+  DeliveryCharge,
+  DeliveryDetails,
+} from "src/app/components/models/delivery";
+import { State } from "src/app/components/models/region";
+import { Store } from "src/app/components/models/store";
+import { StoreService } from "src/app/store.service";
 
 @Component({
-  selector: 'app-content',
-  templateUrl: './content.component.html',
-  styleUrls: ['./content.component.css']
+  selector: "app-content",
+  templateUrl: "./content.component.html",
+  styleUrls: ["./content.component.css"],
 })
 export class ContentComponent implements OnInit {
-
   checkout: CartItem[];
   userDeliveryDetails: DeliveryDetails;
   cartTotals: CartTotals = null;
@@ -58,30 +60,31 @@ export class ContentComponent implements OnInit {
     private apiService: ApiService
   ) {
     this.numberRegex = /[0-9]+/;
-    this.emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    this.emailRegex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     this.phoneNumberRegex = /^[+]*[(]?[0-9]{1,4}[)]?[-\s\.\/0-9]*$/;
     this.submitButtonText = "Get Delivery Charges";
     this.userDeliveryDetails = {
-      deliveryContactName: '',
-      deliveryAddress: '',
-      deliveryPostcode: '',
-      deliveryContactEmail: '',
-      deliveryContactPhone: '',
-      deliveryState: '',
-      deliveryCity: '',
-      deliveryCountry: '',
-      deliveryNotes: ''
+      deliveryContactName: "",
+      deliveryAddress: "",
+      deliveryPostcode: "",
+      deliveryContactEmail: "",
+      deliveryContactPhone: "",
+      deliveryState: "",
+      deliveryCity: "",
+      deliveryCountry: "",
+      deliveryNotes: "",
     };
   }
   public isOne = true;
   public isTwo = true;
   public calculateSubtotal() {
     return this.cartService.getSubTotal();
-  };
+  }
   ngOnInit(): void {
     this.checkout = this.cartService.cart;
     this.getStoreInfo();
-    this.cartService.cartChange.subscribe(cart => {
+    this.cartService.cartChange.subscribe((cart) => {
       this.checkout = cart;
     });
   }
@@ -95,19 +98,28 @@ export class ContentComponent implements OnInit {
       this.isProcessing = true;
       if (this.hasDeliveryCharges) {
         const codResult: any = await this.cartService.confirmCashOnDelivery(
-          this.userDeliveryDetails, this.deliveryFee);
+          this.userDeliveryDetails,
+          this.deliveryFee
+        );
         if (codResult.status === 201) {
-          this.route.navigate(['/thankyou']);
+          this.route.navigate(["/thankyou"]);
         } else {
           // TODO: Show error message
         }
       } else {
-        this.deliveryFee = await this.cartService.getDeliveryFee(this.userDeliveryDetails);
-        this.cartTotals = await this.cartService.getDiscount(this.deliveryFee.price);
+        this.deliveryFee = await this.cartService.getDeliveryFee(
+          this.userDeliveryDetails
+        );
+        this.cartTotals = await this.cartService.getDiscount(
+          this.deliveryFee.price
+        );
 
         this.hasDeliveryCharges = this.cartTotals ? true : false;
-        this.totalServiceCharge = this.storeDeliveryPercentage === 0 ? this.storeDeliveryPercentage :
-          ((this.storeDeliveryPercentage / 100) * this.cartTotals.cartSubTotal);
+        this.totalServiceCharge =
+          this.storeDeliveryPercentage === 0
+            ? this.storeDeliveryPercentage
+            : (this.storeDeliveryPercentage / 100) *
+              this.cartTotals.cartSubTotal;
         this.submitButtonText = "Place Order";
       }
       this.isProcessing = false;
@@ -115,18 +127,19 @@ export class ContentComponent implements OnInit {
   }
 
   getStatesByID(countryID): Promise<State[]> {
-    return new Promise(resolve => {
-      this.apiService.getStateByCountryID(countryID).subscribe(async (res: any) => {
-        if (res.status === 200) {
-          resolve(res.data.content)
-        } else {
-          console.log('getStateByCountryID operation failed')
+    return new Promise((resolve) => {
+      this.apiService.getStateByCountryID(countryID).subscribe(
+        async (res: any) => {
+          if (res.status === 200) {
+            resolve(res.data.content);
+          }
+        },
+        (error) => {
+          console.error(error);
+          resolve(error);
         }
-      }, error => {
-        console.error(error);
-        resolve(error);
-      })
-    })
+      );
+    });
   }
 
   async getStoreInfo() {
@@ -153,39 +166,49 @@ export class ContentComponent implements OnInit {
     this.validatePhoneNumber();
     this.validateEmailAddress();
 
-    return this.isNameValid && this.isAddressValid && this.isCityValid && this.isStateValid &&
-      this.isPostCodeValid && this.isCountryValid && this.isPhoneNumberValid && this.isEmailValid;
+    return (
+      this.isNameValid &&
+      this.isAddressValid &&
+      this.isCityValid &&
+      this.isStateValid &&
+      this.isPostCodeValid &&
+      this.isCountryValid &&
+      this.isPhoneNumberValid &&
+      this.isEmailValid
+    );
   }
 
   validateName(): boolean {
-    this.isNameValid = this.userDeliveryDetails.deliveryContactName !== '';
+    this.isNameValid = this.userDeliveryDetails.deliveryContactName !== "";
     return this.isNameValid;
   }
 
   validateAddress(): boolean {
-    this.isAddressValid = this.userDeliveryDetails.deliveryAddress !== '';
+    this.isAddressValid = this.userDeliveryDetails.deliveryAddress !== "";
     return this.isAddressValid;
   }
 
   validateCity(): boolean {
-    this.isCityValid = this.userDeliveryDetails.deliveryCity !== '';
+    this.isCityValid = this.userDeliveryDetails.deliveryCity !== "";
     return this.isCityValid;
   }
 
   validateState(): boolean {
-    this.isStateValid = this.userDeliveryDetails.deliveryState !== '';
+    this.isStateValid = this.userDeliveryDetails.deliveryState !== "";
     return this.isStateValid;
   }
 
   validateCountry(): boolean {
-    this.isCountryValid = this.userDeliveryDetails.deliveryCountry !== '';
+    this.isCountryValid = this.userDeliveryDetails.deliveryCountry !== "";
     return this.isCountryValid;
   }
 
   validatePostCode(): boolean {
-    const postCodeRegexMatch = this.userDeliveryDetails.deliveryPostcode.match(this.numberRegex);
+    const postCodeRegexMatch = this.userDeliveryDetails.deliveryPostcode.match(
+      this.numberRegex
+    );
     this.isPostCodeValid = postCodeRegexMatch !== null;
-    if (this.userDeliveryDetails.deliveryPostcode === '') {
+    if (this.userDeliveryDetails.deliveryPostcode === "") {
       this.postCodeErrorMsg = "Postcode cannot be blank.";
     } else if (!postCodeRegexMatch) {
       this.postCodeErrorMsg = "Postcode must be a valid number";
@@ -194,9 +217,11 @@ export class ContentComponent implements OnInit {
   }
 
   validatePhoneNumber(): boolean {
-    const phoneRegexMatch = this.userDeliveryDetails.deliveryContactPhone.match(this.phoneNumberRegex);
+    const phoneRegexMatch = this.userDeliveryDetails.deliveryContactPhone.match(
+      this.phoneNumberRegex
+    );
     this.isPhoneNumberValid = phoneRegexMatch !== null;
-    if (this.userDeliveryDetails.deliveryContactPhone === '') {
+    if (this.userDeliveryDetails.deliveryContactPhone === "") {
       this.phoneNumberErrorMsg = "Phone number cannot be blank.";
     } else if (!phoneRegexMatch) {
       this.phoneNumberErrorMsg = "Not a valid phone number.";
@@ -205,12 +230,14 @@ export class ContentComponent implements OnInit {
   }
 
   validateEmailAddress(): boolean {
-    const emailRegexMatch = this.userDeliveryDetails.deliveryContactEmail.match(this.emailRegex);
+    const emailRegexMatch = this.userDeliveryDetails.deliveryContactEmail.match(
+      this.emailRegex
+    );
     this.isEmailValid = emailRegexMatch !== null;
-    if (this.userDeliveryDetails.deliveryContactEmail === '') {
+    if (this.userDeliveryDetails.deliveryContactEmail === "") {
       this.emailErrorMsg = "Email address cannot be blank.";
     } else if (!emailRegexMatch) {
-      this.emailErrorMsg = "Not a valid email address."
+      this.emailErrorMsg = "Not a valid email address.";
     }
     return this.isEmailValid;
   }
