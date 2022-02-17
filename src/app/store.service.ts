@@ -7,6 +7,7 @@ import { CartService } from "./cart.service";
 import { Category } from "./components/models/category";
 import { Product } from "./components/models/product";
 import { StoreAsset, Store } from "./components/models/store";
+import { isDevMode } from "@angular/core";
 
 @Injectable({
   providedIn: "root",
@@ -18,21 +19,22 @@ export class StoreService {
   storeNameKey: string = "store_name";
   storeIdChange: Subject<string> = new Subject<string>();
 
-  // defaultStoreId: string = "217cc14c-fbf0-4af7-b927-9328458a61d0";
-  defaultStoreId: string = "McD";
-  defaultStoreDomainName: string = "mcd";
-
   constructor(private apiService: ApiService) {}
 
   async parseStoreFromUrl() {
     let currBaseUrl = location.origin;
 
+    if (isDevMode()) {
+      console.log("Running in dev mode");
+      currBaseUrl = "mcd.dev-pk2.symplified.ai";
+    }
+
     // For testing purposes
     // currBaseUrl = "awan-tech.dev-pk2.symplified.ai";
     // currBaseUrl = "mcd.dev-pk2.symplified.ai";
 
-    const domainName = currBaseUrl.split(".")[0].replace(/^(https?:|)\/\//, "");
-    const store: Store = await this.getStoreByDomainName(domainName);
+    currBaseUrl = currBaseUrl.split(".")[0].replace(/^(https?:|)\/\//, "");
+    const store: Store = await this.getStoreByDomainName(currBaseUrl);
     console.log("StoreInfo: ", store.id);
     if (this.getStoreId() !== store.id) {
       this.setStoreId(store.id);
@@ -150,6 +152,8 @@ export class StoreService {
   }
 
   getStoreByDomainName(domainName: string): Promise<Store> {
+    console.log("Domain name: ", domainName);
+
     return new Promise((resolve, reject) => {
       this.apiService.getStoreInfoByDomainName(domainName).subscribe(
         (res: any) => {

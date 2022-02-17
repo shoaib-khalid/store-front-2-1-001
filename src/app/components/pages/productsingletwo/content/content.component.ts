@@ -1,22 +1,22 @@
-import { Component, AfterContentInit, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import shoppost from '../../../../data/shop.json';
-import blogcategory from '../../../../data/blogcategory.json';
-import blogtags from '../../../../data/blogtags.json';
-import { ApiService } from 'src/app/api.service';
-import { Category } from 'src/app/components/models/category';
-import { PlatformLocation, Location } from '@angular/common';
-import { Product } from 'src/app/components/models/product';
-import { contains, data, param } from 'jquery';
-import { HttpParams } from '@angular/common/http';
-import { CartService } from 'src/app/cart.service';
-import Swal from 'sweetalert2';
-import { StoreService } from 'src/app/store.service';
+import { Component, AfterContentInit, OnInit } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import shoppost from "../../../../data/shop.json";
+import blogcategory from "../../../../data/blogcategory.json";
+import blogtags from "../../../../data/blogtags.json";
+import { ApiService } from "src/app/api.service";
+import { Category } from "src/app/components/models/category";
+import { PlatformLocation, Location } from "@angular/common";
+import { Product } from "src/app/components/models/product";
+import { contains, data, param } from "jquery";
+import { HttpParams } from "@angular/common/http";
+import { CartService } from "src/app/cart.service";
+import Swal from "sweetalert2";
+import { StoreService } from "src/app/store.service";
 
 @Component({
-  selector: 'app-content',
-  templateUrl: './content.component.html',
-  styleUrls: ['./content.component.css']
+  selector: "app-content",
+  templateUrl: "./content.component.html",
+  styleUrls: ["./content.component.css"],
 })
 export class ContentComponent implements OnInit {
   productId: any;
@@ -46,34 +46,33 @@ export class ContentComponent implements OnInit {
     private router: Router,
     private cartService: CartService,
     private storeService: StoreService,
-    private location: Location) {
+    private location: Location
+  ) {
     this.product = {
       allowOutOfStockPurchases: false,
-      categoryId: '',
+      categoryId: "",
       productid: 0,
-      name: '',
-      description: '',
+      name: "",
+      description: "",
       price: 0,
-      thumbnailUrl: '',
+      thumbnailUrl: "",
       status: false,
-      id: '',
+      id: "",
       productInventories: [
         {
-          itemCode: '',
+          itemCode: "",
           price: 0,
           quantity: 0,
-          productId: '',
-          sku: '',
+          productId: "",
+          sku: "",
           productInventoryItems: [],
           product: null,
-        }
-      ]
+        },
+      ],
     };
-    this.activatedRoute.params.subscribe(params => {
-      this.productSeoName = params['prodSeoName'];
-      console.log('product name before: ' + this.productSeoName); // Print the parameter to the console.             
+    this.activatedRoute.params.subscribe((params) => {
+      this.productSeoName = params["prodSeoName"];
     });
-
   }
 
   back(): void {
@@ -81,7 +80,7 @@ export class ContentComponent implements OnInit {
   }
 
   // Increment decrement
-  public counter: number = 1
+  public counter: number = 1;
   increment() {
     this.counter += 1;
   }
@@ -92,8 +91,6 @@ export class ContentComponent implements OnInit {
   }
 
   async getProductDetailsByName(seoName) {
-    console.log('getProductDetailsByName(): ' + seoName)
-
     this.product = await this.storeService.getProductDetailsByName(seoName);
   }
 
@@ -102,18 +99,20 @@ export class ContentComponent implements OnInit {
   }
 
   async addToCart() {
-    console.log(this.product);
-    const addToCartResponse: any = await this.cartService.addToCart(this.product, this.counter);
+    const addToCartResponse: any = await this.cartService.addToCart(
+      this.product,
+      this.counter
+    );
     if (addToCartResponse.status === 201) {
       Swal.fire({
-        icon: 'success',
-        title: 'Great!',
-        text: 'Item successfully added to cart.',
-        confirmButtonColor: '#50BD4D'
-      })
+        icon: "success",
+        title: "Great!",
+        text: "Item successfully added to cart.",
+        confirmButtonColor: "#50BD4D",
+      });
     } else {
       // TODO: Show error message
     }
-    this.router.navigate(['/cart']);
+    this.router.navigate(["/cart"]);
   }
 }

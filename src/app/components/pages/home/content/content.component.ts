@@ -1,20 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Router, ActivatedRoute } from '@angular/router';
-import Swal from 'sweetalert2';
-import { Category } from '../../../models/category';
-import { Product } from '../../../models/product';
-import { StoreAsset } from '../../../models/store';
-import { CartService } from '../../../../cart.service';
-import { StoreService } from '../../../../store.service';
+import { Component, OnInit } from "@angular/core";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { Router, ActivatedRoute } from "@angular/router";
+import Swal from "sweetalert2";
+import { Category } from "../../../models/category";
+import { Product } from "../../../models/product";
+import { StoreAsset } from "../../../models/store";
+import { CartService } from "../../../../cart.service";
+import { StoreService } from "../../../../store.service";
 
 @Component({
-  selector: 'app-content',
-  templateUrl: './content.component.html',
-  styleUrls: ['./content.component.css']
+  selector: "app-content",
+  templateUrl: "./content.component.html",
+  styleUrls: ["./content.component.css"],
 })
 export class ContentComponent implements OnInit {
-
   isLoading: boolean;
 
   closeResult: string;
@@ -45,25 +44,30 @@ export class ContentComponent implements OnInit {
   assetsData: any;
   banner: any;
 
-  constructor(private modalService: NgbModal,
+  constructor(
+    private modalService: NgbModal,
     private route: Router,
     private activatedRoute: ActivatedRoute,
     private cartService: CartService,
     private storeService: StoreService
   ) {
     this.assets = {
-      bannerMobileUrl: '',
-      bannerUrl: '',
-      logoUrl: '',
-      qrCodeUrl: '',
-      storeId: ''
+      bannerMobileUrl: "",
+      bannerUrl: "",
+      logoUrl: "",
+      qrCodeUrl: "",
+      storeId: "",
     };
   }
 
   open(content: any, item: Product) {
     this.counter = 1;
     this.modalContent = item;
-    this.modalService.open(content, { centered: true, size: "lg", windowClass: 'andro_quick-view-modal p-0' });
+    this.modalService.open(content, {
+      centered: true,
+      size: "lg",
+      windowClass: "andro_quick-view-modal p-0",
+    });
   }
   closeModal() {
     this.modalService.dismissAll();
@@ -107,14 +111,14 @@ export class ContentComponent implements OnInit {
   // }
 
   goToDetails(productID) {
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.productID = params['productID'];
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.productID = params["productID"];
     });
-    this.route.navigate(['product/:prodSeoName/'] + productID);
+    this.route.navigate(["product/:prodSeoName/"] + productID);
   }
   //Navigation to category
   goToCategory(catId) {
-    this.route.navigate(['catalogue/' + catId]);// + catId
+    this.route.navigate(["catalogue/" + catId]); // + catId
   }
 
   // Fresharrivals
@@ -124,37 +128,40 @@ export class ContentComponent implements OnInit {
     arrows: true,
     dots: false,
     autoplay: false,
-    prevArrow: '.andro_fresh-arrivals .slider-prev',
-    nextArrow: '.andro_fresh-arrivals .slider-next',
+    prevArrow: ".andro_fresh-arrivals .slider-prev",
+    nextArrow: ".andro_fresh-arrivals .slider-next",
     responsive: [
       {
         breakpoint: 991,
         settings: {
           slidesToShow: 2,
-        }
+        },
       },
       {
         breakpoint: 575,
         settings: {
           slidesToShow: 1,
-        }
-      }
-    ]
-  }
+        },
+      },
+    ],
+  };
 
   async addToCartFromModal(product: Product) {
     this.isLoading = true;
     this.modalService.dismissAll();
-    const addToCartResponse: any = await this.cartService.addToCart(product, this.counter);
+    const addToCartResponse: any = await this.cartService.addToCart(
+      product,
+      this.counter
+    );
     this.isLoading = false;
     if (addToCartResponse.status === 201) {
       Swal.fire({
-        icon: 'success',
-        title: 'Item added to Cart',
+        icon: "success",
+        title: "Item added to Cart",
         toast: true,
         showConfirmButton: false,
         timer: 2000,
-        position: 'bottom-right'
+        position: "bottom-right",
       });
     } else {
       // TODO: Show Error message
@@ -171,21 +178,25 @@ export class ContentComponent implements OnInit {
     this.isLoading = true;
 
     await this.storeService.parseStoreFromUrl();
-    Promise.all([this.storeService.getAssets(), this.storeService.getCategories(), this.storeService.getStoreProducts()])
+    Promise.all([
+      this.storeService.getAssets(),
+      this.storeService.getCategories(),
+      this.storeService.getStoreProducts(),
+    ])
       .then((values) => {
         this.assets = values[0];
         this.categories = values[1];
         this.product = values[2];
         this.isLoading = false;
-      }).catch(error => {
+      })
+      .catch((error) => {
         console.error("Error getting values for homepage" + error);
         Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'An error occurred while fetching store details. Please refresh the page.',
+          icon: "error",
+          title: "Oops...",
+          text: "An error occurred while fetching store details. Please refresh the page.",
         });
-      }
-      );
+      });
   }
 
   // goToProductPage() {
@@ -193,4 +204,3 @@ export class ContentComponent implements OnInit {
   //   this.route.nav
   // }
 }
-

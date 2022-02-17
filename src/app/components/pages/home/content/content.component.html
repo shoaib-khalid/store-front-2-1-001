@@ -2,12 +2,12 @@
 
 <!-- Banner Start -->
 <div>
-    <div class="andro_banner banner-2">
-        <!-- <img class="banner-design" src="{{assets['bannerUrl']}}"> -->
-        <img class="banner-design" [src]="assets.bannerUrl">
-    </div>
+  <div class="andro_banner banner-2">
     <!-- <img class="banner-design" src="{{assets['bannerUrl']}}"> -->
-    <!-- <ngx-slick-carousel #slickModal="slick-carousel" [config]="bannerConfig" class="andro_banner-slider" >
+    <img class="banner-design" [src]="assets.bannerUrl" />
+  </div>
+  <!-- <img class="banner-design" src="{{assets['bannerUrl']}}"> -->
+  <!-- <ngx-slick-carousel #slickModal="slick-carousel" [config]="bannerConfig" class="andro_banner-slider" >
         <div ngxSlickItem class="andro_banner-slider-inner" style="background-image: url('{{item.photo}}');"
             *ngFor="let item of bannerslides">
             <div class="container" ><img src="{{assets['bannerUrl']}}">
@@ -26,65 +26,95 @@
 
 <!-- Categories Start -->
 <div class="section section-padding category_section">
-    <!-- <div class="alert alert-primary" role="alert">
+  <!-- <div class="alert alert-primary" role="alert">
         This is a primary alert—check it out!
       </div> -->
-    <div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-2 col-md-6 col-sm-4" *ngFor="let item of categories ; let i = index; ">
-                    <div class="andro_icon-block text-center has-link" (click)="goToCategory(item.id)">
-                        <a routerLink="/catalogue/{{item.id}}">
-                            <img class="cat-img" src="{{item.thumbnailUrl}}" />
-                            <h5 class="category-name">{{item.name}}</h5>
-                        </a>
-                    </div>
-                </div>
-            </div>
+  <div>
+    <div class="container">
+      <div class="row">
+        <div
+          class="col-lg-2 col-md-6 col-sm-4"
+          *ngFor="let item of categories; let i = index"
+        >
+          <div
+            class="andro_icon-block text-center has-link"
+            (click)="goToCategory(item.id)"
+          >
+            <a routerLink="/catalogue/{{ item.id }}">
+              <img class="cat-img" src="{{ item.thumbnailUrl }}" />
+              <h5 class="category-name">{{ item.name }}</h5>
+            </a>
+          </div>
         </div>
+      </div>
     </div>
-    <!-- Categories End -->
-    <!-- Fresh Arrival Start -->
+  </div>
+  <!-- Categories End -->
+  <!-- Fresh Arrival Start -->
 
-    <!-- Products End -->
-    <!-- Featured Product Start -->
-    <div class="section pt-0 andro_fresh-arrivals">
-        <div class="container">
-            <div class="section-title flex-title">
-                <h4 class="title">Featured Products</h4>
-                <div class="andro_arrows">
-                    <i class="fa fa-arrow-left slick-arrow slider-prev"></i>
-                    <i class="fa fa-arrow-right slick-arrow slider-next"></i>
-                </div>
+  <!-- Products End -->
+  <!-- Featured Product Start -->
+  <div class="section pt-0 andro_fresh-arrivals">
+    <div class="container">
+      <div class="section-title flex-title">
+        <h4 class="title">Featured Products</h4>
+        <div class="andro_arrows">
+          <i class="fa fa-arrow-left slick-arrow slider-prev"></i>
+          <i class="fa fa-arrow-right slick-arrow slider-next"></i>
+        </div>
+      </div>
+      <ngx-slick-carousel
+        #slickModal="slick-carousel"
+        [config]="freshConfig"
+        class="andro_fresh-arrivals-slider"
+      >
+        <!-- Product Start -->
+
+        <div
+          ngxSlickItem
+          class="andro_product andro_product-has-controls"
+          *ngFor="let item of product; let i = index"
+        >
+          <div
+            class="andro_product-badge andro_badge-featured"
+            *ngIf="item.featured"
+          >
+            <i class="fa fa-star"></i>
+            <span>New</span>
+          </div>
+          <div
+            class="andro_product-badge andro_badge-sale"
+            *ngIf="item.discount"
+          >
+            {{ item.discount }}% Off
+          </div>
+          <div class="andro_product-thumb thumb-sm">
+            <a routerLink="/product/{{ item.seoName }}"
+              ><img src="{{ item.thumbnailUrl }}" alt="{{ item.name }}"
+            /></a>
+          </div>
+          <div class="andro_product-body">
+            <!-- (click)="goToDetails(item.seoName)" -->
+            <h5 class="andro_product-title">
+              <a routerLink="/product/{{ item.seoName }}"> {{ item.name }} </a>
+            </h5>
+            <div
+              class="andro_product-price"
+              *ngIf="item.productInventories.length > 0"
+            >
+              <span *ngIf="item.discount">
+                PKR
+                {{
+                  (item.productInventories[0].price * (100 - item.discount)) /
+                    100 | number: "1.2-2"
+                }}
+              </span>
+              <span>
+                PKR
+                {{ item.productInventories[0].price | number: "1.2-2" }}
+              </span>
             </div>
-            <ngx-slick-carousel #slickModal="slick-carousel" [config]="freshConfig" class="andro_fresh-arrivals-slider">
-                <!-- Product Start -->
-
-                <div ngxSlickItem class="andro_product andro_product-has-controls"
-                    *ngFor="let item of product ; let i = index; ">
-                    <div class="andro_product-badge andro_badge-featured" *ngIf="item.featured">
-                        <i class="fa fa-star"></i>
-                        <span>New</span>
-                    </div>
-                    <div class="andro_product-badge andro_badge-sale" *ngIf="item.discount">
-                        {{item.discount}}% Off
-                    </div>
-                    <div class="andro_product-thumb thumb-sm">
-                        <a routerLink="/product/{{item.seoName}}"><img src="{{item.thumbnailUrl}}"
-                                alt="{{item.name}}"></a>
-                    </div>
-                    <div class="andro_product-body">
-                        <!-- (click)="goToDetails(item.seoName)" -->
-                        <h5 class="andro_product-title"><a routerLink="/product/{{item.seoName}}">
-                                {{item.name}} </a> </h5>
-                        <div class="andro_product-price">
-                            <span *ngIf="item.discount">PKR {{item.productInventories[0].price * (100 - item.discount) /
-                                100
-                                |
-                                number:'1.2-2'}}</span>
-                            <span>PKR {{item.productInventories[0].price| number:'1.2-2'}}</span>
-                        </div>
-                        <!--<div class="andro_rating-wrapper">
+            <!--<div class="andro_rating-wrapper">
                                     <div class="andro_rating">
                                         <ngb-rating [max]="5" [(rate)]="item.rating" [readonly]="true">
                                             <ng-template let-fill="fill" let-index="index">
@@ -94,72 +124,87 @@
                                     </div>
                                     <span>{{item.rating}} Stars</span>
                                 </div>-->
-                    </div>
-                    <div class="andro_product-footer">
-                        <div class="andro_product-buttons">
-                            <!-- <a routerLink= "/product/{{item.seoName}}">
+          </div>
+          <div class="andro_product-footer">
+            <div class="andro_product-buttons">
+              <!-- <a routerLink= "/product/{{item.seoName}}">
                                 <i ngbTooltip="Add To Cart" placement="top" class="flaticon-shopping-basket"></i>
                             </a> -->
-                            <a href="javascript:void(0)" (click)="open(shopmodal, item)"
-                                class="andro_btn-custom light">Quick View</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product End -->
-            </ngx-slick-carousel>
+              <a
+                href="javascript:void(0)"
+                (click)="open(shopmodal, item)"
+                class="andro_btn-custom light"
+                >Quick View</a
+              >
+            </div>
+          </div>
         </div>
+        <!-- Product End -->
+      </ngx-slick-carousel>
     </div>
-    <!-- Products End -->
+  </div>
+  <!-- Products End -->
 </div>
 
 <!-- Modal Start -->
 <ng-template #shopmodal let-modal>
-    <div class="modal-body">
-        <!-- (click)="modal.dismiss('Cross click')" -->
-        <div class="close-btn close-dark close" (click)="closeModal()">
-            <span></span>
-            <span></span>
-        </div>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-5">
-                    <div class="andro_product">
-                        <!-- <div class="andro_product-badge andro_badge-featured" *ngIf="modalContent.featured">
+  <div class="modal-body">
+    <!-- (click)="modal.dismiss('Cross click')" -->
+    <div class="close-btn close-dark close" (click)="closeModal()">
+      <span></span>
+      <span></span>
+    </div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-5">
+          <div class="andro_product">
+            <!-- <div class="andro_product-badge andro_badge-featured" *ngIf="modalContent.featured">
                             <i class="fa fa-star"></i>
                             <span>Featured</span>
                         </div>
                         <div class="andro_product-badge andro_badge-sale" *ngIf="modalContent.discount">
                             {{modalContent.discount}}% Off
                         </div> -->
-                        <img [src]="modalContent.thumbnailUrl" alt="{{modalContent.name}}">
-                    </div>
-                </div>
-                <div class="col-md-7">
-                    <div class="andro_product-single-content">
-                        <div class="andro_rating-wrapper">
-                            <div class="andro_rating">
-                                <!-- <ngb-rating [max]="5" [(rate)]="modalContent.rating" [readonly]="true">
+            <img
+              [src]="modalContent.thumbnailUrl"
+              alt="{{ modalContent.name }}"
+            />
+          </div>
+        </div>
+        <div class="col-md-7">
+          <div class="andro_product-single-content">
+            <div class="andro_rating-wrapper">
+              <div class="andro_rating">
+                <!-- <ngb-rating [max]="5" [(rate)]="modalContent.rating" [readonly]="true">
                                     <ng-template let-fill="fill" let-index="index">
                                         <i class="fa fa-star" [class.active]="fill === 100"></i>
                                     </ng-template>
                                 </ngb-rating> -->
-                            </div>
-                            <!-- <span>{{modalContent.rating}} Stars</span> -->
-                        </div>
-                        <h3> {{modalContent.name}} </h3>
-                        <div class="andro_product-price">
-                            <!-- <span *ngIf="modalContent.discount">${{modalContent.price * (100 - modalContent.discount) /
+              </div>
+              <!-- <span>{{modalContent.rating}} Stars</span> -->
+            </div>
+            <h3>{{ modalContent.name }}</h3>
+            <div class="andro_product-price">
+              <!-- <span *ngIf="modalContent.discount">${{modalContent.price * (100 - modalContent.discount) /
                                 100 |
                                 number:'1.2-2'}}</span> -->
-                            <span>PKR {{modalContent.productInventories[0].price| number:'1.2-2'}}</span>
-                        </div>
-                        <div>
-                            <p class="andro_product-excerpt" [innerHtml]="modalContent.description">
-                                {{modalContent.description}}
-                            </p>
-                        </div>
-                        <form class="andro_product-atc-form">
-                            <!-- <div class="andro_product-variation-wrapper">
+              <span
+                >PKR
+                {{
+                  modalContent.productInventories[0].price | number: "1.2-2"
+                }}</span
+              >
+            </div>
+            <div>
+              <p
+                class="andro_product-excerpt"
+                [innerHtml]="modalContent.description"
+              >
+                {{ modalContent.description }}
+              </p>
+            </div>
+            <form class="andro_product-atc-form">
+              <!-- <div class="andro_product-variation-wrapper">
                                 <div class="form-group">
                                     <select class="form-control" name="amount">
                                         <option value="">Select Amount</option>
@@ -177,24 +222,33 @@
                                     </select>
                                 </div>
                             </div> -->
-                            <div class="qty-outter">
-                                <!-- (click)="modal.dismiss('Cross click')" -->
-                                <a (click)="addToCartFromModal(modalContent)" class="andro_btn-custom">Add to Cart</a>
-                                <div class="qty">
-                                    <span class="qty-subtract" (click)="decrement()">
-                                        <i class="fa fa-minus"></i>
-                                    </span>
-                                    <input type="text" name="qty" value="{{counter}}" disabled>
-                                    <span class="qty-add" (click)="increment()">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+              <div class="qty-outter">
+                <!-- (click)="modal.dismiss('Cross click')" -->
+                <a
+                  (click)="addToCartFromModal(modalContent)"
+                  class="andro_btn-custom"
+                  >Add to Cart</a
+                >
+                <div class="qty">
+                  <span class="qty-subtract" (click)="decrement()">
+                    <i class="fa fa-minus"></i>
+                  </span>
+                  <input
+                    type="text"
+                    name="qty"
+                    value="{{ counter }}"
+                    disabled
+                  />
+                  <span class="qty-add" (click)="increment()">
+                    <i class="fa fa-plus"></i>
+                  </span>
                 </div>
-            </div>
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </ng-template>
 <!-- Modal End -->
