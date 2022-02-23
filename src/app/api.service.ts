@@ -4,6 +4,7 @@ import { PlatformLocation } from "@angular/common";
 import { Category } from "./components/models/category";
 import { Observable } from "rxjs";
 import { AppConfig } from "./app.config";
+import { isDevMode } from "@angular/core";
 
 @Injectable({
   providedIn: "root",
@@ -22,13 +23,14 @@ export class ApiService {
     private http: HttpClient,
     private platformLocation: PlatformLocation
   ) {
-    this.checkBaseUrl();
+    this.getBaseUrls();
   }
-  checkBaseUrl() {
-    this.productServiceURL = "https://api.symplified.it/product-service/v1/";
-    this.orderServiceURL = "https://api.symplified.it/order-service/v1/";
-    this.deliveryServiceURL = "https://api.symplified.it/delivery-service/v1/";
-    //this.productServiceURL = AppConfig.settings.serviceUrl.productServiceURL;
+  getBaseUrls() {
+    this.userServiceURL = AppConfig.settings.serviceUrl.userServiceURL;
+    this.productServiceURL = AppConfig.settings.serviceUrl.productServiceURL;
+    this.orderServiceURL = AppConfig.settings.serviceUrl.orderServiceURL;
+    this.deliveryServiceURL = AppConfig.settings.serviceUrl.deliveryServiceURL;
+    this.payServiceURL = AppConfig.settings.serviceUrl.payServiceURL;
   }
   postAuthenticate(data) {
     return this.http.post(this.userServiceURL + "clients/authenticate", data);
