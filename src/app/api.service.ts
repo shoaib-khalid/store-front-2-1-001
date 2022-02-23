@@ -10,14 +10,16 @@ import { isDevMode } from "@angular/core";
   providedIn: "root",
 })
 export class ApiService {
-  productServiceURL: any;
   token: any = "accessToken";
-  userServiceURL: string;
-  orderServiceURL: string;
+
   variantStr: string;
   tokenPay: any;
+
   deliveryServiceURL: string;
   payServiceURL: string;
+  userServiceURL: string;
+  orderServiceURL: string;
+  productServiceURL: any;
 
   constructor(
     private http: HttpClient,
@@ -26,11 +28,38 @@ export class ApiService {
     this.getBaseUrls();
   }
   getBaseUrls() {
-    this.userServiceURL = AppConfig.settings.serviceUrl.userServiceURL;
-    this.productServiceURL = AppConfig.settings.serviceUrl.productServiceURL;
-    this.orderServiceURL = AppConfig.settings.serviceUrl.orderServiceURL;
-    this.deliveryServiceURL = AppConfig.settings.serviceUrl.deliveryServiceURL;
-    this.payServiceURL = AppConfig.settings.serviceUrl.payServiceURL;
+    try {
+      this.userServiceURL = AppConfig.settings.serviceUrl.userServiceURL;
+      this.productServiceURL = AppConfig.settings.serviceUrl.productServiceURL;
+      this.orderServiceURL = AppConfig.settings.serviceUrl.orderServiceURL;
+      this.deliveryServiceURL =
+        AppConfig.settings.serviceUrl.deliveryServiceURL;
+      this.payServiceURL = AppConfig.settings.serviceUrl.payServiceURL;
+    } catch (ex) {
+      console.error(
+        "Failed to get API baseURLs from config file. Assigning hardcoded values instead.",
+        ex
+      );
+      let currBaseUrl = location.origin;
+      let splitUrl = currBaseUrl.split(".");
+      if (isDevMode() || splitUrl.length === 4) {
+        this.userServiceURL = "https://api.symplified.it/user-service/v1/";
+        this.productServiceURL =
+          "https://api.symplified.it/product-service/v1/";
+        this.payServiceURL = "https://api.symplified.it/payment-service/v1/";
+        this.orderServiceURL = "https://api.symplified.it/order-service/v1/";
+        this.deliveryServiceURL =
+          "https://api.symplified.it/delivery-service/v1/";
+      } else {
+        this.userServiceURL = "https://api.symplified.biz/user-service/v1/";
+        this.productServiceURL =
+          "https://api.symplified.biz/product-service/v1/";
+        this.payServiceURL = "https://api.symplified.biz/payment-service/v1/";
+        this.orderServiceURL = "https://api.symplified.biz/order-service/v1/";
+        this.deliveryServiceURL =
+          "https://api.symplified.biz/delivery-service/v1/";
+      }
+    }
   }
   postAuthenticate(data) {
     return this.http.post(this.userServiceURL + "clients/authenticate", data);
