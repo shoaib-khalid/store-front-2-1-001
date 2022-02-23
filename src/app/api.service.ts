@@ -53,7 +53,7 @@ export class ApiService {
       } else {
         this.userServiceURL = "https://api.symplified.it/user-service/v1/";
         this.productServiceURL =
-          "httpsthis.productServiceURL + "stores/" = "https://api.symplified.it/payment-service/v1/";
+          "https://api.symplified.it/product-service/v1/";
         this.orderServiceURL = "https://api.symplified.it/order-service/v1/";
         this.deliveryServiceURL =
           "https://api.symplified.it/delivery-service/v1/";
