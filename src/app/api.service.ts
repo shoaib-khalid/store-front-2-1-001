@@ -42,15 +42,7 @@ export class ApiService {
       );
       let currBaseUrl = location.origin;
       let splitUrl = currBaseUrl.split(".");
-      if (isDevMode() || splitUrl.length === 4) {
-        this.userServiceURL = "https://api.symplified.it/user-service/v1/";
-        this.productServiceURL =
-          "https://api.symplified.it/product-service/v1/";
-        this.payServiceURL = "https://api.symplified.it/payment-service/v1/";
-        this.orderServiceURL = "https://api.symplified.it/order-service/v1/";
-        this.deliveryServiceURL =
-          "https://api.symplified.it/delivery-service/v1/";
-      } else {
+      if (splitUrl.length === 3) {
         this.userServiceURL = "https://api.symplified.biz/user-service/v1/";
         this.productServiceURL =
           "https://api.symplified.biz/product-service/v1/";
@@ -58,6 +50,13 @@ export class ApiService {
         this.orderServiceURL = "https://api.symplified.biz/order-service/v1/";
         this.deliveryServiceURL =
           "https://api.symplified.biz/delivery-service/v1/";
+      } else {
+        this.userServiceURL = "https://api.symplified.it/user-service/v1/";
+        this.productServiceURL =
+          "httpsthis.productServiceURL + "stores/" = "https://api.symplified.it/payment-service/v1/";
+        this.orderServiceURL = "https://api.symplified.it/order-service/v1/";
+        this.deliveryServiceURL =
+          "https://api.symplified.it/delivery-service/v1/";
       }
     }
   }
@@ -68,9 +67,10 @@ export class ApiService {
   // Ref : http://209.58.160.20:1201/stores/8913d06f-a63f-4a16-8059-2a30a517663a/customers/?email=mwaqassh%40gmail.com&page=0&pageSize=20
   getCustomerProfileByEmail(email, storeId) {
     const header = {
-      headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+      headers: new HttpHeaders().this.productServiceURL + "`),
     };
     const url =
+      this.userServiceURL +
       "stores/" +
       storeId +
       "/customers/?email=" +
@@ -79,7 +79,7 @@ export class ApiService {
       storeId +
       "&page=0" +
       "&pageSize=20";
-    return this.http.get(this.userServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   getCustomerProfileByMsisdn(msisdn, storeId) {
@@ -87,6 +87,7 @@ export class ApiService {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
     const url =
+      this.userServiceURL +
       "stores/" +
       storeId +
       "/customers/?phoneNumber=" +
@@ -95,7 +96,7 @@ export class ApiService {
       storeId +
       "&page=0" +
       "&pageSize=20";
-    return this.http.get(this.userServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   // Ref : http://209.58.160.20:20921/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/customer-address-controller/getCustomerAddresss
@@ -104,11 +105,11 @@ export class ApiService {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
 
-    const url = "customer/" + uuid + "/address/?" + "page=0" + "&pageSize=20";
+    const url = this.userServiceURL + "customer/" + uuid + "/address/?" + "page=0" + "&pageSize=20";
 
     // https://api.symplified.biz/v1/user-service/customer/acedr-uvbhnhk-okpbfk-jvhcxxg/address/?page=0&pageSize=20
 
-    return this.http.get(this.userServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   // ===============
@@ -123,8 +124,8 @@ export class ApiService {
         Authorization: "Bearer accessToken",
       }),
     };
-    const url = `stores/${storeID}/assets`;
-    return this.http.get(this.productServiceURL + url, header);
+    const url = `${this.productServiceURL}stores/${storeID}/assets`;
+    return this.http.get(url, header);
   }
 
   // Ref : https://api.symplified.it/product-service/v1/stores/8913d06f-a63f-4a16-8059-2a30a517663a/discount/active
@@ -132,9 +133,9 @@ export class ApiService {
     const header = {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
-    const url = "stores/" + storeID + "/discount/active";
+    const url = this.productServiceURL + "stores/" + storeID + "/discount/active";
 
-    return this.http.get(this.productServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   // Ref : https://api.symplified.biz/product-service/v1/stores/McD
@@ -174,9 +175,9 @@ export class ApiService {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
     const url =
-      "carts/" + cartId + "/discount?deliveryCharge=" + deliveryCharge;
+      this.orderServiceURL + "carts/" + cartId + "/discount?deliveryCharge=" + deliveryCharge;
 
-    return this.http.get(this.orderServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   // REf : https://api.symplified.biz/product-service/v1/region-country-state?id=MYS
@@ -184,9 +185,9 @@ export class ApiService {
     const header = {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
-    const url = "region-country-state?regionCountryId=" + countryID;
+    const url = this.productServiceURL + "region-country-state?regionCountryId=" + countryID;
 
-    return this.http.get(this.productServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   // https://api.symplified.biz/product-service/v1/stores/8913d06f-a63f-4a16-8059-2a30a517663a/products?pageSize=10&page=0&status=ACTIVE
@@ -195,22 +196,23 @@ export class ApiService {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
     const url =
+      this.productServiceURL +
       "stores/" +
       storeID +
       "/products?pageSize=10" +
       "&page=0" +
       "&status=ACTIVE";
 
-    return this.http.get(this.productServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   getStoreHoursByID(storeID) {
     const header = {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
-    const url = "stores/" + storeID;
+    const url = this.productServiceURL + "stores/" + storeID;
 
-    return this.http.get(this.productServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-controller/getStoreUsingGET_1
@@ -222,9 +224,9 @@ export class ApiService {
       }),
     };
     const url =
-      "https://api.symplified.it/product-service/v1/stores/" + storename;
+      this.productServiceURL + "stores/" + storename;
 
-    return this.http.get(this.productServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   // Ref : http://209.58.160.20:7071/swagger-ui.html#/product-controller/getProductUsingGET
@@ -236,17 +238,14 @@ export class ApiService {
       }),
     };
     const url =
-      "https://api.symplified.it/product-service/v1/products/" +
+      this.productServiceURL + 
+      "products/" +
       productID +
       "?featured=true" +
       "&page=0" +
       "&pageSize=20";
-    //  "products/"+ productID
-    //  "?featured=true" +
-    //  "&page=0" +
-    //  "&pageSize=20";
 
-    return this.http.get(url, header);
+      return this.http.get(url, header);
   }
   getCategoryByStoreID(storeID): Observable<Category[]> {
     const header = {
@@ -256,13 +255,11 @@ export class ApiService {
       }),
     };
     const url =
-      "https://api.symplified.it/product-service/v1/store-categories?page=0" +
+      this.productServiceURL +
+      "store-categories?page=0" +
       "&pageSize=20" +
       "&storeId=" +
       storeID;
-    //     return this.http.get(this.productServiceURL + url, header);
-    // const url =
-    //     "https://api.symplified.it/product-service/v1/stores/" + storeID +  "/store-categories";
     return this.http.get<Category[]>(url, header);
   }
   // Ref : https://api.symplified.biz/product-service/v1/stores/8913d06f-a63f-4a16-8059-2a30a517663a/deliverydetails
@@ -270,8 +267,8 @@ export class ApiService {
     const header = {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
-    const url = "stores/" + storeID + "/deliverydetails";
-    return this.http.get(this.productServiceURL + url, header);
+    const url = this.productServiceURL + "stores/" + storeID + "/deliverydetails";
+    return this.http.get(url, header);
   }
 
   // Ref : http://209.58.160.20:7071/swagger-ui.html#/product-controller/getProductUsingGET_1
@@ -285,10 +282,11 @@ export class ApiService {
 
     // Endpoint: http://localhost:7071/stores/storeId/products?sortByCol=price&sortingOrder=DESC
 
+    let url = "";
     if (categoryId != null) {
       if (sortId == 1) {
         // cheapest
-        var url =
+        url =
           "stores/" +
           storeID +
           "/products?status=ACTIVE" +
@@ -300,7 +298,7 @@ export class ApiService {
           "&sortingOrder=ASC";
       } else if (sortId == 2) {
         // expensive
-        var url =
+        url =
           "stores/" +
           storeID +
           "/products?status=ACTIVE" +
@@ -312,7 +310,7 @@ export class ApiService {
           "&sortingOrder=DESC";
       } else if (sortId == 3) {
         // by A-Z
-        var url =
+        url =
           "stores/" +
           storeID +
           "/products?status=ACTIVE" +
@@ -323,7 +321,7 @@ export class ApiService {
           "&sortingOrder=ASC";
       } else if (sortId == 4) {
         // by Z-A
-        var url =
+        url =
           "stores/" +
           storeID +
           "/products?status=ACTIVE" +
@@ -334,7 +332,7 @@ export class ApiService {
           "&sortingOrder=DESC";
       } else if (sortId == 5) {
         // by Most Recent
-        var url =
+        url =
           "stores/" +
           storeID +
           "/products?status=ACTIVE" +
@@ -346,7 +344,7 @@ export class ApiService {
           "&sortingOrder=DESC";
       } else {
         // non sorted
-        var url =
+        url =
           "stores/" +
           storeID +
           "/products?status=ACTIVE" +
@@ -358,7 +356,7 @@ export class ApiService {
     } else {
       if (sortId == 1) {
         // cheapest
-        var url =
+        url =
           "stores/" +
           storeID +
           "/products?status=ACTIVE" +
@@ -368,7 +366,7 @@ export class ApiService {
           "&sortingOrder=ASC";
       } else if (sortId == 2) {
         // expensive
-        var url =
+        url =
           "stores/" +
           storeID +
           "/products?status=ACTIVE" +
@@ -378,7 +376,7 @@ export class ApiService {
           "&sortingOrder=DESC";
       } else if (sortId == 3) {
         // by A-Z
-        var url =
+        url =
           "stores/" +
           storeID +
           "/products?status=ACTIVE" +
@@ -387,7 +385,7 @@ export class ApiService {
           "&sortingOrder=ASC";
       } else if (sortId == 4) {
         // by Z-A
-        var url =
+        url =
           "stores/" +
           storeID +
           "/products?status=ACTIVE" +
@@ -396,7 +394,7 @@ export class ApiService {
           "&sortingOrder=DESC";
       } else if (sortId == 5) {
         // by Most Recent
-        var url =
+        url =
           "stores/" +
           storeID +
           "/products?status=ACTIVE" +
@@ -406,7 +404,7 @@ export class ApiService {
           "&sortingOrder=DESC";
       } else {
         // non sorted
-        var url =
+        url =
           "stores/" + storeID + "/products?status=ACTIVE" + "&page=" + pageNo;
       }
     }
@@ -414,20 +412,6 @@ export class ApiService {
     return this.http.get(this.productServiceURL + url, header);
   }
 
-  // getCategoryByStoreID(storeID): Observable<Category[]>{
-  //     const header = {
-  //         headers: new HttpHeaders({
-  //           'Content-Type':  'application/json', Authorization: 'Bearer accessToken'
-  //         }),
-  //     };
-  //     const url =
-  //         "https://api.symplified.it/product-service/v1/store-categories?page=0" + "&pageSize=20" + "&storeId=" +
-  //         storeID;
-  //     //     return this.http.get(this.productServiceURL + url, header);
-  //     // const url =
-  //     //     "https://api.symplified.it/product-service/v1/stores/" + storeID +  "/store-categories";
-  //         return this.http.get<Category[]>(url, header);
-  // }
   // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-product-controller/getStoreProductsUsingGET
   getProductsByName(name, store_id) {
     const header = {
@@ -438,22 +422,12 @@ export class ApiService {
     };
 
     const url =
-      "https://api.symplified.it/product-service/v1/stores/" +
-      store_id +
-      "/products?" +
-      "&featured=true" +
+      this.productServiceURL + "stores/" +
+      store_id + "/products?featured=true" +
       "&page=0" +
       "&pageSize=20" +
       "&seoName=" +
       name;
-    //   "stores/" + store_id +
-    //   "/products?" +
-    //   "&featured=true" +
-    //   "&page=0" +
-    //   "&pageSize=20" +
-    //   "&seoName=" +
-    //   name;
-    return this.http.get(url, header);
   }
 
   // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-product-inventory-controller/getStoreProductInventorysUsingGET
@@ -473,6 +447,7 @@ export class ApiService {
     });
 
     const url =
+      this.productServiceURL
       "stores/" +
       storeId +
       "/products/" +
@@ -480,7 +455,7 @@ export class ApiService {
       "/inventory?" +
       this.variantStr;
 
-    return this.http.get(this.productServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   // ===============
@@ -494,6 +469,7 @@ export class ApiService {
     };
     // http://209.58.160.20:7072/carts?customerId=4&page=0&pageSize=20
     const url =
+      this.orderServiceURL +
       "carts?customerId=" +
       customerID +
       "&page=0" +
@@ -501,7 +477,7 @@ export class ApiService {
       "&storeId=" +
       storeID;
 
-    return this.http.get(this.orderServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   // Ref : http://209.58.160.20:7072/swagger-ui.html#/order-controller/getOrdersUsingGET
@@ -511,6 +487,7 @@ export class ApiService {
     };
     // http://209.58.160.20:7072/orders?customerId=4&page=0&pageSize=20&storeId=b0c5d5bf-be25-465c-811a-44c20011d025
     const url =
+      this.orderServiceURL +
       "orders?customerId=" +
       customerID +
       "&page=0" +
@@ -518,7 +495,7 @@ export class ApiService {
       "&storeId=" +
       storeID;
 
-    return this.http.get(this.orderServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   // Ref : http://209.58.160.20:7072/swagger-ui.html#/cart-item-controller/getCartItemsUsingGET
@@ -527,9 +504,9 @@ export class ApiService {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
     // http://209.58.160.20:7072/carts/3/items?page=0&pageSize=20
-    const url = "carts/" + cartID + "/items?page=0" + "&pageSize=200";
+    const url = this.orderServiceURL + "carts/" + cartID + "/items?page=0" + "&pageSize=200";
 
-    return this.http.get(this.orderServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   // Ref : https://api.symplified.biz/order-service/v1/orders/000e0d1a-ed1a-4741-8a55-d5e598421364
@@ -538,9 +515,9 @@ export class ApiService {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
 
-    const url = "orders/" + order_id;
+    const url = this.orderServiceURL + "orders/" + order_id;
 
-    return this.http.get(this.orderServiceURL + url, header);
+    return this.http.get(url, header);
   }
 
   // Ref : http://209.58.160.20:7072/swagger-ui.html#/cart-item-controller/postCartItemsUsingPOST
