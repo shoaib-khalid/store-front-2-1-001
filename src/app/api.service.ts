@@ -67,7 +67,7 @@ export class ApiService {
   // Ref : http://209.58.160.20:1201/stores/8913d06f-a63f-4a16-8059-2a30a517663a/customers/?email=mwaqassh%40gmail.com&page=0&pageSize=20
   getCustomerProfileByEmail(email, storeId) {
     const header = {
-      headers: new HttpHeaders().this.productServiceURL + "`),
+      headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
     const url =
       this.userServiceURL +
@@ -105,7 +105,13 @@ export class ApiService {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
 
-    const url = this.userServiceURL + "customer/" + uuid + "/address/?" + "page=0" + "&pageSize=20";
+    const url =
+      this.userServiceURL +
+      "customer/" +
+      uuid +
+      "/address/?" +
+      "page=0" +
+      "&pageSize=20";
 
     // https://api.symplified.biz/v1/user-service/customer/acedr-uvbhnhk-okpbfk-jvhcxxg/address/?page=0&pageSize=20
 
@@ -121,7 +127,7 @@ export class ApiService {
     const header = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: "Bearer accessToken",
+        Authorization: `Bearer ${this.token}`,
       }),
     };
     const url = `${this.productServiceURL}stores/${storeID}/assets`;
@@ -133,7 +139,8 @@ export class ApiService {
     const header = {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
-    const url = this.productServiceURL + "stores/" + storeID + "/discount/active";
+    const url =
+      this.productServiceURL + "stores/" + storeID + "/discount/active";
 
     return this.http.get(url, header);
   }
@@ -175,7 +182,11 @@ export class ApiService {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
     const url =
-      this.orderServiceURL + "carts/" + cartId + "/discount?deliveryCharge=" + deliveryCharge;
+      this.orderServiceURL +
+      "carts/" +
+      cartId +
+      "/discount?deliveryCharge=" +
+      deliveryCharge;
 
     return this.http.get(url, header);
   }
@@ -185,7 +196,10 @@ export class ApiService {
     const header = {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
-    const url = this.productServiceURL + "region-country-state?regionCountryId=" + countryID;
+    const url =
+      this.productServiceURL +
+      "region-country-state?regionCountryId=" +
+      countryID;
 
     return this.http.get(url, header);
   }
@@ -223,8 +237,7 @@ export class ApiService {
         Authorization: "Bearer accessToken",
       }),
     };
-    const url =
-      this.productServiceURL + "stores/" + storename;
+    const url = this.productServiceURL + "stores/" + storename;
 
     return this.http.get(url, header);
   }
@@ -238,14 +251,14 @@ export class ApiService {
       }),
     };
     const url =
-      this.productServiceURL + 
+      this.productServiceURL +
       "products/" +
       productID +
       "?featured=true" +
       "&page=0" +
       "&pageSize=20";
 
-      return this.http.get(url, header);
+    return this.http.get(url, header);
   }
   getCategoryByStoreID(storeID): Observable<Category[]> {
     const header = {
@@ -267,7 +280,8 @@ export class ApiService {
     const header = {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
-    const url = this.productServiceURL + "stores/" + storeID + "/deliverydetails";
+    const url =
+      this.productServiceURL + "stores/" + storeID + "/deliverydetails";
     return this.http.get(url, header);
   }
 
@@ -422,12 +436,16 @@ export class ApiService {
     };
 
     const url =
-      this.productServiceURL + "stores/" +
-      store_id + "/products?featured=true" +
+      this.productServiceURL +
+      "stores/" +
+      store_id +
+      "/products?featured=true" +
       "&page=0" +
       "&pageSize=20" +
       "&seoName=" +
       name;
+
+    return this.http.get(url, header);
   }
 
   // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-product-inventory-controller/getStoreProductInventorysUsingGET
@@ -446,9 +464,8 @@ export class ApiService {
       }
     });
 
-    const url =
-      this.productServiceURL
-      "stores/" +
+    const url = this.productServiceURL;
+    "stores/" +
       storeId +
       "/products/" +
       productId +
@@ -504,7 +521,12 @@ export class ApiService {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
     // http://209.58.160.20:7072/carts/3/items?page=0&pageSize=20
-    const url = this.orderServiceURL + "carts/" + cartID + "/items?page=0" + "&pageSize=200";
+    const url =
+      this.orderServiceURL +
+      "carts/" +
+      cartID +
+      "/items?page=0" +
+      "&pageSize=200";
 
     return this.http.get(url, header);
   }
