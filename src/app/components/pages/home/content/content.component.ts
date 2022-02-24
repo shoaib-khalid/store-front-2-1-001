@@ -4,15 +4,23 @@ import { Router, ActivatedRoute } from "@angular/router";
 import Swal from "sweetalert2";
 import { Category } from "../../../models/category";
 import { Product } from "../../../models/product";
-import { StoreAsset } from "../../../models/store";
+import { Store, StoreAssets } from "../../../models/store";
 import { CartService } from "../../../../cart.service";
 import { StoreService } from "../../../../store.service";
+
 
 @Component({
   selector: "app-content",
   templateUrl: "./content.component.html",
   styleUrls: ["./content.component.css"],
 })
+
+// enum StoreAsset {
+//   Logo = 'Logo',
+//   DesktopBanner = 'DesktopBanner',
+//   MobileBanner = 'MobileBanner',
+//   Favicon = 'Favicon'
+// }
 export class ContentComponent implements OnInit {
   isLoading: boolean;
 
@@ -39,10 +47,12 @@ export class ContentComponent implements OnInit {
   popupSKU: any;
   catalogueList: any;
   noPrice: any;
-  assets: StoreAsset;
+  storeAssets: StoreAssets[];
   bannerExist: boolean = false;
   assetsData: any;
   banner: any;
+  storeBannerUrl: string = "";
+  storeInfo: Store;
 
   constructor(
     private modalService: NgbModal,
@@ -51,14 +61,11 @@ export class ContentComponent implements OnInit {
     private cartService: CartService,
     private storeService: StoreService
   ) {
-    this.assets = {
-      bannerMobileUrl: "",
-      bannerUrl: "",
-      logoUrl: "",
-      qrCodeUrl: "",
-      storeId: "",
-    };
+    // this.storeAssets = {
+
+    // };
   }
+
 
   open(content: any, item: Product) {
     this.counter = 1;
@@ -82,7 +89,6 @@ export class ContentComponent implements OnInit {
       this.counter -= 1;
     }
   }
-
   // Banner
   // bannerslides = [
   //   {
@@ -169,25 +175,44 @@ export class ContentComponent implements OnInit {
   }
 
   resolveLoading() {
-    if (this.product && this.assets && this.categories) {
+    // console.log("entering WRITTING STOREASSETS");
+    if (this.product && this.categories) {
       this.isLoading = false;
     }
   }
 
+  populateAssets(){
+    // console.log("populateAssets");
+    // console.log("this.storeinfo: ", this.storeInfo);
+    // console.log("this.storeinfo.storeAssets: ", this.storeInfo.storeAssets);
+    // this.storeBannerUrl = "https://media.istockphoto.com/photos/red-ribbon-banner-on-white-background-picture-id1157567398";
+    // console.log(this.storeBannerUrl)
+    for (let storeAsset of this.storeInfo.storeAssets) {
+      if (storeAsset.assetType == "BannerDesktopUrl") {
+       this.storeBannerUrl = storeAsset.assetUrl;
+      }
+      // else if (this.storeAssets.assetType== StoreAssetType.Logo){
+      //   this.storeBannerUrl = storeAsset.assetUrl;
+      // }
+    }
+  }
+
   async ngOnInit() {
+    // console.log("ngOnInit");
     this.isLoading = true;
 
     await this.storeService.parseStoreFromUrl();
     Promise.all([
-      this.storeService.getAssets(),
+      this.storeService.getStoreInfoByDomainName(),
       this.storeService.getCategories(),
       this.storeService.getStoreProducts(),
     ])
       .then((values) => {
-        this.assets = values[0];
+        this.storeInfo = values[0];
         this.categories = values[1];
         this.product = values[2];
         this.isLoading = false;
+        this.populateAssets();
       })
       .catch((error) => {
         console.error("Error getting values for homepage" + error);
@@ -197,6 +222,7 @@ export class ContentComponent implements OnInit {
           text: "An error occurred while fetching store details. Please refresh the page.",
         });
       });
+
   }
 
   // goToProductPage() {

@@ -1,11 +1,13 @@
 <app-preloader [isLoading]="isLoading"></app-preloader>
 
 <!-- Banner Start -->
+
+
 <div>
-  <div class="andro_banner banner-2">
+  <div class="andro_banner banner-2" >
     <!-- <img class="banner-design" src="{{assets['bannerUrl']}}"> -->
-    <img class="banner-design" [src]="assets.bannerUrl" />
-  </div>
+    <img class="banner-design" [src]="storeBannerUrl">
+  </div>  
   <!-- <img class="banner-design" src="{{assets['bannerUrl']}}"> -->
   <!-- <ngx-slick-carousel #slickModal="slick-carousel" [config]="bannerConfig" class="andro_banner-slider" >
         <div ngxSlickItem class="andro_banner-slider-inner" style="background-image: url('{{item.photo}}');"
@@ -98,32 +100,23 @@
             <h5 class="andro_product-title">
               <a routerLink="/product/{{ item.seoName }}"> {{ item.name }} </a>
             </h5>
-            <div
-              class="andro_product-price"
-              *ngIf="item.productInventories.length > 0"
-            >
-              <span *ngIf="item.discount">
-                PKR
-                {{
-                  (item.productInventories[0].price * (100 - item.discount)) /
-                    100 | number: "1.2-2"
-                }}
+            <div class="andro_product-price" *ngIf="item.productInventories.length > 0" >
+              <span *ngIf="item.discount"> PKR
+                {{ (item.productInventories[0].price * (100 - item.discount)) / 100 | number: "1.2-2" }}
               </span>
-              <span>
-                PKR
-                {{ item.productInventories[0].price | number: "1.2-2" }}
+              <span> PKR {{ item.productInventories[0].price | number: "1.2-2" }}
               </span>
             </div>
             <!--<div class="andro_rating-wrapper">
-                                    <div class="andro_rating">
-                                        <ngb-rating [max]="5" [(rate)]="item.rating" [readonly]="true">
-                                            <ng-template let-fill="fill" let-index="index">
-                                                <i class="fa fa-star" [class.active]="fill === 100"></i>
-                                            </ng-template>
-                                        </ngb-rating>
-                                    </div>
-                                    <span>{{item.rating}} Stars</span>
-                                </div>-->
+                    <div class="andro_rating">
+                        <ngb-rating [max]="5" [(rate)]="item.rating" [readonly]="true">
+                                  <ng-template let-fill="fill" let-index="index">
+                              <i class="fa fa-star" [class.active]="fill === 100"></i>
+                          </ng-template>
+                      </ngb-rating>
+                   </div>
+                 <span>{{item.rating}} Stars</span>
+              </div>-->
           </div>
           <div class="andro_product-footer">
             <div class="andro_product-buttons">

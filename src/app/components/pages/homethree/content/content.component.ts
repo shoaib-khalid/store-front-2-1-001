@@ -36,12 +36,12 @@ export class ContentComponent implements OnInit {
   public testimonial: { photo: string }[] = testimonialpost;
   public blogbox: { title: string, id: number }[] = blogpost;
   public tags: { title: string, id: number }[] = blogtags;
-  public getBlogTags(items: string | any[]) {
-    var elems = blogtags.filter((item: { id: string; }) => {
-      return items.includes(item.id)
-    });
-    return elems;
-  };
+  // public getBlogTags(items: string | any[]) {
+  //   var elems = blogtags.filter((item: { id: string; }) => {
+  //     return items.includes(item.id)
+  //   });
+  //   return elems;
+  // };
   // Banner
   bannerslides = [
     {

@@ -5,7 +5,7 @@ import $ from 'jquery'
 import { ApiService } from 'src/app/api.service';
 import { StoreService } from 'src/app/store.service';
 import { Category } from '../../models/category';
-import { StoreAsset } from '../../models/store';
+import { Store, StoreAsset } from '../../models/store';
 
 @Component({
   selector: 'app-mobilemenu',
@@ -13,7 +13,7 @@ import { StoreAsset } from '../../models/store';
   styleUrls: ['./mobilemenu.component.css']
 })
 export class MobilemenuComponent implements OnInit {
-  assets: StoreAsset;
+  storeInfo: Store;
   categories: Category[];
   catId: any;
 
@@ -54,9 +54,9 @@ export class MobilemenuComponent implements OnInit {
       });
     }
     mobilemenu();
-    Promise.all([this.storeService.getAssets(), this.storeService.getCategories()])
+    Promise.all([this.storeService.getStoreByDomainName(), this.storeService.getCategories()])
       .then((values) => {
-        this.assets = values[0];
+        this.storeInfo = values[0];
         this.categories = values[1];
       }).catch(error => {
         console.error("Error getting values for mobile menu", error);

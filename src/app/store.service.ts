@@ -6,7 +6,7 @@ import { ApiService } from "./api.service";
 import { CartService } from "./cart.service";
 import { Category } from "./components/models/category";
 import { Product } from "./components/models/product";
-import { StoreAsset, Store } from "./components/models/store";
+import { StoreAssets, Store } from "./components/models/store";
 import { isDevMode } from "@angular/core";
 
 @Injectable({
@@ -64,11 +64,11 @@ export class StoreService {
     });
   }
 
-  getAssets(): Promise<StoreAsset> {
+  getStoreInfoByDomainName(): Promise<Store> {
     return new Promise((resolve, reject) => {
-      this.apiService.getStoreAssets(this.getStoreId()).subscribe(
+      this.apiService.getStoreInfoByDomainName(this.getStoreId()).subscribe(
         (res: any) => {
-          resolve(res.data);
+          resolve(res.data.content[0]);
         },
         (error) => {
           console.error("Failed to get store assets", error);
@@ -151,7 +151,7 @@ export class StoreService {
     });
   }
 
-  getStoreByDomainName(domainName: string): Promise<Store> {
+  private getStoreByDomainName(domainName: string): Promise<Store> {
     console.log("Domain name: ", domainName);
 
     return new Promise((resolve, reject) => {
