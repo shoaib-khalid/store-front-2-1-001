@@ -131,7 +131,7 @@ export class ApiService {
         Authorization: `Bearer ${this.token}`,
       }),
     };
-    const url = `${this.productServiceURL}stores/${storeID}/assets`;
+    const url = `${this.productServiceURL}stores/${storeID}`;
     return this.http.get(url, header);
   }
 

@@ -1,10 +1,13 @@
 import { Component, OnInit, HostListener, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { ApiService } from 'src/app/api.service';
+// import { ApiService } from 'src/app/api.service';
 import { CartItem } from '../../models/cart';
-import { CartService } from 'src/app/cart.service';
-import { StoreService } from 'src/app/store.service';
-import { StoreAsset } from '../../models/store';
+// import { CartService } from 'src/app/cart.service';
+// import { StoreService } from 'src/app/store.service';
+import {  Store, StoreAssets } from '../../models/store';
+import { ApiService } from '../../../api.service';
+import { CartService } from '../../../cart.service';
+import { StoreService } from '../../../store.service';
 
 @Component({
   selector: 'app-headerthree',
@@ -17,7 +20,7 @@ export class HeaderthreeComponent implements OnInit {
   localURL: any;
   senderID: any;
   storeName: String = 'McD';
-  assets: StoreAsset;
+  assets: StoreAssets[];
   bannerExist: boolean = false;
   logoExist: boolean = false;
   storeDescription: any;
@@ -38,16 +41,24 @@ export class HeaderthreeComponent implements OnInit {
     private cartService: CartService,
     private storeService: StoreService
   ) {
-    this.assets = {
-      storeId: '',
-      bannerUrl: '',
-      bannerMobileUrl: '',
-      logoUrl: '',
-      qrCodeUrl: ''
-    }
+    // this.assets = {
+    //   storeId: '',
+    //   bannerUrl: '',
+    //   bannerMobileUrl: '',
+    //   logoUrl: '',
+    //   qrCodeUrl: ''
+    // }
 
     this.cart = cartService.cart;
     cartService.cartChange.subscribe(cart => { this.cart = cart; });
+  }
+  async populateAssets(){
+    const store : Store = await this.storeService.getStoreInfoByDomainName();
+    for (let storeAsset of store.storeAssets) {
+      if (storeAsset.assetType === "LogoUrl") {
+       this.logoUrl = storeAsset.assetUrl;
+      }
+    }
   }
 
   // Sticky Nav
@@ -83,9 +94,11 @@ export class HeaderthreeComponent implements OnInit {
     return this.cart.reduce((subtotal: number, item: CartItem) => subtotal + item.price, 0);
   };
   async ngOnInit() {
-    this.assets = await this.storeService.getAssets();
-    if (this.assets.logoUrl != null) {
-      this.logoExist = true;
-    }
+    this.populateAssets();
+    // this.assets = await this.storeService.getStoreInfoByDomainName();
+    // for (let storeAsset of this.storeInfo.storeAssets) {
+    //   if (storeAsset.assetType == "LogoUrl") {
+    //    this.logoUrl = storeAsset.assetUrl;
+    //   }
   }
 }

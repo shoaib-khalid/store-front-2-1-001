@@ -29,15 +29,25 @@ export interface Store {
     verticalCode: string;
     regionCountry: RegionCountry;
     storeTiming: StoreTiming[];
+    storeAssets: StoreAssets[];
 }
 
-export interface StoreAsset {
-    storeId: string;
-    bannerUrl: string;
-    bannerMobileUrl: string,
-    logoUrl: string;
-    qrCodeUrl: string;
-}
+// export interface StoreAssets {
+//     storeId: string;
+//     bannerUrl: string;
+//     bannerMobileUrl: string,
+//     logoUrl: string;
+//     qrCodeUrl: string;
+//     assetUrl: string;
+// }
+export interface StoreAssets {
+        id: string;
+        storeId: string;
+        assetUrl: string;
+        assetDescription: string;
+        assetType: string;
+        assetFile: string;
+    }
 
 export interface StoreTiming {
     storeId: string;
