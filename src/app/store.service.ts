@@ -1,12 +1,9 @@
-import { PlatformLocation } from "@angular/common";
 import { Injectable, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
 import { Subject } from "rxjs/internal/Subject";
 import { ApiService } from "./api.service";
-import { CartService } from "./cart.service";
 import { Category } from "./components/models/category";
 import { Product } from "./components/models/product";
-import { StoreAssets, Store } from "./components/models/store";
+import { Store } from "./components/models/store";
 import { isDevMode } from "@angular/core";
 
 @Injectable({
@@ -50,7 +47,7 @@ export class StoreService {
     return localStorage.getItem(this.storeIdKey);
   }
 
-  getStoreInfo(): Promise<Store> {
+  getStoreHours(): Promise<Store> {
     return new Promise((resolve, reject) => {
       this.apiService.getStoreHoursByID(this.getStoreId()).subscribe(
         (res: any) => {
@@ -64,7 +61,7 @@ export class StoreService {
     });
   }
 
-  getStoreInfoByDomainName(): Promise<Store> {
+  getStoreInfo(): Promise<Store> {
     return new Promise((resolve, reject) => {
       this.apiService.getStoreInfoByDomainName(this.getStoreId()).subscribe(
         (res: any) => {

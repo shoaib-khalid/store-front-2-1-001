@@ -1,19 +1,21 @@
-<a class="navbar-brand" routerLink="/"> <img style="height: 55px; width: 100px;" [src]="assets.logoUrl" alt="logo"> </a>
+<a class="navbar-brand" routerLink="/">
+  <img style="height: 55px; width: 100px" [src]="logoUrl" alt="logo" />
+</a>
 <ul>
-    <li class="menu-item menu-item-has-children">
-        <a routerLink="/">Home</a>
-    </li>
+  <li class="menu-item menu-item-has-children">
+    <a routerLink="/">Home</a>
+  </li>
 
-    <li class="menu-item menu-item-has-children">
-        <a href="#">Category</a>
-        <ul class="sub-menu">
-            <li class="menu-item" *ngFor="let item of categories ; let i = index;">
-                <a routerLink="/catalogue/{{item.id}}">{{item.name}}</a>
-            </li>
-        </ul>
-    </li>
+  <li class="menu-item menu-item-has-children">
+    <a href="#">Category</a>
+    <ul class="sub-menu">
+      <li class="menu-item" *ngFor="let item of categories; let i = index">
+        <a routerLink="/catalogue/{{ item.id }}">{{ item.name }}</a>
+      </li>
+    </ul>
+  </li>
 
-    <li class="menu-item menu-item-has-children">
-        <a routerLink="/cart">Cart</a>
-    </li>
+  <li class="menu-item menu-item-has-children">
+    <a routerLink="/cart">Cart</a>
+  </li>
 </ul>

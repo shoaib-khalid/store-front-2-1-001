@@ -1,27 +1,31 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import shoppost from '../../../../data/shop.json'
-import categorypost from '../../../../data/category.json'
-import blogcategory from '../../../../data/blogcategory.json';
-import blogpost from '../../../../data/blog.json';
-import blogtags from '../../../../data/blogtags.json';
-import testimonialpost from '../../../../data/testimonial.json';
+import { Component, OnInit } from "@angular/core";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import shoppost from "../../../../data/shop.json";
+import categorypost from "../../../../data/category.json";
+import blogcategory from "../../../../data/blogcategory.json";
+import blogpost from "../../../../data/blog.json";
+import blogtags from "../../../../data/blogtags.json";
+import testimonialpost from "../../../../data/testimonial.json";
 
 @Component({
-  selector: 'app-content',
-  templateUrl: './content.component.html',
-  styleUrls: ['./content.component.css']
+  selector: "app-content",
+  templateUrl: "./content.component.html",
+  styleUrls: ["./content.component.css"],
 })
 export class ContentComponent implements OnInit {
   closeResult: string;
   modalContent: any;
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal) {}
   open(content: any, item: any) {
-    this.modalContent = item
-    this.modalService.open(content, { centered: true, size: "lg", windowClass: 'andro_quick-view-modal p-0' });
+    this.modalContent = item;
+    this.modalService.open(content, {
+      centered: true,
+      size: "lg",
+      windowClass: "andro_quick-view-modal p-0",
+    });
   }
   // Increment decrement
-  public counter: number = 1
+  public counter: number = 1;
   increment() {
     this.counter += 1;
   }
@@ -33,13 +37,14 @@ export class ContentComponent implements OnInit {
   public category: { icon: string }[] = categorypost;
   public blogcategory: { title: string }[] = blogcategory;
   public testimonial: { photo: string }[] = testimonialpost;
-  public blogbox: { title: string, id: number }[] = blogpost;
-  public tags: { title: string, id: number }[] = blogtags;
+  public blogbox: { title: string; id: number }[] = blogpost;
+  public tags: { title: string; id: number }[] = blogtags;
   public getBlogTags(items: string | any[]) {
-    var elems = blogtags.filter((item: { id: string; }) => {
-      return items.includes(item.id)
-    });
-    return elems;
+    return blogtags;
+    // var elems = blogtags.filter((item: { id: string; }) => {
+    //   return items.includes(item.id)
+    // });
+    // return elems;
   }
   // Banner
   bannerslider = [
@@ -70,16 +75,16 @@ export class ContentComponent implements OnInit {
         breakpoint: 991,
         settings: {
           slidesToShow: 2,
-        }
+        },
       },
       {
         breakpoint: 575,
         settings: {
           slidesToShow: 1,
-        }
-      }
-    ]
-  }
+        },
+      },
+    ],
+  };
   // Icons
   iconspost = [
     {
@@ -105,22 +110,22 @@ export class ContentComponent implements OnInit {
     arrows: true,
     dots: false,
     autoplay: true,
-    prevArrow: '.andro_fresh-arrivals .slider-prev',
-    nextArrow: '.andro_fresh-arrivals .slider-next',
+    prevArrow: ".andro_fresh-arrivals .slider-prev",
+    nextArrow: ".andro_fresh-arrivals .slider-next",
     responsive: [
       {
         breakpoint: 991,
         settings: {
           slidesToShow: 2,
-        }
+        },
       },
       {
         breakpoint: 575,
         settings: {
           slidesToShow: 1,
-        }
-      }
-    ]
+        },
+      },
+    ],
   };
   // Testimonial
   testiConfig = {
@@ -135,18 +140,16 @@ export class ContentComponent implements OnInit {
         breakpoint: 991,
         settings: {
           slidesToShow: 2,
-        }
+        },
       },
       {
         breakpoint: 575,
         settings: {
           slidesToShow: 1,
-        }
-      }
-    ]
-  }
+        },
+      },
+    ],
+  };
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

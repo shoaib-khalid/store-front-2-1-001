@@ -1,36 +1,29 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ApiService } from 'src/app/api.service';
-import { StoreAsset } from 'src/app/components/models/store';
-import { StoreService } from 'src/app/store.service';
+import { HttpClient } from "@angular/common/http";
+import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { StoreService } from "../../../../store.service";
+import { Store } from "../../../models/store";
 
 @Component({
-  selector: 'app-content',
-  templateUrl: './content.component.html',
-  styleUrls: ['./content.component.css']
+  selector: "app-content",
+  templateUrl: "./content.component.html",
+  styleUrls: ["./content.component.css"],
 })
 export class ContentComponent implements OnInit {
-  assets: StoreAsset;
+  bannerUrl: string = "";
 
-  constructor(
-    private storeService: StoreService
-  ) {
-    this.assets = {
-      storeId: '',
-      bannerUrl: '',
-      bannerMobileUrl: '',
-      logoUrl: '',
-      qrCodeUrl: ''
-    }
-  }
+  constructor(private storeService: StoreService) {}
 
   //Banner
   async getAssets() {
-    this.assets = await this.storeService.getAssets();
+    const store: Store = await this.storeService.getStoreInfo();
+    for (const storeAsset of store.storeAssets) {
+      if (storeAsset.assetType === "BannerDesktopUrl") {
+        this.bannerUrl = storeAsset.assetUrl;
+      }
+    }
   }
   ngOnInit(): void {
     this.getAssets();
   }
-
 }
