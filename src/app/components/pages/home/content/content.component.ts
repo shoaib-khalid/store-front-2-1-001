@@ -8,7 +8,6 @@ import { Store, StoreAssets } from "../../../models/store";
 import { CartService } from "../../../../cart.service";
 import { StoreService } from "../../../../store.service";
 
-
 @Component({
   selector: "app-content",
   templateUrl: "./content.component.html",
@@ -62,10 +61,8 @@ export class ContentComponent implements OnInit {
     private storeService: StoreService
   ) {
     // this.storeAssets = {
-
     // };
   }
-
 
   open(content: any, item: Product) {
     this.counter = 1;
@@ -181,29 +178,20 @@ export class ContentComponent implements OnInit {
     }
   }
 
-  populateAssets(){
-    // console.log("populateAssets");
-    // console.log("this.storeinfo: ", this.storeInfo);
-    // console.log("this.storeinfo.storeAssets: ", this.storeInfo.storeAssets);
-    // this.storeBannerUrl = "https://media.istockphoto.com/photos/red-ribbon-banner-on-white-background-picture-id1157567398";
-    // console.log(this.storeBannerUrl)
-    for (let storeAsset of this.storeInfo.storeAssets) {
+  populateAssets() {
+    for (const storeAsset of this.storeInfo.storeAssets) {
       if (storeAsset.assetType == "BannerDesktopUrl") {
-       this.storeBannerUrl = storeAsset.assetUrl;
+        this.storeBannerUrl = storeAsset.assetUrl;
       }
-      // else if (this.storeAssets.assetType== StoreAssetType.Logo){
-      //   this.storeBannerUrl = storeAsset.assetUrl;
-      // }
     }
   }
 
   async ngOnInit() {
-    // console.log("ngOnInit");
     this.isLoading = true;
 
     await this.storeService.parseStoreFromUrl();
     Promise.all([
-      this.storeService.getStoreInfoByDomainName(),
+      this.storeService.getStoreInfo(),
       this.storeService.getCategories(),
       this.storeService.getStoreProducts(),
     ])
@@ -222,11 +210,5 @@ export class ContentComponent implements OnInit {
           text: "An error occurred while fetching store details. Please refresh the page.",
         });
       });
-
   }
-
-  // goToProductPage() {
-  //   this.cartService.previousUrl = location.href;
-  //   this.route.nav
-  // }
 }

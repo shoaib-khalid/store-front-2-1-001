@@ -57,6 +57,7 @@ export class ApiService {
         this.orderServiceURL = "https://api.symplified.it/order-service/v1/";
         this.deliveryServiceURL =
           "https://api.symplified.it/delivery-service/v1/";
+        this.payServiceURL = "https://api.symplified.it/payment-service/v1/";
       }
     }
   }
