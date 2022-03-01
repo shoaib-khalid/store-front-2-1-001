@@ -10,6 +10,7 @@ import { isDevMode } from "@angular/core";
   providedIn: "root",
 })
 export class StoreService {
+  [x: string]: any;
   store: Store;
 
   storeIdKey: string = "store_id";

@@ -4,8 +4,9 @@ import { BreadcrumbService, Breadcrumb } from 'angular-crumbs';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { CartService } from './cart.service';
 import { Store } from './components/models/store';
-import { StoreService } from './store.service';
+// import { StoreService } from './store.service';
 import { version } from '../../package.json';
+import { StoreService } from './store.service';
 
 @Component({
   selector: 'app-root',
@@ -31,11 +32,20 @@ export class AppComponent implements OnInit {
 
   }
 
-  async changeIcon() {
-    const store : Store = await this.storeService.getStoreInfoByDomainName();
-    for (let storeAsset of store.storeAssets) {
-      if (storeAsset.assetType === "FaviconUrl") {
-       this.fav = storeAsset.assetUrl;
+  // async changeIcon() {
+  //   const store : Store = await this.storeService.getStoreInfoByDomainName();
+  //   for (let storeAsset of store.storeAssets) {
+  //     if (storeAsset.assetType === "FaviconUrl") {
+  //      this.fav = storeAsset.assetUrl;
+  //     }
+  //   }
+  //   this.favIcon.href = this.fav;
+  // }
+  async changeIcon(){
+    const store : Store = await this.storeService.getStoreInfo();
+    for (let storeAsset of store.storeAssets){
+      if(storeAsset.assetType === "FaviconUrl"){
+        this.fav = storeAsset.assetUrl
       }
     }
     this.favIcon.href = this.fav;

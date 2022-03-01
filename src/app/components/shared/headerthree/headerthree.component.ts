@@ -55,6 +55,60 @@ export class HeaderthreeComponent implements OnInit {
       this.cart = cart;
     });
   }
+  getStoreHour(){
+    console.log('hello')
+        this.apiService.getStoreHoursByID(this.storeID).subscribe((res: any) => {
+            console.log('store business hour: ', res)
+            if (res.message){
+                console.log('storeTiming : ', res.data.storeTiming)
+                
+                this.currencySymbol =  res.data.regionCountry.currencySymbol;
+
+                console.log('symbol currency: ', this.currencySymbol)
+
+                const currentDate = new Date();
+
+                var todayDay = this.dayArr[currentDate.getDay()];
+
+                var browserTime = new Date();
+
+                this.storeTimingObj = res.data.storeTiming;
+
+                this.storeTimingObj.forEach( obj => {
+
+                    let dayObj = obj.day;
+
+                    if(dayObj == todayDay){
+                        // true = store closed ; false = store opened
+                        let isOff = obj.isOff;
+
+                        if (isOff == false) {
+                            var openTime = new Date();
+                            openTime.setHours(obj.openTime.split(":")[0], obj.openTime.split(":")[1], 0); 
+                            var closeTime = new Date();
+                            closeTime.setHours(obj.closeTime.split(":")[0], obj.closeTime.split(":")[1], 0); 
+
+                            console.log("happy hour?")
+                            if(browserTime >= openTime && browserTime < closeTime ){
+                                console.log("WE ARE OPEN !");
+                            }else{
+                                console.log("OH No, sorry! between 5.30pm and 6.30pm");
+                                this.store_close = false
+                            }
+
+                        } else {
+                            console.log("WERE ARE CLOSED")
+                            this.store_close = false
+                        }
+                    }
+                });
+
+            } else {
+            }
+        }, error => {
+            console.log(error)
+        }) 
+    }
   async populateAssets() {
     const store: Store = await this.storeService.getStoreInfo();
     for (let storeAsset of store.storeAssets) {
@@ -101,6 +155,7 @@ export class HeaderthreeComponent implements OnInit {
     );
   }
   async ngOnInit() {
+    this.getStoreHour();
     this.populateAssets();
   }
 }

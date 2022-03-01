@@ -1,3 +1,4 @@
+
 <!-- Aside (Right Panel) -->
 <aside class="andro_aside andro_aside-right" [ngClass]="sidebarmethod ? '' : 'open'">
     <app-canvas></app-canvas>
@@ -9,6 +10,7 @@
 </aside>
 <div class="andro_aside-overlay aside-trigger-left" (click)="toggleNav()"></div>
 <!-- Header Start -->
+
 <header class="andro_header header-2 can-sticky" id="can-sticky">
     <!-- Topheader Start 
     <div class="andro_header-top">
@@ -30,6 +32,17 @@
                         </ul>
                     </li>
                 </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Topheader End -->
+    <!-- Topheader Start -->
+    <div class="andro_header-top">
+        <div class="position-relative" *ngIf="!store_close">
+            <div style="text-align: center; position: relative;" class=" alert alert-danger fade show header" role="alert">
+                <marquee width="80%" direction="left">
+                    Sorry, We are closed now
+                </marquee>
             </div>
         </div>
     </div>
