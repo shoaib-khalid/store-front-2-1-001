@@ -20,18 +20,32 @@ import { version } from '../../package.json';
 })
 export class AppComponent implements OnInit {
   title: any;
+  favIcon: HTMLLinkElement = document.querySelector('#appIcon');
+  fav: string;
 
   constructor(private titleService: Title,
     private breadcrumbService: BreadcrumbService,
     private cartService: CartService,
     private storeService: StoreService
   ) {
+
   }
+
+  async changeIcon() {
+    const store : Store = await this.storeService.getStoreInfoByDomainName();
+    for (let storeAsset of store.storeAssets) {
+      if (storeAsset.assetType === "FaviconUrl") {
+       this.fav = storeAsset.assetUrl;
+      }
+    }
+    this.favIcon.href = this.fav;
+  }
+
   ngOnInit(): void {
     this.breadcrumbService.breadcrumbChanged.subscribe(async crumbs => {
       this.titleService.setTitle(await this.createTitle(crumbs));
     });
-
+    this.changeIcon();
     console.log("Project version: " + version);
   }
   onActivate(event) {

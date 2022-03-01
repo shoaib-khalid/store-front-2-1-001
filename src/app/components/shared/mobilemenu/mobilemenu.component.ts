@@ -5,7 +5,7 @@ import $ from 'jquery'
 import { ApiService } from 'src/app/api.service';
 import { StoreService } from 'src/app/store.service';
 import { Category } from '../../models/category';
-import { Store, StoreAsset } from '../../models/store';
+import { Store, StoreAssets } from '../../models/store';
 
 @Component({
   selector: 'app-mobilemenu',
@@ -16,21 +16,15 @@ export class MobilemenuComponent implements OnInit {
   storeInfo: Store;
   categories: Category[];
   catId: any;
-
+  assets: StoreAssets[];
+  logoUrl: string;
+ 
   constructor(
     private route: Router,
     private activatedRoute: ActivatedRoute,
     private storeService: StoreService
   ) {
-    this.assets = {
-      storeId: '',
-      bannerUrl: '',
-      bannerMobileUrl: '',
-      logoUrl: '',
-      qrCodeUrl: ''
-    }
-
-    this.activatedRoute.params.subscribe(params => {
+      this.activatedRoute.params.subscribe(params => {
       this.catId = params['catId']
       localStorage.setItem('category_id', this.catId)
     })
@@ -38,13 +32,19 @@ export class MobilemenuComponent implements OnInit {
 
   //Navigation to category
   goToCategory(catId) {
-    // alert(catId)
-    // return false;
     this.route.navigate(['catalogue/' + catId]);// + catId
   }
 
-  ngOnInit(): void {
+  async populateAssets(){
+    const store : Store = await this.storeService.getStoreInfoByDomainName();
+    for (let storeAsset of store.storeAssets) {
+      if (storeAsset.assetType === "LogoUrl") {
+       this.logoUrl = storeAsset.assetUrl;
+      }
+    }
+  }
 
+  ngOnInit(): void {
     function mobilemenu() {
       ($(".andro_aside .menu-item-has-children > a") as any).on('click', function (e) {
         var submenu = $(this).next(".sub-menu");
@@ -54,7 +54,8 @@ export class MobilemenuComponent implements OnInit {
       });
     }
     mobilemenu();
-    Promise.all([this.storeService.getStoreByDomainName(), this.storeService.getCategories()])
+    this.populateAssets();
+    Promise.all([this.storeService.getStoreInfoByDomainName(), this.storeService.getCategories()])
       .then((values) => {
         this.storeInfo = values[0];
         this.categories = values[1];

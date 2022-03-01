@@ -18,6 +18,7 @@ export class StoreService {
   storeIdKey: string = "store_id";
   storeNameKey: string = "store_name";
   storeIdChange: Subject<string> = new Subject<string>();
+  getAssets: any;
 
   constructor(private apiService: ApiService) {}
 
