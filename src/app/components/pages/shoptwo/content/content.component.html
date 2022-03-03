@@ -35,8 +35,8 @@
                                 <i class="fa fa-star"></i>
                                 <span>Featured</span>
                             </div>
-                            <div class="andro_product-badge andro_badge-sale" *ngIf="item.discount">
-                                {{item.discount}}% Off
+                            <div class="andro_product-badge andro_badge-sale" *ngIf="item.productInventories[0].itemDiscount">
+                                {{item.productInventories[0].itemDiscount.discountAmount}}% Off
                             </div>
                             <div class="andro_product-thumb">
                                 <a routerLink="/product/{{item.seoName}}"><img src="{{item.thumbnailUrl}}"
@@ -58,9 +58,10 @@
                             </div>
                             <div class="andro_product-footer">
                                 <div class="andro_product-price">
-                                    <span *ngIf="item.discount">PKR {{item.productInventories[0].price * (100 -
-                                        item.discount) / 100 |
-                                        number:'1.2-2'}}</span>
+                                    <span *ngIf="item.productInventories[0].itemDiscount">
+                                        PKR {{item.productInventories[0].itemDiscount.discountedPrice |
+                                        number:'1.2-2'}}
+                                    </span>
                                     <span>PKR {{item.productInventories[0].price| number:'1.2-2'}}</span>
                                 </div>
                                 <div class="andro_product-buttons">

@@ -86,9 +86,9 @@
           </div>
           <div
             class="andro_product-badge andro_badge-sale"
-            *ngIf="item.discount"
+            *ngIf="item.productInventories[0].itemDiscount"
           >
-            {{ item.discount }}% Off
+            {{ item.productInventories[0].itemDiscount.discountAmount }}% Off
           </div>
           <div class="andro_product-thumb thumb-sm">
             <a routerLink="/product/{{ item.seoName }}"
@@ -101,8 +101,8 @@
               <a routerLink="/product/{{ item.seoName }}"> {{ item.name }} </a>
             </h5>
             <div class="andro_product-price" *ngIf="item.productInventories.length > 0" >
-              <span *ngIf="item.discount"> PKR
-                {{ (item.productInventories[0].price * (100 - item.discount)) / 100 | number: "1.2-2" }}
+              <span *ngIf="item.productInventories[0].itemDiscount"> PKR
+                {{ item.productInventories[0].itemDiscount.discountedPrice| number: "1.2-2" }}
               </span>
               <span> PKR {{ item.productInventories[0].price | number: "1.2-2" }}
               </span>

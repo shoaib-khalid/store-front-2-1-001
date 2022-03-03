@@ -19,6 +19,14 @@ export class ProductInventory {
     sku: string;
     productInventoryItems: ProductInventoryItem[];
     product: Product;
+    itemDiscount: itemDiscount[];
+}
+
+export class itemDiscount{
+    calculationType: string;
+    discountAmount: number;
+    discountedPrice: number;
+    normalPrice: number;
 }
 
 export class ProductInventoryItem {

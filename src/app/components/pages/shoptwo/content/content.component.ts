@@ -1,16 +1,16 @@
 import { Component, OnInit } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import shoppost from "../../../../data/shop.json";
-import { ApiService } from "src/app/api.service";
-import { Category } from "src/app/components/models/category";
-import { Product } from "src/app/components/models/product";
+import { ApiService } from "../../../../api.service";
+import { Category } from "../../../models/category";
+import { Product } from "../../../models/product";
 import { HttpClient } from "@angular/common/http";
 import { Router, ActivatedRoute } from "@angular/router";
 import { PlatformLocation } from "@angular/common";
 import { contains, removeData } from "jquery";
-import { CartService } from "src/app/cart.service";
+import { CartService } from "../../../../cart.service";
+import { StoreService } from "../../../../store.service";
 import Swal from "sweetalert2";
-import { StoreService } from "src/app/store.service";
 @Component({
   selector: "app-content",
   templateUrl: "./content.component.html",

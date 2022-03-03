@@ -1,17 +1,14 @@
 import { Component, AfterContentInit, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import shoppost from "../../../../data/shop.json";
-import blogcategory from "../../../../data/blogcategory.json";
-import blogtags from "../../../../data/blogtags.json";
-import { ApiService } from "src/app/api.service";
-import { Category } from "src/app/components/models/category";
+import { ApiService } from "../../../../api.service";
+import { Category } from "../../../models/category";
 import { PlatformLocation, Location } from "@angular/common";
-import { Product } from "src/app/components/models/product";
+import { Product } from "../../../models/product";
 import { contains, data, param } from "jquery";
 import { HttpParams } from "@angular/common/http";
-import { CartService } from "src/app/cart.service";
+import { CartService } from "../../../../cart.service";
+import { StoreService } from "../../../../store.service";
 import Swal from "sweetalert2";
-import { StoreService } from "src/app/store.service";
 
 @Component({
   selector: "app-content",
@@ -59,15 +56,18 @@ export class ContentComponent implements OnInit {
       status: false,
       id: "",
       productInventories: [
-        {
-          itemCode: "",
-          price: 0,
-          quantity: 0,
-          productId: "",
-          sku: "",
-          productInventoryItems: [],
-          product: null,
-        },
+        // {
+        //   itemDiscount: [{}]
+        // }
+        // {
+        //   itemCode: "",
+        //   price: 0,
+        //   quantity: 0,
+        //   productId: "",
+        //   sku: "",
+        //   productInventoryItems: [],
+        //   product: null,
+        // },
       ],
     };
     this.activatedRoute.params.subscribe((params) => {
