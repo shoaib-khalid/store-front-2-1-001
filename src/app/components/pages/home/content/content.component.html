@@ -101,10 +101,10 @@
               <a routerLink="/product/{{ item.seoName }}"> {{ item.name }} </a>
             </h5>
             <div class="andro_product-price" *ngIf="item.productInventories.length > 0" >
-              <span *ngIf="item.productInventories[0].itemDiscount"> PKR
+              <span *ngIf="item.productInventories[0].itemDiscount"> {{ currencySymbol }}
                 {{ item.productInventories[0].itemDiscount.discountedPrice| number: "1.2-2" }}
               </span>
-              <span> PKR {{ item.productInventories[0].price | number: "1.2-2" }}
+              <span> {{ currencySymbol }} {{ item.productInventories[0].price | number: "1.2-2" }}
               </span>
             </div>
             <!--<div class="andro_rating-wrapper">
@@ -179,10 +179,10 @@
             <h3>{{ modalContent.name }}</h3>
             <div class="andro_product-price">
               <span *ngIf="modalContent.productInventories[0].itemDiscount">
-                PKR  {{modalContent.productInventories[0].itemDiscount.discountedPrice |
+                {{ currencySymbol }} {{modalContent.productInventories[0].itemDiscount.discountedPrice |
                                 number:'1.2-2'}}</span>
               <span
-                >PKR
+                >{{ currencySymbol }}  
                   {{
                   modalContent.productInventories[0].price | number: "1.2-2"
                 }}</span

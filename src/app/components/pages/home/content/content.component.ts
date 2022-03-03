@@ -179,6 +179,15 @@ export class ContentComponent implements OnInit {
     }
   }
 
+  async getStoreInfo() {
+    try {
+      const storeInfo: Store = await this.storeService.getStoreInfo();
+      this.currencySymbol = storeInfo.regionCountry.currencySymbol;
+    } catch (error) {
+      console.error("Error getting storeInfo", error);
+    }
+  }
+
   populateAssets() {
     for (const storeAsset of this.storeInfo.storeAssets) {
       if (storeAsset.assetType == "BannerDesktopUrl") {
@@ -202,6 +211,7 @@ export class ContentComponent implements OnInit {
         this.product = values[2];
         this.isLoading = false;
         this.populateAssets();
+        this.getStoreInfo();
       })
       .catch((error) => {
         console.error("Error getting values for homepage" + error);

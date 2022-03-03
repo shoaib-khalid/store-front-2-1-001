@@ -117,6 +117,14 @@ export class HeaderthreeComponent implements OnInit {
       }
     }
   }
+  async getStoreInfo() {
+    try {
+      const storeInfo: Store = await this.storeService.getStoreInfo();
+      this.currencySymbol = storeInfo.regionCountry.currencySymbol;
+    } catch (error) {
+      console.error("Error getting storeInfo", error);
+    }
+  }
 
   // Sticky Nav
   @HostListener("window:scroll", ["$event"])
@@ -157,5 +165,6 @@ export class HeaderthreeComponent implements OnInit {
   async ngOnInit() {
     this.getStoreHour();
     this.populateAssets();
+    this.getStoreInfo();
   }
 }

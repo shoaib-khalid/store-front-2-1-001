@@ -12,6 +12,7 @@ import { HttpParams } from "@angular/common/http";
 import { CartService } from "../../../../cart.service";
 import { StoreService } from "../../../../store.service";
 import Swal from "sweetalert2";
+import { Store } from "../../../models/store";
 
 @Component({
   selector: "app-content",
@@ -40,6 +41,8 @@ export class ContentComponent implements OnInit {
   productID: any;
   seo_name: any;
   productSeoName: string;
+  currencySymbol: string = "";
+  isLoading: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -99,11 +102,22 @@ export class ContentComponent implements OnInit {
 
   async getProductDetailsByName(seoName) {
     this.product = await this.storeService.getProductDetailsByName(seoName);
-    console.log('productInfo', this.product)
+
+  }
+  async getStoreInfo() {
+    try {
+      const storeInfo: Store = await this.storeService.getStoreInfo();
+      this.currencySymbol = storeInfo.regionCountry.currencySymbol;
+    } catch (error) {
+      console.error("Error getting storeInfo", error);
+    }
   }
 
   ngOnInit() {
+    // this.isLoading = true;
     this.getProductDetailsByName(this.productSeoName);
+    this.getStoreInfo();
+    // this.isLoading = false;
   }
 
   async addToCart() {

@@ -11,6 +11,7 @@ import { contains, removeData } from "jquery";
 import { CartService } from "../../../../cart.service";
 import { StoreService } from "../../../../store.service";
 import Swal from "sweetalert2";
+import { Store } from "../../../models/store";
 @Component({
   selector: "app-content",
   templateUrl: "./content.component.html",
@@ -47,6 +48,7 @@ export class ContentComponent implements OnInit {
   isLoading: boolean;
   name: any;
   sortId: any;
+  currencySymbol: string = "";
 
   constructor(
     private modalService: NgbModal,
@@ -136,10 +138,20 @@ export class ContentComponent implements OnInit {
       // TODO: Show error message
     }
   }
+  async getStoreInfo() {
+    try {
+      const storeInfo: Store = await this.storeService.getStoreInfo();
+      this.currencySymbol = storeInfo.regionCountry.currencySymbol;
+    } catch (error) {
+      console.error("Error getting storeInfo", error);
+    }
+  }
+
 
   ngOnInit() {
     this.catId = localStorage.getItem("category_id");
     this.getStoreCategories();
     this.getProductsByCategory(this.catId, this.sortBy);
+    this.getStoreInfo();
   }
 }
