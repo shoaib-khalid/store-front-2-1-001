@@ -63,9 +63,9 @@
                         <h3> {{product.name}} </h3>
                         <div class="andro_product-price">
                             <span *ngIf="product.productInventories[0].itemDiscount">
-                                PKR{{product.productInventories[0].itemDiscount.discountedPrice |
-                                number:'1.2-2'}}</span>
-                            <span>PKR {{product.productInventories[0].itemDiscount.normalPrice| number:'1.2-2'}}</span>
+                                PKR {{product.productInventories[0].itemDiscount.discountedPrice |
+                                number:'1.2-2'}}</span> 
+                              <span>PKR  {{product.productInventories[0].price| number:'1.2-2'}}</span> 
                         </div>
                         <div [innerHtml]="product.description"></div>
                         <form class="andro_product-atc-form">

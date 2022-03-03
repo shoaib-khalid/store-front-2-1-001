@@ -1,15 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { ApiService } from "src/app/api.service";
-import { CartService } from "src/app/cart.service";
-import { CartItem, CartTotals } from "src/app/components/models/cart";
-import {
-  DeliveryCharge,
-  DeliveryDetails,
-} from "src/app/components/models/delivery";
-import { State } from "src/app/components/models/region";
-import { Store } from "src/app/components/models/store";
-import { StoreService } from "src/app/store.service";
+import { ApiService } from "../../../../api.service";
+import { CartService } from "../../../../cart.service";
+import { CartItem, CartTotals } from "../../../models/cart";
+import { DeliveryCharge, DeliveryDetails } from "../../../models/delivery";
+import { State } from "../../../models/region";
+import { Store } from "../../../models/store";
+import { StoreService } from "../../../../store.service";
 
 @Component({
   selector: "app-content",

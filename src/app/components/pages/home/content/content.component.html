@@ -154,10 +154,10 @@
             <!-- <div class="andro_product-badge andro_badge-featured" *ngIf="modalContent.featured">
                             <i class="fa fa-star"></i>
                             <span>Featured</span>
-                        </div>
-                        <div class="andro_product-badge andro_badge-sale" *ngIf="modalContent.discount">
-                            {{modalContent.discount}}% Off
                         </div> -->
+                        <div class="andro_product-badge andro_badge-sale" *ngIf="modalContent.productInventories[0].itemDiscount">
+                            {{modalContent.productInventories[0].itemDiscount.discountAmount}}% Off
+                        </div>
             <img
               [src]="modalContent.thumbnailUrl"
               alt="{{ modalContent.name }}"
@@ -178,12 +178,12 @@
             </div>
             <h3>{{ modalContent.name }}</h3>
             <div class="andro_product-price">
-              <!-- <span *ngIf="modalContent.discount">${{modalContent.price * (100 - modalContent.discount) /
-                                100 |
-                                number:'1.2-2'}}</span> -->
+              <span *ngIf="modalContent.productInventories[0].itemDiscount">
+                PKR  {{modalContent.productInventories[0].itemDiscount.discountedPrice |
+                                number:'1.2-2'}}</span>
               <span
                 >PKR
-                {{
+                  {{
                   modalContent.productInventories[0].price | number: "1.2-2"
                 }}</span
               >

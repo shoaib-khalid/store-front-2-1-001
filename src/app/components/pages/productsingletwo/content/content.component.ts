@@ -1,5 +1,8 @@
 import { Component, AfterContentInit, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import shoppost from "../../../../data/shop.json";
+import blogcategory from "../../../../data/blogcategory.json";
+import blogtags from "../../../../data/blogtags.json";
 import { ApiService } from "../../../../api.service";
 import { Category } from "../../../models/category";
 import { PlatformLocation, Location } from "@angular/common";
@@ -56,18 +59,22 @@ export class ContentComponent implements OnInit {
       status: false,
       id: "",
       productInventories: [
-        // {
-        //   itemDiscount: [{}]
-        // }
-        // {
-        //   itemCode: "",
-        //   price: 0,
-        //   quantity: 0,
-        //   productId: "",
-        //   sku: "",
-        //   productInventoryItems: [],
-        //   product: null,
-        // },
+        {
+          itemCode: "",
+          price: 0,
+          quantity: 0,
+          productId: "",
+          sku: "",
+          productInventoryItems: [],
+          product: null,
+          itemDiscount: 
+          {
+            discountAmount: 0,
+            normalPrice: 0,
+            calculationType: "",  
+            discountedPrice: 0,
+          }
+        },  
       ],
     };
     this.activatedRoute.params.subscribe((params) => {
@@ -92,6 +99,7 @@ export class ContentComponent implements OnInit {
 
   async getProductDetailsByName(seoName) {
     this.product = await this.storeService.getProductDetailsByName(seoName);
+    console.log('productInfo', this.product)
   }
 
   ngOnInit() {

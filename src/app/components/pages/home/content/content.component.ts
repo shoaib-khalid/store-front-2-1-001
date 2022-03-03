@@ -52,6 +52,7 @@ export class ContentComponent implements OnInit {
   banner: any;
   storeBannerUrl: string = "";
   storeInfo: Store;
+  currencySymbol: string = "";
 
   constructor(
     private modalService: NgbModal,

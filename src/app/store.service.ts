@@ -22,6 +22,7 @@ export class StoreService {
 
   async parseStoreFromUrl() {
     let currBaseUrl = location.origin;
+    console.log("Current URL: ", currBaseUrl);
 
     if (isDevMode()) {
       console.log("Running in dev mode");

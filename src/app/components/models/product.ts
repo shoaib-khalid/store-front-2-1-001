@@ -9,6 +9,7 @@ export class Product {
     status: boolean;
     id: any;
     productInventories: ProductInventory[];
+
 }
 
 export class ProductInventory {
@@ -19,16 +20,15 @@ export class ProductInventory {
     sku: string;
     productInventoryItems: ProductInventoryItem[];
     product: Product;
-    itemDiscount: itemDiscount[];
+    itemDiscount: ItemDiscount;
 }
 
-export class itemDiscount{
-    calculationType: string;
-    discountAmount: number;
-    discountedPrice: number;
+export class ItemDiscount {
     normalPrice: number;
+    discountedPrice: number;
+    discountAmount: number;
+    calculationType: string;
 }
-
 export class ProductInventoryItem {
     itemCode: string;
     productVariantAvailableId: string;
