@@ -50,9 +50,10 @@ export class ContentComponent implements OnInit {
   bannerExist: boolean = false;
   assetsData: any;
   banner: any;
-  storeBannerUrl: string = "";
+  storeBannerUrl = [];
   storeInfo: Store;
   currencySymbol: string = "";
+  bannerslides: { photo: any; }[];
 
   constructor(
     private modalService: NgbModal,
@@ -87,32 +88,24 @@ export class ContentComponent implements OnInit {
       this.counter -= 1;
     }
   }
+  
   // Banner
-  // bannerslides = [
-  //   {
-  //     photo: "assets/img/banner/1.jpg",
-  //     proimg: "assets/img/products/8.png",
-  //     ctaimg: "assets/img/cta/3.jpg",
-  //     couponcode: "ORGANIC991",
-  //     title: "Organic Vegetables",
-  //     para: "Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Sed porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula.",
-  //   },
-  //   {
-  //     photo: "assets/img/banner/2.jpg",
-  //     proimg: "assets/img/products/14.png",
-  //     ctaimg: "assets/img/cta/2.jpg",
-  //     couponcode: "ORGANIC991",
-  //     title: "Organic Exotic Fruits",
-  //     para: "Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Sed porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula.",
-  //   },
-  // ];
-  // bannerConfig = {
-  //   slidesToShow: 1,
-  //   slidesToScroll: 1,
-  //   arrows: false,
-  //   dots: false,
-  //   autoplay: true,
-  // }
+  populateAssets() {
+    let storeBannerUrls = [];
+    for (const storeAsset of this.storeInfo.storeAssets) {
+      if (storeAsset.assetType == "BannerDesktopUrl") {
+        storeBannerUrls.push( { photo: storeAsset.assetUrl} );
+      }
+    }
+    this.bannerslides = storeBannerUrls;
+  }
+  bannerConfig = {
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    dots: false,
+    autoplay: true,
+  }
 
   goToDetails(productID) {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -188,13 +181,7 @@ export class ContentComponent implements OnInit {
     }
   }
 
-  populateAssets() {
-    for (const storeAsset of this.storeInfo.storeAssets) {
-      if (storeAsset.assetType == "BannerDesktopUrl") {
-        this.storeBannerUrl = storeAsset.assetUrl;
-      }
-    }
-  }
+  
 
   async ngOnInit() {
     this.isLoading = true;

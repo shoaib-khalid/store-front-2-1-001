@@ -1,31 +1,48 @@
 <app-preloader [isLoading]="isLoading"></app-preloader>
 
-<!-- Banner Start -->
-
-
+<!-- Banner Start 
 <div>
   <div class="andro_banner banner-2" >
-    <!-- <img class="banner-design" src="{{assets['bannerUrl']}}"> -->
-    <img class="banner-design" [src]="storeBannerUrl">
+     <img class="banner-design" src="{{assets['bannerUrl']}}"> 
+     <img class="banner-design" [src]="storeBannerUrl"> 
   </div>  
-  <!-- <img class="banner-design" src="{{assets['bannerUrl']}}"> -->
-  <!-- <ngx-slick-carousel #slickModal="slick-carousel" [config]="bannerConfig" class="andro_banner-slider" >
+  <img class="banner-design" src="{{assets['bannerUrl']}}"> 
+  <ngx-slick-carousel #slickModal="slick-carousel" [config]="bannerConfig" class="andro_banner-slider" >
+    <img class="banner-design" [src]="storeBannerUrl"> 
         <div ngxSlickItem class="andro_banner-slider-inner" style="background-image: url('{{item.photo}}');"
-            *ngFor="let item of bannerslides">
-            <div class="container" ><img src="{{assets['bannerUrl']}}">
+            *ngFor="let item of bannerslides"> 
+             <div class="container" ><img src="{{assets['bannerUrl']}}">
                 <div class="andro_banner-slider-text">
                     <img src="{{item.proimg}}" class="img-1" alt="{{item.title}}">
                     <p>Use code <strong class="custom-primary">{{item.couponcode}}</strong> during checkout</p>
                     <h1 style="background-image: url('{{item.ctaimg}}') "> {{item.title}} </h1>
                     <p>{{item.para}}</p>
                     
-                </div>
+                </div> 
             </div>
         </div>
-    </ngx-slick-carousel>-->
+    </ngx-slick-carousel>
 </div>
-<!-- Banner End -->
-
+ Banner End -->
+ <div class="andro_banner banner-2">
+  <ngx-slick-carousel #slickModal="slick-carousel" [config]="bannerConfig"
+      class="andro_banner-slider">
+      <div ngxSlickItem  *ngFor="let item of bannerslides">
+          <div >
+              <!-- <div class="col-lg-6">
+                  <p>Use code <strong class="custom-primary">{{item.couponcode}}</strong> during
+                      checkout</p>
+                  <h1> {{item.title}} <span class="fw-400">{{item.titlespan}}</span> </h1>
+                  <p>{{item.para}}</p>
+                  <a routerLink="/shop-v1" class="andro_btn-custom">Shop Now</a>
+              </div> -->
+              <div class="banner-design">
+                  <img class="banner-design" [src]="item.photo">
+              </div>
+          </div>
+      </div>
+  </ngx-slick-carousel>
+</div>
 <!-- Categories Start -->
 <div class="section section-padding category_section">
   <!-- <div class="alert alert-primary" role="alert">

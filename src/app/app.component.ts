@@ -32,15 +32,6 @@ export class AppComponent implements OnInit {
     private storeService: StoreService
   ) {}
 
-  // async changeIcon() {
-  //   const store : Store = await this.storeService.getStoreInfoByDomainName();
-  //   for (let storeAsset of store.storeAssets) {
-  //     if (storeAsset.assetType === "FaviconUrl") {
-  //      this.fav = storeAsset.assetUrl;
-  //     }
-  //   }
-  //   this.favIcon.href = this.fav;
-  // }
   async changeIcon(){
     const store : Store = await this.storeService.getStoreInfo();
     for (let storeAsset of store.storeAssets){
