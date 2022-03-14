@@ -5,7 +5,7 @@ import { CartService } from "../../../../cart.service";
 import { CartItem, CartTotals } from "../../../models/cart";
 import { DeliveryCharge, DeliveryDetails } from "../../../models/delivery";
 import { State } from "../../../models/region";
-import { Store } from "../../../models/store";
+import { Store, StoreTiming } from "../../../models/store";
 import { StoreService } from "../../../../store.service";
 
 @Component({
@@ -48,7 +48,12 @@ export class ContentComponent implements OnInit {
   states: State[] = [];
   storeDeliveryPercentage: number;
 
+  storeTiming: StoreTiming[];
+  dayArr = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+  store_close: boolean = false;
+
   totalServiceCharge: number;
+  storeTimings: any;
 
   constructor(
     private cartService: CartService,
@@ -145,8 +150,29 @@ export class ContentComponent implements OnInit {
       this.currencySymbol = storeInfo.regionCountry.currencySymbol;
       this.userDeliveryDetails.deliveryCountry = storeInfo.regionCountry.name;
       this.storeDeliveryPercentage = storeInfo.serviceChargesPercentage;
-
       this.states = await this.getStatesByID(storeInfo.regionCountry.id);
+      this.storeTimings = storeInfo.storeTiming;
+      const currentDate = new Date();
+      let todayDay = this.dayArr[currentDate.getDay()];
+      let browserTime = new Date();
+      for (let item of this.storeTimings){
+        let dayObj = item.day;
+        if ( dayObj == todayDay){
+          let isOff = item.isOff;
+          if(isOff == false){
+            let openTime = new Date();
+            openTime.setHours(item.openTime.split(":")[0], item.openTime.split(":")[1], 0);
+            let closeTime = new Date();
+            closeTime.setHours(item.closeTime.split(":")[0], item.closeTime.split(":")[1], 0);
+            if (browserTime >= openTime && browserTime < closeTime) {
+              
+            } else {
+              this.store_close = true;
+            }
+          } else {
+            this.store_close = true;}
+        }
+      }      
     } catch (error) {
       console.error("Error getting storeInfo", error);
     }

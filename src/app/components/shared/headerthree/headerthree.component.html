@@ -12,11 +12,14 @@
 <!-- Header Start -->
 
 <header class="andro_header header-2 can-sticky" id="can-sticky">
-    <!-- Topheader Start 
-    <div class="andro_header-top">
+    <!-- Topheader Start -->
+    <div class="andro_header-top" *ngIf="store_close">
         <div class="container">
             <div class="andro_header-top-inner">
-                <ul class="andro_header-top-sm andro_sm">
+                <marquee width="100%" direction="left" style="color: #cca6a6;"> 
+                    Sorry for the inconvenience, Our store is closed for now.
+                </marquee>
+                  <!--  <ul class="andro_header-top-sm andro_sm">
                     <!--Powered by EasyDukan.co Should be written here
                     <li> <a href="#"> <i class="fab fa-facebook-f"></i> </a> </li>
                     <li> <a href="#"> <i class="fab fa-twitter"></i> </a> </li>
@@ -31,21 +34,10 @@
                             <li> <a href="#">Pakistani Rupee (PKR)</a> </li>
                         </ul>
                     </li>
-                </ul>
+                </ul> -->
             </div>
         </div>
     </div>
-    <!-- Topheader End -->
-    <!-- Topheader Start -->
-    <!-- <div class="andro_header-top">
-        <div class="position-relative" *ngIf="!store_close">
-            <div style="text-align: center; position: relative;" class=" alert alert-danger fade show header" role="alert">
-                <marquee width="80%" direction="left">
-                    Sorry, We are closed now
-                </marquee>
-            </div>
-        </div>
-    </div> -->
     <!-- Topheader End -->
     <!-- Middle Header Start -->
     <div class="andro_header-middle">

@@ -1,6 +1,16 @@
 <!-- Checkout Start -->
 <div class="section">
     <div class="container">
+        <!-- <div *ngIf="store_close">
+            <p class="small" >
+                We are closed now our opening hours are as per below
+            </p>
+            <div *ngFor="let timing of storeTimings">
+                <span *ngIf="!timing.isOff">{{timing.day}} on <strong>
+                    {{timing.openTime}} - {{timing.closeTime}}
+                </strong><br></span>
+            </div>
+            </div> -->
         <form method="post" (ngSubmit)="onSubmit()" #billingForm="ngForm">
             <div class="row">
                 <div class="col-xl-7">
@@ -9,6 +19,16 @@
                         <p>Are you a returning customer? <a href="javascript:void(0)" (click)="isOne = !isOne"
                                 [attr.aria-expanded]="!isOne">Click here to login</a> </p>
                     </div> -->
+                    <div *ngIf="store_close" style="margin-bottom: 20px; background-origin: padding-box;" >
+                        <p class="small" class="text-center">
+                            We are closed now our opening hours are as per below
+                        </p>
+                        <div *ngFor="let timing of storeTimings" class="text-center">
+                            <span *ngIf="!timing.isOff">{{timing.day}} on <strong>
+                                {{timing.openTime}} - {{timing.closeTime}}
+                            </strong><br></span>
+                        </div>
+                    </div>
                     <div [ngbCollapse]="isOne" class="collapse">
                         <div class="andro_notice-content d-block">
                             <div class="row">
@@ -52,32 +72,32 @@
                         </div>
                     </div>
                     <!-- Buyer Info Start -->
-                    <h4>Billing Details</h4>
+                    <h4><b>Billing Details </b></h4>
                     <div class="row">
                         <div class="form-group col-xl-12">
                             <label>Full Name <span class="text-danger">*</span></label>
-                            <input type="text" id="username" placeholder="Full Name" name="username"
+                            <input type="text" id="username" placeholder="Full Name" name="username" [disabled]="store_close"
                                 [(ngModel)]="userDeliveryDetails.deliveryContactName" (ngModelChange)="validateName()"
                                 class="form-control" required>
                             <div class="text-danger" [hidden]="isNameValid">Name cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-12">
                             <label>Address <span class="text-danger">*</span></label>
-                            <textarea id="userAddress" placeholder="Address" name="userAddress" rows="5"
+                            <textarea id="userAddress" placeholder="Address" name="userAddress" rows="5" [disabled]="store_close"
                                 [(ngModel)]="userDeliveryDetails.deliveryAddress" class="form-control"
                                 (ngModelChange)="validateAddress()" required></textarea>
                             <div class="text-danger" [hidden]="isAddressValid">Address cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>Town / City <span class="text-danger">*</span></label>
-                            <input type="text" id="userCity" placeholder="Town/City" name="userCity"
+                            <input type="text" id="userCity" placeholder="Town/City" name="userCity" [disabled]="store_close"
                                 [(ngModel)]="userDeliveryDetails.deliveryCity" class="form-control"
                                 (ngModelChange)="validateCity()" required="">
                             <div class="text-danger" [hidden]="isCityValid">City cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>State <span class="text-danger">*</span></label>
-                            <select class="form-control" (change)="selectState($event)">
+                            <select class="form-control1" (change)="selectState($event)" [disabled]="store_close">
                                 <option value="" disabled>Select a State</option>
                                 <option *ngFor="let state of states" [ngValue]="state">{{ state.name }}</option>
                             </select>
@@ -85,38 +105,39 @@
                         </div>
                         <div class="form-group col-xl-6">
                             <label>Postcode<span class="text-danger">*</span></label>
-                            <input type="text" id="userPostcode" placeholder="Post Code" name="userPostcode"
+                            <input type="text" id="userPostcode" placeholder="Post Code" name="userPostcode" [disabled]="store_close"
                                 [(ngModel)]="userDeliveryDetails.deliveryPostcode" class="form-control"
                                 (ngModelChange)="validatePostCode()" required="">
                             <div class="text-danger" [hidden]="isPostCodeValid">{{ postCodeErrorMsg }}</div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                            <label>Country</label>
                             <input type="text" name="userCountries" class="form-control"
-                                [(ngModel)]="userDeliveryDetails.deliveryCountry" autocomplete="disabled" readonly
+                                [(ngModel)]="userDeliveryDetails.deliveryCountry" autocomplete="disabled" readonly [disabled]="store_close"
                                 placeholder="Countries" required="">
                             <div class="text-danger" [hidden]="isCountryValid">Country cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>Phone Number <span class="text-danger">*</span></label>
-                            <input type="tel" id="userPhone" placeholder="Phone Number" name="userPhone"
+                            <input type="tel" id="userPhone" placeholder="Phone Number" name="userPhone" [disabled]="store_close"
                                 [(ngModel)]="userDeliveryDetails.deliveryContactPhone" class="form-control" value=""
                                 (ngModelChange)="validatePhoneNumber()" required="">
                             <div class="text-danger" [hidden]="isPhoneNumberValid">{{ phoneNumberErrorMsg }}</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>Email Address <span class="text-danger">*</span></label>
-                            <input type="email" id="userEmail" placeholder="Email Address" name="email"
+                            <input type="email" id="userEmail" placeholder="Email Address" name="email" [disabled]="store_close"
                                 [(ngModel)]="userDeliveryDetails.deliveryContactEmail" class="form-control" value=""
                                 (ngModelChange)="validateEmailAddress()" required="">
                             <div class="text-danger" [hidden]="isEmailValid">{{ emailErrorMsg }}</div>
                         </div>
                         <div class="form-group col-xl-12 mb-0">
                             <label>Order Notes (Optional)</label>
-                            <textarea id="orderNotes" name="orderNotes" placeholder="Order Notes (Optional)" rows="5"
+                            <textarea id="orderNotes" name="orderNotes" placeholder="Order Notes (Optional)" rows="5" [disabled]="store_close"
                                 [(ngModel)]="userDeliveryDetails.deliveryNotes" class="form-control"></textarea>
                         </div>
                         <div class="form-group col-xl-12 mb-0">
-                            <button type="submit" class="andro_btn-custom primary btn-block" [disabled]="isProcessing">
+                            <button type="submit" class="andro_btn-custom primary btn-block" [disabled]="isProcessing" [disabled]="store_close">
                                 <span *ngIf="!isProcessing; else loadingAnim">{{ submitButtonText }}</span>
                                 <ng-template #loadingAnim><span class="spinner-grow spinner-grow-sm" role="status"
                                         aria-hidden="true"></span></ng-template>
@@ -209,12 +230,19 @@
                             <label>CVV*</label>
                             <input type="number" class="form-control" name="master-cvv" placeholder="CVV" value="">
                         </div>
+                    </div> -->
+                    <!-- <div *ngIf="store_close">
+                    <p class="small" >
+                        We are closed now our opening hours are as per below
+                    </p>
+                    <div *ngFor="let timing of storeTimings">
+                        <span *ngIf="!timing.isOff">{{timing.day}} on <strong>
+                            {{timing.openTime}} - {{timing.closeTime}}
+                        </strong><br></span>
                     </div>
-                    <p class="small">Your personal data will be used to process your order, support your experience
-                        throughout this website, and for other purposes described in our <a class="btn-link"
-                            href="#">privacy policy.</a> </p>
-                    <button type="submit" class="andro_btn-custom primary btn-block">Place
-                        Order</button> -->
+                    </div> -->
+                    <!-- <button type="submit" class="andro_btn-custom primary btn-block">Place
+                        Order</button>  -->
                     <!-- Order Details End -->
                 </div>
             </div>

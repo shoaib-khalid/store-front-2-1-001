@@ -1,0 +1,106 @@
+textarea {
+    resize: none;
+  }
+  .form-control1::-webkit-input-placeholder {
+    color: #a5a5a5;
+  }
+  .form-control1::-moz-placeholder {
+    color: #a5a5a5;
+  }
+  .form-control1:-ms-input-placeholder {
+    color: #a5a5a5;
+  }
+  .form-control1::-ms-input-placeholder {
+    color: #a5a5a5;
+  }
+  .form-control1::placeholder {
+    color: #a5a5a5;
+  }
+  .form-control1 {
+    height: 50px;
+    padding: 8px 15px;
+    border-radius: 0;
+    border: 1px solid #f0f2f3;
+    border-radius: 25px;
+    width: 100%;
+    color: #6e6e6e;
+    background-color: #fff;
+    letter-spacing: 0.1px;
+    font-size: 14px;
+  }
+  .form-control1:focus {
+    border: 1px solid #efefef;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+  .form-control1-1::-webkit-input-placeholder {
+    color: #a5a5a5;
+  }
+  .form-control1-1::-moz-placeholder {
+    color: #a5a5a5;
+  }
+  .form-control1-1:-ms-input-placeholder {
+    color: #a5a5a5;
+  }
+  .form-control1-1::-ms-input-placeholder {
+    color: #a5a5a5;
+  }
+  .form-control1-1::placeholder {
+    color: #a5a5a5;
+  }
+  .form-control1-1 {
+    height: 50px;
+    padding: 8px 15px;
+    border-radius: 0;
+    border: 1px solid #f0f2f3;
+    border-radius: 25px;
+    width: 20%;
+    color: #6e6e6e;
+    background-color: #fff;
+    letter-spacing: 0.1px;
+    font-size: 14px;
+  }
+  .form-control1-1:focus {
+    border: 1px solid #efefef;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  .input-with-icon {
+    position: relative;
+  }
+  .input-with-icon input,
+  .input-with-icon select {
+    padding-left: 40px;
+  }
+  .input-with-icon i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    font-size: 18px;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    color: #a5a5a5;
+    -webkit-transition: 0.3s;
+    -o-transition: 0.3s;
+    transition: 0.3s;
+  }
+  .input-with-icon input:focus + i,
+  .input-with-icon select:focus + i {
+    color: #454545;
+  }
+  .custom-control-input:focus ~ .custom-control-label::before {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+  .custom-radio .custom-control-input:checked ~ .custom-control-label::before,
+  .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #50bd49;
+  }
+  .custom-control label {
+    line-height: 23px;
+  }
+  
