@@ -26,14 +26,10 @@ export class StoreService {
 
     if (isDevMode()) {
       console.log("Running in dev mode");
-      currBaseUrl = "mcd.dev-pk2.symplified.ai";
+      currBaseUrl = "elo.dev-pk.symplified.ai";
     }
 
-    // For testing purposes
-    // currBaseUrl = "awan-tech.dev-pk2.symplified.ai";
-    // currBaseUrl = "mcd.dev-pk2.symplified.ai";
-
-    currBaseUrl = currBaseUrl.split(".")[0].replace(/^(https?:|)\/\//, "");
+    // currBaseUrl = currBaseUrl.split(".")[0].replace(/^(https?:|)\/\//, "");
     const store: Store = await this.getStoreByDomainName(currBaseUrl);
     console.log("StoreInfo: ", store.id);
     if (this.getStoreId() !== store.id) {
