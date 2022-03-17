@@ -17,6 +17,7 @@ import { Ng2SearchPipeModule } from "ng2-search-filter";
 import { APP_INITIALIZER } from "@angular/core";
 import { AppConfig } from "./app.config";
 
+
 export function initializeApp(appConfig: AppConfig) {
   return () => appConfig.load();
 }

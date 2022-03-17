@@ -124,7 +124,7 @@ export class ContentComponent implements OnInit {
     slidesToScroll: 1,
     arrows: true,
     dots: false,
-    autoplay: false,
+    autoplay: true,
     prevArrow: ".andro_fresh-arrivals .slider-prev",
     nextArrow: ".andro_fresh-arrivals .slider-next",
     responsive: [
@@ -180,9 +180,6 @@ export class ContentComponent implements OnInit {
       console.error("Error getting storeInfo", error);
     }
   }
-
-  
-
   async ngOnInit() {
     this.isLoading = true;
 
@@ -196,9 +193,10 @@ export class ContentComponent implements OnInit {
         this.storeInfo = values[0];
         this.categories = values[1];
         this.product = values[2];
-        this.isLoading = false;
+        // this.isLoading = false;
         this.populateAssets();
         this.getStoreInfo();
+        this.isLoading = false;
       })
       .catch((error) => {
         console.error("Error getting values for homepage" + error);
