@@ -1,6 +1,14 @@
 <!-- Checkout Start -->
 <div class="section">
     <div class="container">
+        <div class="wrapper">
+            <div *ngIf="isLoading">
+                <div class="spinner-wrapper">
+                    <div class="dot1"></div>
+                    <div class="dot2"></div>
+                </div>
+            </div>
+            </div>
         <!-- <div *ngIf="store_close">
             <p class="small" >
                 We are closed now our opening hours are as per below
@@ -95,14 +103,35 @@
                                 (ngModelChange)="validateCity()" required="">
                             <div class="text-danger" [hidden]="isCityValid">City cannot be blank.</div>
                         </div>
-                        <div class="form-group col-xl-6">
+                        <!-- <div class="form-group col-xl-6">
                             <label>State <span class="text-danger">*</span></label>
-                            <select class="form-control1" (change)="selectState($event)" [disabled]="store_close">
+                            <select class="selectpicker"  data-style="btn-success" (change)="selectState($event)" [disabled]="store_close">
                                 <option value="" disabled>Select a State</option>
                                 <option *ngFor="let state of states" [ngValue]="state">{{ state.name }}</option>
                             </select>
                             <div class="text-danger" [hidden]="isStateValid">State cannot be blank.</div>
+                        </div> -->
+                        <div class="form-group col-xl-6">
+                            <label>State<span class="text-danger">*</span></label>
+                                <mat-select  class="form-control1" appearance="outline" name="state" placeholder="State" [(ngModel)]="userDeliveryDetails.deliveryState" [disabled]="store_close">
+                                  <mat-option *ngFor="let state of states" [value]="state.id">
+                                    {{ state.name }}
+                                  </mat-option>
+                                </mat-select>
+                            <div class="text-danger" [hidden]="isStateValid">State cannot be blank.</div>
                         </div>
+                        <!-- <div class="form-group col-xl-6">
+                            <label>State <span class="text-danger">*</span></label>
+                            <ul class="form-control1" (change)="selectState($event)" >
+                                <li value="" aria-disabled="true">Select State</li>
+                                <li *ngFor="Let state of states" [ngValue]="state">{{state.name}}</li>
+                            </ul>
+                            <!-- <select class="form-control1" (change)="selectState($event)" [disabled]="store_close">
+                                <option value="" disabled>Select a State</option>
+                                <option *ngFor="let state of states" [ngValue]="state">{{ state.name }}</option>
+                            </select> 
+                            <div class="text-danger" [hidden]="isStateValid">State cannot be blank.</div>
+                        </div> -->
                         <div class="form-group col-xl-6">
                             <label>Postcode<span class="text-danger">*</span></label>
                             <input type="text" id="userPostcode" placeholder="Post Code" name="userPostcode" [disabled]="store_close"
@@ -135,6 +164,13 @@
                             <label>Order Notes (Optional)</label>
                             <textarea id="orderNotes" name="orderNotes" placeholder="Order Notes (Optional)" rows="5" [disabled]="store_close"
                                 [(ngModel)]="userDeliveryDetails.deliveryNotes" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group col-xl-12 mb-0">
+                            <div *ngIf="hasDeliveryCharges">
+                                <p class="small" >
+                                    We do not provide delivery to the state you have selected.
+                                </p>        
+                            </div>
                         </div>
                         <div class="form-group col-xl-12 mb-0">
                             <button type="submit" class="andro_btn-custom primary btn-block" [disabled]="isProcessing" [disabled]="store_close">
@@ -213,6 +249,13 @@
                         </tbody>
                     </table>
                     <!-- <div class="form-group">
+                        <div *ngIf="!hasDeliveryCharges">
+                            <p class="small" >
+                                We do not provide delivery to the state you have selected.
+                            </p>        
+                        </div>
+                    </div> -->
+                    <!-- <div class="form-group">
                         <label>Card Number</label>
                         <input type="text" class="form-control" name="master-number" placeholder="Card Number" value="">
                     </div>
@@ -245,6 +288,7 @@
                         Order</button>  -->
                     <!-- Order Details End -->
                 </div>
+                
             </div>
         </form>
     </div>

@@ -16,6 +16,10 @@ import { Ng2SearchPipeModule } from "ng2-search-filter";
 
 import { APP_INITIALIZER } from "@angular/core";
 import { AppConfig } from "./app.config";
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatOptionModule } from "@angular/material/core";
+
 
 
 export function initializeApp(appConfig: AppConfig) {
@@ -34,6 +38,9 @@ export function initializeApp(appConfig: AppConfig) {
     HttpClientModule,
     SharedModule,
     Ng2SearchPipeModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatOptionModule
   ],
   providers: [
     AppConfig,

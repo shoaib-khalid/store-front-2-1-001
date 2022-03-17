@@ -1,3 +1,4 @@
+// import { NgModule } from '@angular/core';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +10,12 @@ import { SharedModule } from '../../shared/shared.module';
 import { ContentComponent } from './content/content.component'
 import { FormsModule } from '@angular/forms';
 
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatOptionModule } from '@angular/material/core';
+
+
+
 @NgModule({
   declarations: [CheckoutComponent, ContentComponent],
   imports: [
@@ -16,7 +23,11 @@ import { FormsModule } from '@angular/forms';
     CheckoutRoutingModule,
     NgbModule,
     SharedModule,
-    FormsModule
+    FormsModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatOptionModule
+    
   ]
 })
 export class CheckoutModule { }

@@ -162,19 +162,20 @@ export class CartService {
 
   getDeliveryFee(DeliveryDetails: DeliveryDetails): Promise<DeliveryCharge> {
     let data = {
-      customerId: null,
+      customerId: undefined,
       deliveryProviderId: null,
-      cartid: this.getCartId(),
+      cartId: this.getCartId(),
       storeId: this.storeService.getStoreId(),
       delivery: DeliveryDetails
     };
-
+    console.log('cartID ', data)
     return new Promise((resolve, reject) => {
       this.apiService.postTogetDeliveryFee(data).subscribe(async (res: any) => {
         if (Array.isArray(res.data)) {
           resolve(res.data[0]);
+          console.log(res.data)
         } else {
-          resolve(res.data);
+          resolve(res.data);console.log(res.data)
         }
       }, error => {
         console.error("Error posting to delivery", error);

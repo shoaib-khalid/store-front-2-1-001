@@ -7,6 +7,11 @@ import { DeliveryCharge, DeliveryDetails } from "../../../models/delivery";
 import { State } from "../../../models/region";
 import { Store, StoreTiming } from "../../../models/store";
 import { StoreService } from "../../../../store.service";
+import Swal from "sweetalert2";
+import { MatSelect } from "@angular/material/select";
+import { MatFormField } from "@angular/material/form-field";
+import { MatLabel } from "@angular/material/form-field";
+import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from "@angular/cdk/overlay/overlay-directives";
 
 @Component({
   selector: "app-content",
@@ -42,6 +47,7 @@ export class ContentComponent implements OnInit {
   phoneNumberRegex;
 
   submitButtonText: string;
+  isLoading: boolean;
 
   // Store info
   currencySymbol: string = "";
@@ -84,15 +90,19 @@ export class ContentComponent implements OnInit {
     return this.cartService.getSubTotal();
   }
   ngOnInit(): void {
+    this.isLoading = true;
     this.checkout = this.cartService.cart;
     this.getStoreInfo();
     this.cartService.cartChange.subscribe((cart) => {
       this.checkout = cart;
     });
+    this.isLoading = false;
   }
 
   selectState(e): void {
-    this.userDeliveryDetails.deliveryState = e.target.value;
+    console.log()
+    this.userDeliveryDetails.deliveryState = e.id;
+    console.log("selectState: ", this.userDeliveryDetails.deliveryState);
   }
 
   async onSubmit() {
@@ -109,6 +119,7 @@ export class ContentComponent implements OnInit {
           // TODO: Show error message
         }
       } else {
+        try{
         this.deliveryFee = await this.cartService.getDeliveryFee(
           this.userDeliveryDetails
         );
@@ -122,6 +133,16 @@ export class ContentComponent implements OnInit {
             ? this.storeDeliveryPercentage
             : (this.storeDeliveryPercentage / 100) *
               this.cartTotals.cartSubTotal;
+            }
+            catch{
+              Swal.fire({
+                icon: "error",
+                title: "Ooops",
+                text: "We can't deliver in your state.",
+                timer: 3000,
+              });
+              console.log('Something went wrong. Try again')
+            }
         this.submitButtonText = "Place Order";
       }
       this.isProcessing = false;
@@ -217,13 +238,12 @@ export class ContentComponent implements OnInit {
   }
 
   validateState(): boolean {
-    this.isStateValid = this.userDeliveryDetails.deliveryState !== "";
-    return this.isStateValid;
+    console.log("onStateSelect, ", this.userDeliveryDetails.deliveryState);
+    return this.userDeliveryDetails.deliveryState !== "";
   }
 
   validateCountry(): boolean {
-    this.isCountryValid = this.userDeliveryDetails.deliveryCountry !== "";
-    return this.isCountryValid;
+    return this.userDeliveryDetails.deliveryCountry !== "";
   }
 
   validatePostCode(): boolean {

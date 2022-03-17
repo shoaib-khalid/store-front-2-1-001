@@ -1,3 +1,15 @@
+::ng-deep .mat-select-value{
+  height: 50px;
+    padding: 14px 15px;
+    border-radius: 0;
+    border: 1px solid #f0f2f3;
+    border-radius: 25px;
+    width: 200px;
+    color: #6e6e6e;
+    background-color: #fff;
+    letter-spacing: 0.1px;
+    font-size: 14px;
+}
 textarea {
     resize: none;
   }
@@ -16,7 +28,7 @@ textarea {
   .form-control1::placeholder {
     color: #a5a5a5;
   }
-  .form-control1 {
+  .selectpicker {
     height: 50px;
     padding: 8px 15px;
     border-radius: 0;
@@ -28,8 +40,13 @@ textarea {
     letter-spacing: 0.1px;
     font-size: 14px;
   }
+  .form-control1 .option{
+      border-radius: 10px;
+      color: #50bd49;
+  }
   .form-control1:focus {
     border: 1px solid #efefef;
+    border-radius: 8px;
     -webkit-box-shadow: none;
     box-shadow: none;
   }
@@ -95,6 +112,7 @@ textarea {
   .custom-control-input:focus ~ .custom-control-label::before {
     -webkit-box-shadow: none;
     box-shadow: none;
+    
   }
   .custom-radio .custom-control-input:checked ~ .custom-control-label::before,
   .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
@@ -103,4 +121,6 @@ textarea {
   .custom-control label {
     line-height: 23px;
   }
+  
+  
   

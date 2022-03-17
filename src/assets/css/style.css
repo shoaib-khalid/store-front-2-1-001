@@ -1172,6 +1172,7 @@ textarea {
   font-size: 14px;
   color: #838383;
   border: 1px solid #f0f2f3;
+  border-radius: 8px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
 }
 .dropdown-item {
@@ -3006,6 +3007,7 @@ table img {
 .andro_product.andro_product-minimal .andro_product-title {
   margin-bottom: 10px;
   font-size: 16px;
+  height: 30px;
 }
 .andro_product.andro_product-minimal .andro_product-footer {
   border: 0;
