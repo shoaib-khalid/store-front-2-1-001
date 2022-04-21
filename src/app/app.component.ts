@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
     private titleService: Title,
     private breadcrumbService: BreadcrumbService,
     private cartService: CartService,
-    private storeService: StoreService
+    private storeService: StoreService,
   ) {}
 
   async changeIcon(){

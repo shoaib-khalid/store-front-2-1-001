@@ -79,8 +79,10 @@ export class ContentComponent implements OnInit {
     this.cart = this.cartService.cart;
     this.cartService.cartChange.subscribe((cart) => {
       this.cart = cart;
+      
     });
     this.getFeaturedProducts();
+    console.log('cart',this.cartService)
   }
 
   closeModal() {

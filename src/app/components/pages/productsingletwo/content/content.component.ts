@@ -102,6 +102,7 @@ export class ContentComponent implements OnInit {
 
   async getProductDetailsByName(seoName) {
     this.product = await this.storeService.getProductDetailsByName(seoName);
+    
 
   }
   async getStoreInfo() {
@@ -117,6 +118,7 @@ export class ContentComponent implements OnInit {
     // this.isLoading = true;
     this.getProductDetailsByName(this.productSeoName);
     this.getStoreInfo();
+    
     // this.isLoading = false;
   }
 

@@ -65,6 +65,8 @@ export class ApiService {
     return this.http.post(this.userServiceURL + "clients/authenticate", data);
   }
 
+  
+
   // Ref : http://209.58.160.20:1201/stores/8913d06f-a63f-4a16-8059-2a30a517663a/customers/?email=mwaqassh%40gmail.com&page=0&pageSize=20
   getCustomerProfileByEmail(email, storeId) {
     const header = {
