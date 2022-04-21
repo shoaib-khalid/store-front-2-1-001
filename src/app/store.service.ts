@@ -32,6 +32,7 @@ export class StoreService {
     // For testing purposes
     // currBaseUrl = "awan-tech.dev-pk2.symplified.ai";
     // currBaseUrl = "mcd.dev-pk2.symplified.ai";
+    // currBaseUrl = "al-awan-shoping.dev-pk.symplified.ai";
 
     currBaseUrl = currBaseUrl.split(".")[0].replace(/^(https?:|)\/\//, "");
     const store: Store = await this.getStoreByDomainName(currBaseUrl);
@@ -64,11 +65,25 @@ export class StoreService {
     });
   }
 
+  // getStoreInfo(): Promise<Store> {
+  //   return new Promise((resolve, reject) => {
+  //     this.apiService.getStoreInfoByDomainName(this.getStoreId()).subscribe(
+  //       (res: any) => {
+  //         resolve(res.data.content[0]);
+  //       },
+  //       (error) => {
+  //         console.error("Failed to get store assets", error);
+  //         reject(error);
+  //       }
+  //     );
+  //   });
+  // }
+
   getStoreInfo(): Promise<Store> {
     return new Promise((resolve, reject) => {
-      this.apiService.getStoreInfoByDomainName(this.getStoreId()).subscribe(
+      this.apiService.getStoreInfoByID(this.getStoreId()).subscribe(
         (res: any) => {
-          resolve(res.data.content[0]);
+          resolve(res.data);
         },
         (error) => {
           console.error("Failed to get store assets", error);
