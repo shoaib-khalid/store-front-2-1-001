@@ -2787,6 +2787,7 @@ table img {
   box-shadow: 0 3px 24px rgba(0, 0, 0, 0.04);
   border-radius: 8px;
   margin-bottom: 30px;
+  height: 400px;
 }
 .andro_product .andro_product-thumb {
   margin: 0 0 20px;
@@ -2794,7 +2795,7 @@ table img {
 }
 .andro_product .andro_product-thumb.thumb-sm {
   max-width: 200px;
-  margin: 0 auto 20px;
+  margin: 0 80px 20px;
 }
 .andro_product .andro_product-thumb img {
   transition: 0.3s;
@@ -3018,6 +3019,7 @@ table img {
 }
 .andro_product.andro_product-minimal .andro_product-price {
   margin: 15px 0;
+  margin-top: 90px;
 }
 .andro_product.andro_product-minimal .andro_product-price span {
   font-size: 14px;

@@ -114,7 +114,7 @@
           </div>
           <div class="andro_product-body">
             <!-- (click)="goToDetails(item.seoName)" -->
-            <h5 class="andro_product-title">
+            <h5 class="andro_product-title" style="height: 60px;">
               <a routerLink="/product/{{ item.seoName }}"> {{ item.name }} </a>
             </h5>
             <div class="andro_product-price" *ngIf="item.productInventories.length > 0" >
@@ -200,10 +200,8 @@
                                 number:'1.2-2'}}</span>
               <span
                 >{{ currencySymbol }}  
-                  {{
-                  modalContent.productInventories[0].price | number: "1.2-2"
-                }}</span
-              >
+                  {{ modalContent.productInventories[0].price | number: "1.2-2" }}
+                  </span>
             </div>
             <div>
               <p

@@ -26,7 +26,7 @@ export class StoreService {
 
     if (isDevMode()) {
       console.log("Running in dev mode");
-      currBaseUrl = "mcd.dev-pk2.symplified.ai";
+      currBaseUrl = "al-awan-shoping.dev-pk.symplified.ai";
     }
 
     // For testing purposes
