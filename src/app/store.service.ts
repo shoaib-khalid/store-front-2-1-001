@@ -3,8 +3,9 @@ import { Subject } from "rxjs/internal/Subject";
 import { ApiService } from "./api.service";
 import { Category } from "./components/models/category";
 import { Product } from "./components/models/product";
-import { Store } from "./components/models/store";
+import { Store, StoreDiscount } from "./components/models/store";
 import { isDevMode } from "@angular/core";
+
 
 @Injectable({
   providedIn: "root",
@@ -120,7 +121,21 @@ export class StoreService {
       );
     });
   }
+  getDiscount(): Promise<StoreDiscount[]>{
+    return new Promise((resolve,reject ) =>{
+      this.apiService.getStoreActiveDiscount(this.getStoreId()).subscribe(
+        (res:any) =>{
+          resolve(res.data);
+          console.log("Discounts",res.data)
+        },
+        (error) =>{
+          console.error("Error getting Active Discounts", error);
+          reject(error);
+        }
+      )
+    })
 
+  }
   getProductDetailsByName(seoName: string): Promise<Product> {
     return new Promise((resolve, reject) => {
       this.apiService.getProductsByName(seoName, this.getStoreId()).subscribe(
@@ -133,6 +148,7 @@ export class StoreService {
       );
     });
   }
+  
 
   getProductsByCategory(
     categoryId: string,
@@ -152,6 +168,8 @@ export class StoreService {
         );
     });
   }
+
+
 
   getDeliveryOption() {
     return new Promise((resolve, reject) => {

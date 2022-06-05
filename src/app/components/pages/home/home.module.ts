@@ -10,7 +10,14 @@ import { HomeComponent } from './home.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { ContentComponent } from './content/content.component'
-import { PreloaderComponent } from 'src/app/preloader/preloader.component';
+import { PreloaderComponent } from '../../../preloader/preloader.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
 
 @NgModule({
   declarations: [HomeComponent, ContentComponent, PreloaderComponent],
@@ -21,7 +28,14 @@ import { PreloaderComponent } from 'src/app/preloader/preloader.component';
     NgbModule,
     CountdownModule,
     SharedModule,
-    NgMasonryGridModule
+    NgMasonryGridModule,
+    MatTabsModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatButtonModule,
+    MatProgressBarModule,
+    MatSlideToggleModule,
+    
   ]
 })
 export class HomeModule { }

@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import Swal from "sweetalert2";
 import { Category } from "../../../models/category";
 import { Product } from "../../../models/product";
-import { Store, StoreAssets } from "../../../models/store";
+import { Store, StoreAssets, StoreDiscount } from "../../../models/store";
 import { CartService } from "../../../../cart.service";
 import { StoreService } from "../../../../store.service";
 
@@ -29,6 +29,7 @@ export class ContentComponent implements OnInit {
   data: any;
   product_id: any;
   productID: any;
+  bannerUrl: string
 
   categories: Category[];
   product: Product[];
@@ -54,6 +55,9 @@ export class ContentComponent implements OnInit {
   storeInfo: Store;
   currencySymbol: string = "";
   bannerslides: { photo: any; }[];
+  discounts: any[] = [];
+  storeDiscounts: StoreDiscount[];
+  discountB: {photo: any; }[];
 
   constructor(
     private modalService: NgbModal,
@@ -99,6 +103,14 @@ export class ContentComponent implements OnInit {
     }
     this.bannerslides = storeBannerUrls;
   }
+  displayDiscountBanner() {
+   for(const storeAsset of this.storeInfo.storeAssets){
+     if (storeAsset.assetType === "DiscountBannerUrl"){
+       this.bannerUrl = storeAsset.assetUrl
+      //  discountBanner.push( { photo: storeAsset.assetUrl} )
+     }
+   }
+}
   bannerConfig = {
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -180,22 +192,68 @@ export class ContentComponent implements OnInit {
       console.error("Error getting storeInfo", error);
     }
   }
+  getActiveDiscount(){
+    this.storeService.getDiscount().then((response: StoreDiscount[]) =>{
+      this.storeDiscounts = response;
+      console.log("StoreDiscounts", response);
+      if(this.storeDiscounts.length > 0){
+        this.storeDiscounts.forEach(item => {
+          if (item.storeDiscountTierList && item.storeDiscountTierList.length > 0 && item.discountType !== "ITEM") {
+            this.discounts.push(item)
+              return{
+                discountName: item.discountName,
+                discountType: item.discountType,
+                startDate   : item.startDate,
+                endDate     : item.endDate,
+                maxDiscountAmount   : item.maxDiscountAmount,
+                normalPriceItemOnly : item.normalPriceItemOnly,
+                calculationType       : item.storeDiscountTierList[0].calculationType,
+                discountAmount        : item.storeDiscountTierList[0].discountAmount,
+                startTotalSalesAmount : item.storeDiscountTierList[0].startTotalSalesAmount
+              }
+              console.log("Pushed to discounts");
+          }
+          // this.discounts.push(item)
+          // if(item.storeDiscountTierList &&  item.storeDiscountTierList.length > 0 && item.discountType !== "ITEM"){
+          //   this.discounts.push(...item.storeDiscountTierList.map(object =>{
+          //     return{
+          //       discountName: item.discountName,
+          //       discountType: item.discountType,
+          //       startDate   : item.startDate,
+          //       endDate     : item.endDate,
+          //       maxDiscountAmount   : item.maxDiscountAmount,
+          //       normalPriceItemOnly : item.normalPriceItemOnly,
+          //       calculationType       : object.calculationType,
+          //       discountAmount        : object.discountAmount,
+          //       startTotalSalesAmount : object.startTotalSalesAmount
+          //     }
+          //   }))
+          // }
+        })
+      }
+    })
+  }
+  
   async ngOnInit() {
     this.isLoading = true;
-
     await this.storeService.parseStoreFromUrl();
     Promise.all([
       this.storeService.getStoreInfo(),
       this.storeService.getCategories(),
       this.storeService.getStoreProducts(),
+      this.storeService.getDiscount(),
     ])
       .then((values) => {
         this.storeInfo = values[0];
         this.categories = values[1];
         this.product = values[2];
+        //this.discounts = values [3];
         // this.isLoading = false;
         this.populateAssets();
+        this.getActiveDiscount();
+        this.displayDiscountBanner();
         this.getStoreInfo();
+      
         this.isLoading = false;
       })
       .catch((error) => {

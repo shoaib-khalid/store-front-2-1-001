@@ -3707,6 +3707,7 @@ td.remove {
 }
 .andro_cta-notice-inner {
   max-width: 600px;
+  position: absolute;
 }
 .andro_cta-notice-inner p {
   margin-bottom: 25px;

@@ -50,3 +50,26 @@ export interface StoreTiming {
   day: string;
   isOff: boolean;
 }
+
+export interface StoreDiscount
+{
+    discountName: string;
+    discountType: string;
+    endDate: string;
+    id: string;
+    isActive: string;
+    maxDiscountAmount: string;
+    normalPriceItemOnly: null
+    startDate: string;
+    storeDiscountTierList: StoreDiscountTierList[],
+    storeId: string;
+}
+
+export interface StoreDiscountTierList {
+    calculationType: string;
+    discountAmount: number;
+    endTotalSalesAmount: number;
+    id: string;
+    startTotalSalesAmount: number;
+    storeDiscountId: string;
+}
