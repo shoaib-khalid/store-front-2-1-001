@@ -1,52 +1,69 @@
 /* You can add global styles to this file, and also import other style files */
-.tooltip{
+
+.tooltip {
     white-space: nowrap;
 }
-.andro_newsletter-popup-modal .modal-dialog{
+
+.andro_newsletter-popup-modal .modal-dialog {
     max-width: 600px;
     margin: .5rem auto;
 }
-.andro_subheader .breadcrumb-item+.breadcrumb-item::before{
+
+.andro_subheader .breadcrumb-item+.breadcrumb-item::before {
     line-height: 2.7;
 }
-.slick-dots li button:before{
+
+.slick-dots li button:before {
     display: none;
 }
-.slick-dots{
+
+.slick-dots {
     position: relative;
     bottom: 0;
+    margin-left: 500px;
+    margin-top: -30px;
 }
-.slick-slide .andro_product{
+
+.slick-slide .andro_product {
     margin-bottom: 0;
 }
-.andro_testimonials .slick-dots{
+
+.andro_testimonials .slick-dots {
     margin-top: 20px;
-} 
-.slick-dots li{
+}
+
+.slick-dots li {
     width: auto;
     height: auto;
 }
-.banner-2.andro_banner .slick-slide, .banner-3.andro_banner .slick-slide{
+
+.banner-2.andro_banner .slick-slide,
+.banner-3.andro_banner .slick-slide {
     display: block;
 }
-.banner-2.andro_banner .slick-slide .andro_banner-slider-inner, 
-.banner-3.andro_banner .slick-slide .andro_banner-slider-inner{
+
+.banner-2.andro_banner .slick-slide .andro_banner-slider-inner,
+.banner-3.andro_banner .slick-slide .andro_banner-slider-inner {
     display: flex;
     height: auto;
     align-items: center;
     justify-content: center;
 }
-.andro_banner-slider.slick-dotted.slick-slider{
+
+.andro_banner-slider.slick-dotted.slick-slider {
     margin-bottom: 0;
 }
-.deals-slider .slick-dots{
+
+.deals-slider .slick-dots {
     margin: 25px 0 0;
 }
+
 .accordion .card .card-header {
     width: 100%;
     padding: 0;
     border-radius: 0;
 }
+
 .accordion .card .card-header .btn-link {
     background-color: #f8f9fa;
     color: #18181D;
@@ -61,18 +78,23 @@
     font-size: 14px;
     line-height: normal;
 }
-.accordion .card .card-header .btn-link.collapsed{
+
+.accordion .card .card-header .btn-link.collapsed {
     background: transparent;
     color: #18181D;
 }
+
 .accordion .card .card-header .btn-link:hover,
-.accordion .card .card-header .btn-link:focus{
+.accordion .card .card-header .btn-link:focus {
     box-shadow: none;
     outline: none;
     text-decoration: none;
 }
+
+
 /* Pagination */
-pagination-template .ngx-pagination{
+
+pagination-template .ngx-pagination {
     margin-top: 20px;
     justify-content: center;
     margin-bottom: 0;
@@ -81,18 +103,21 @@ pagination-template .ngx-pagination{
     list-style: none;
     border-radius: .25rem;
 }
-pagination-template .ngx-pagination li{
+
+pagination-template .ngx-pagination li {
     margin: 0;
     position: relative;
 }
+
 pagination-template .ngx-pagination li.pagination-next,
-pagination-template .ngx-pagination li.pagination-previous{
+pagination-template .ngx-pagination li.pagination-previous {
     padding: 0;
     display: block;
 }
+
 pagination-template .ngx-pagination li.pagination-next span,
 pagination-template .ngx-pagination li.pagination-previous span,
-pagination-template .ngx-pagination li a{
+pagination-template .ngx-pagination li a {
     border-radius: 8px;
     color: #7e7e85;
     border: 0;
@@ -107,7 +132,8 @@ pagination-template .ngx-pagination li a{
     display: block;
     line-height: 1.25;
 }
-pagination-template .ngx-pagination li.current{
+
+pagination-template .ngx-pagination li.current {
     border-radius: 8px;
     color: #fff;
     border: 0;
@@ -122,35 +148,66 @@ pagination-template .ngx-pagination li.current{
     display: block;
     line-height: 1.25;
 }
+
 pagination-template .ngx-pagination li.pagination-next::after,
 pagination-template .ngx-pagination li.pagination-next a:after,
 pagination-template .ngx-pagination li.pagination-previous a::before,
-pagination-template .ngx-pagination li.pagination-previous::before{
+pagination-template .ngx-pagination li.pagination-previous::before {
     display: none!important;
 }
-.custom-control-label::before{
+
+.custom-control-label::before {
     background-color: #dee2e6;
     border: none;
 }
-.comments-list .comment-item .andro_rating ngb-rating span{
+
+.comments-list .comment-item .andro_rating ngb-rating span {
     position: relative;
     top: 0;
     font-size: 12px;
 }
-.productpage .andro_product-title+p{
+
+.productpage .andro_product-title+p {
     display: none;
 }
-ngb-rating:focus{
+
+ngb-rating:focus {
     outline: none;
 }
-.modal-body .andro_product{
+
+.modal-body .andro_product {
     padding: 30px 0 0 0;
     border: none;
     border-radius: 0;
     box-shadow: none;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}

@@ -19,18 +19,15 @@
                 <div class="row masonry">
                     <!-- Product Start -->
                     <div class="wrapper">
-                    <div class="overlay" *ngIf="isLoading">
-                        <div class="spinner-wrapper">
-                            <div class="dot1"></div>
-                            <div class="dot2"></div>
+                        <div class="overlay" *ngIf="isLoading">
+                            <div class="spinner-wrapper">
+                                <div class="dot1"></div>
+                                <div class="dot2"></div>
+                            </div>
                         </div>
                     </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6 masonry-item"
-                    
-                        *ngFor="let item of product | paginate: { itemsPerPage: 9, currentPage: page } ; let i = index ">
-                        <div
-                            class="andro_product andro_product-minimal andro_product-has-controls andro_product-has-buttons">
+                    <div class="col-md-4 col-sm-6 masonry-item" *ngFor="let item of product | paginate: { itemsPerPage: 9, currentPage: page } ; let i = index ">
+                        <div class="andro_product andro_product-minimal andro_product-has-controls andro_product-has-buttons">
                             <div class="andro_product-badge andro_badge-featured" *ngIf="item.featured">
                                 <i class="fa fa-star"></i>
                                 <span>Featured</span>
@@ -39,8 +36,7 @@
                                 {{item.productInventories[0].itemDiscount.discountAmount}}% Off
                             </div>
                             <div class="andro_product-thumb">
-                                <a routerLink="/product/{{item.seoName}}"><img src="{{item.thumbnailUrl}}"
-                                        alt="{{item.name}}"></a>
+                                <a routerLink="/product/{{item.seoName}}"><img src="{{item.thumbnailUrl}}" alt="{{item.name}}"></a>
                             </div>
                             <div class="andro_product-body">
                                 <h6 class="andro_product-title"><a routerLink="/product/{{item.seoName}}">
@@ -69,8 +65,7 @@
                                         Cart</a>
                                     <a href="javascript:void(0)" (click)="open(shopmodal, item)"
                                         class="andro_btn-custom light">Quick View</a> -->
-                                    <a href="javascript:void(0)" (click)="open(shopmodal, item)"
-                                        class="quick-view-btn light">Quick View</a>
+                                    <a href="javascript:void(0)" (click)="open(shopmodal, item)" class="quick-view-btn light">Quick View</a>
                                 </div>
                             </div>
                         </div>
@@ -87,11 +82,10 @@
                     <!-- Search Start -->
                     <div class="sidebar-widget widget-search">
                         <!-- <form method="post"> -->
-                            <div class="andro_search-adv-input">
-                                <input type="text" class="form-control" placeholder="Look for Products" name="search"
-                                    value="" autocomplete="off">
-                                <button type="submit" name="button"><i class="fa fa-search"></i></button>
-                            </div>
+                        <div class="andro_search-adv-input">
+                            <input type="text" class="form-control" placeholder="Look for Products" name="search" value="" autocomplete="off">
+                            <button type="submit" name="button"><i class="fa fa-search"></i></button>
+                        </div>
                         <!-- </form> -->
                     </div>
                     <!-- Search End -->
@@ -102,8 +96,7 @@
                             <div id="CategoryList">
                                 <div id="allcategory">
                                     <div class="card-button">
-                                        <a (click)="getAllProduct()"
-                                            [ngClass]="{'selected' : this.selectedMenu === 'all'}" id="price">All</a>
+                                        <a routerLink="/catalogue/all" [ngClass]="{'selected' : this.selectedMenu === 'all'}" id="price">All</a>
                                     </div>
                                 </div>
                                 <!--<li>
@@ -114,8 +107,7 @@
                             </li>-->
                                 <div *ngFor="let item of categories">
                                     <div class="card-button">
-                                        <a (click)="getProductsByCategory(item.id,sortBy)"
-                                            [ngClass]="{'selected' : this.selectedMenu === item.id}" id="price">{{
+                                        <a routerLink="/catalogue/{{ item.id }}" [ngClass]="{'selected' : this.selectedMenu === item.id}" id="price">{{
                                             item.name }}</a>
                                     </div>
                                     <!--<div class="custom-control custom-checkbox">

@@ -8,7 +8,7 @@
                     <div class="dot2"></div>
                 </div>
             </div>
-            </div>
+        </div>
         <!-- <div *ngIf="store_close">
             <p class="small" >
                 We are closed now our opening hours are as per below
@@ -27,7 +27,7 @@
                         <p>Are you a returning customer? <a href="javascript:void(0)" (click)="isOne = !isOne"
                                 [attr.aria-expanded]="!isOne">Click here to login</a> </p>
                     </div> -->
-                    <div *ngIf="store_close" style="margin-bottom: 20px; background-origin: padding-box;" >
+                    <div *ngIf="store_close" style="margin-bottom: 20px; background-origin: padding-box;">
                         <p class="small" class="text-center">
                             We are closed now our opening hours are as per below
                         </p>
@@ -42,13 +42,11 @@
                             <div class="row">
                                 <div class="col-xl-6 form-group">
                                     <label>Email Address</label>
-                                    <input type="text" class="form-control" name="login-email"
-                                        placeholder="Email Address" value="">
+                                    <input type="text" class="form-control" name="login-email" placeholder="Email Address" value="">
                                 </div>
                                 <div class="col-xl-6 form-group">
                                     <label>Password</label>
-                                    <input type="password" class="form-control" name="login-pass" placeholder="Password"
-                                        value="">
+                                    <input type="password" class="form-control" name="login-pass" placeholder="Password" value="">
                                 </div>
                                 <div class="col-12 form-group">
                                     <div class="custom-control custom-checkbox">
@@ -57,8 +55,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <button type="submit" class="andro_btn-custom shadow-none btn-sm"
-                                        name="button">Login</button>
+                                    <button type="submit" class="andro_btn-custom shadow-none btn-sm" name="button">Login</button>
                                 </div>
                             </div>
                         </div>
@@ -84,23 +81,17 @@
                     <div class="row">
                         <div class="form-group col-xl-12">
                             <label>Full Name <span class="text-danger">*</span></label>
-                            <input type="text" id="username" placeholder="Full Name" name="username" [disabled]="store_close"
-                                [(ngModel)]="userDeliveryDetails.deliveryContactName" (ngModelChange)="validateName()"
-                                class="form-control" required>
+                            <input type="text" id="username" placeholder="Full Name" name="username" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryContactName" (ngModelChange)="validateName()" class="form-control" required>
                             <div class="text-danger" [hidden]="isNameValid">Name cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-12">
                             <label>Address <span class="text-danger">*</span></label>
-                            <textarea id="userAddress" placeholder="Address" name="userAddress" rows="5" [disabled]="store_close"
-                                [(ngModel)]="userDeliveryDetails.deliveryAddress" class="form-control"
-                                (ngModelChange)="validateAddress()" required></textarea>
+                            <textarea id="userAddress" placeholder="Address" name="userAddress" rows="5" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryAddress" class="form-control" (ngModelChange)="validateAddress()" required></textarea>
                             <div class="text-danger" [hidden]="isAddressValid">Address cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>Town / City <span class="text-danger">*</span></label>
-                            <input type="text" id="userCity" placeholder="Town/City" name="userCity" [disabled]="store_close"
-                                [(ngModel)]="userDeliveryDetails.deliveryCity" class="form-control"
-                                (ngModelChange)="validateCity()" required="">
+                            <input type="text" id="userCity" placeholder="Town/City" name="userCity" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryCity" class="form-control" (ngModelChange)="validateCity()" required="">
                             <div class="text-danger" [hidden]="isCityValid">City cannot be blank.</div>
                         </div>
                         <!-- <div class="form-group col-xl-6">
@@ -113,11 +104,11 @@
                         </div> -->
                         <div class="form-group col-xl-6">
                             <label>State<span class="text-danger">*</span></label>
-                                <mat-select  class="form-control1" appearance="outline" name="state" placeholder="State" [(ngModel)]="userDeliveryDetails.deliveryState" [disabled]="store_close">
-                                  <mat-option *ngFor="let state of states" [value]="state.id">
+                            <mat-select class="form-control1" appearance="outline" name="state" placeholder="State" [(ngModel)]="userDeliveryDetails.deliveryState" [disabled]="store_close">
+                                <mat-option *ngFor="let state of states" [value]="state.id">
                                     {{ state.name }}
-                                  </mat-option>
-                                </mat-select>
+                                </mat-option>
+                            </mat-select>
                             <div class="text-danger" [hidden]="isStateValid">State cannot be blank.</div>
                         </div>
                         <!-- <div class="form-group col-xl-6">
@@ -134,43 +125,27 @@
                         </div> -->
                         <div class="form-group col-xl-6">
                             <label>Postcode<span class="text-danger">*</span></label>
-                            <input type="text" id="userPostcode" placeholder="Post Code" name="userPostcode" [disabled]="store_close"
-                                [(ngModel)]="userDeliveryDetails.deliveryPostcode" class="form-control"
-                                (ngModelChange)="validatePostCode()" required="">
+                            <input type="text" id="userPostcode" placeholder="Post Code" name="userPostcode" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryPostcode" class="form-control" (ngModelChange)="validatePostCode()" required="">
                             <div class="text-danger" [hidden]="isPostCodeValid">{{ postCodeErrorMsg }}</div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                             <label>Country</label>
-                            <input type="text" name="userCountries" class="form-control"
-                                [(ngModel)]="userDeliveryDetails.deliveryCountry" autocomplete="disabled" readonly [disabled]="store_close"
-                                placeholder="Countries" required="">
+                            <input type="text" name="userCountries" class="form-control" [(ngModel)]="userDeliveryDetails.deliveryCountry" autocomplete="disabled" readonly [disabled]="store_close" placeholder="Countries" required="">
                             <div class="text-danger" [hidden]="isCountryValid">Country cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>Phone Number <span class="text-danger">*</span></label>
-                            <input type="tel" id="userPhone" placeholder="Phone Number" name="userPhone" [disabled]="store_close"
-                                [(ngModel)]="userDeliveryDetails.deliveryContactPhone" class="form-control" value=""
-                                (ngModelChange)="validatePhoneNumber()" required="">
+                            <input type="tel" id="userPhone" placeholder="Phone Number" name="userPhone" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryContactPhone" class="form-control" value="" (ngModelChange)="validatePhoneNumber()" required="">
                             <div class="text-danger" [hidden]="isPhoneNumberValid">{{ phoneNumberErrorMsg }}</div>
                         </div>
                         <div class="form-group col-xl-6">
                             <label>Email Address <span class="text-danger">*</span></label>
-                            <input type="email" id="userEmail" placeholder="Email Address" name="email" [disabled]="store_close"
-                                [(ngModel)]="userDeliveryDetails.deliveryContactEmail" class="form-control" value=""
-                                (ngModelChange)="validateEmailAddress()" required="">
+                            <input type="email" id="userEmail" placeholder="Email Address" name="email" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryContactEmail" class="form-control" value="" (ngModelChange)="validateEmailAddress()" required="">
                             <div class="text-danger" [hidden]="isEmailValid">{{ emailErrorMsg }}</div>
                         </div>
                         <div class="form-group col-xl-12 mb-0">
                             <label>Order Notes (Optional)</label>
-                            <textarea id="orderNotes" name="orderNotes" placeholder="Order Notes (Optional)" rows="5" [disabled]="store_close"
-                                [(ngModel)]="userDeliveryDetails.deliveryNotes" class="form-control"></textarea>
-                        </div>
-                        <div class="form-group col-xl-12 mb-0">
-                            <div *ngIf="hasDeliveryCharges">
-                                <p class="small" >
-                                    We do not provide delivery to the state you have selected.
-                                </p>        
-                            </div>
+                            <textarea id="orderNotes" name="orderNotes" placeholder="Order Notes (Optional)" rows="5" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryNotes" class="form-control"></textarea>
                         </div>
                         <div class="form-group col-xl-12 mb-0">
                             <button type="submit" class="andro_btn-custom primary btn-block" [disabled]="isProcessing" [disabled]="store_close">
@@ -209,34 +184,33 @@
                             </tr>
                             <tr *ngIf="hasDeliveryCharges" class="total">
                                 <td>
-                                   Subtotal
+                                    Subtotal
                                 </td>
                                 <td></td>
                                 <td><strong>{{ currencySymbol }} {{ cartTotals.cartSubTotal| number:'1.2-2'
                                         }}</strong></td>
                             </tr>
-                            <tr *ngIf="hasDeliveryCharges">
+                            <tr *ngIf="hasDeliveryCharges && cartTotals.subTotalDiscount > 0">
                                 <td>Order Discount</td>
                                 <td></td>
-                                <td>{{ currencySymbol }} {{ cartTotals.subTotalDiscount| number:'1.2-2' }}</td>
+                                <td>{{ currencySymbol }} -{{ cartTotals.subTotalDiscount| number:'1.2-2' }}</td>
                             </tr>
-                            <tr *ngIf="hasDeliveryCharges">
+                            <tr *ngIf="hasDeliveryCharges && totalServiceCharge > 0">
                                 <td>Service Charge</td>
                                 <td></td>
-                                <td>{{ currencySymbol }} {{ totalServiceCharge| number:'1.2-2' }} <span
-                                        class="small">({{
+                                <td>{{ currencySymbol }} {{ totalServiceCharge| number:'1.2-2' }} <span class="small">({{
                                         storeDeliveryPercentage
                                         }}%)</span></td>
                             </tr>
-                            <tr *ngIf="hasDeliveryCharges">
+                            <tr *ngIf="hasDeliveryCharges && cartTotals.cartDeliveryCharge > 0">
                                 <td>Delivery Charges</td>
                                 <td></td>
                                 <td>{{ currencySymbol }} {{ cartTotals.cartDeliveryCharge| number:'1.2-2' }}</td>
                             </tr>
-                            <tr *ngIf="hasDeliveryCharges">
+                            <tr *ngIf="hasDeliveryCharges && cartTotals.deliveryDiscount > 0">
                                 <td>Delivery Discount</td>
                                 <td></td>
-                                <td>{{ currencySymbol }} {{ cartTotals.deliveryDiscount }}</td>
+                                <td>{{ currencySymbol }} -{{ cartTotals.deliveryDiscount | number:'1.2-2' }}</td>
                             </tr>
                             <tr *ngIf="hasDeliveryCharges" class="total">
                                 <td>
@@ -288,7 +262,7 @@
                         Order</button>  -->
                     <!-- Order Details End -->
                 </div>
-                
+
             </div>
         </form>
     </div>

@@ -20,8 +20,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from "@angular/material/core";
 
-
-
 export function initializeApp(appConfig: AppConfig) {
   return () => appConfig.load();
 }
@@ -40,7 +38,7 @@ export function initializeApp(appConfig: AppConfig) {
     Ng2SearchPipeModule,
     MatSelectModule,
     MatFormFieldModule,
-    MatOptionModule
+    MatOptionModule,
   ],
   providers: [
     AppConfig,

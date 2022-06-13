@@ -58,10 +58,7 @@ export class ContentComponent implements OnInit {
     private cartService: CartService,
     private storeService: StoreService
   ) {
-    this.activatedRoute.params.subscribe((params) => {
-      this.catId = params["catId"];
-      localStorage.setItem("category_id", this.catId);
-    });
+    
   }
   open(content: any, item: any) {
     this.modalContent = item;
@@ -149,9 +146,15 @@ export class ContentComponent implements OnInit {
 
 
   ngOnInit() {
-    this.catId = localStorage.getItem("category_id");
-    this.getStoreCategories();
-    this.getProductsByCategory(this.catId, this.sortBy);
-    this.getStoreInfo();
+    this.activatedRoute.params.subscribe((params) => {
+      if (params["catId"] !== "all") {
+        this.catId = params["catId"];
+      } else {
+        this.catId = null
+      }
+      this.getStoreCategories();
+      this.getProductsByCategory(this.catId, this.sortBy);
+      this.getStoreInfo();
+    });
   }
 }

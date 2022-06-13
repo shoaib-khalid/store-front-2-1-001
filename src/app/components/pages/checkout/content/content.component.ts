@@ -28,6 +28,8 @@ export class ContentComponent implements OnInit {
   isProcessing: boolean = false;
   hasDeliveryCharges: boolean = false;
 
+  isError: boolean
+
   isNameValid: boolean = true;
   isAddressValid: boolean = true;
   isCityValid: boolean = true;
@@ -126,15 +128,15 @@ export class ContentComponent implements OnInit {
         this.cartTotals = await this.cartService.getDiscount(
           this.deliveryFee.price
         );
-
         this.hasDeliveryCharges = this.cartTotals ? true : false;
+        this.isError = this.deliveryFee.isError
         this.totalServiceCharge =
           this.storeDeliveryPercentage === 0
             ? this.storeDeliveryPercentage
             : (this.storeDeliveryPercentage / 100) *
               this.cartTotals.cartSubTotal;
             }
-            catch{
+            catch {
               Swal.fire({
                 icon: "error",
                 title: "Ooops",
