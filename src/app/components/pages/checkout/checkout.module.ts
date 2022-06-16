@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
+import { MatRadioModule } from '@angular/material/radio';
 
 
 
@@ -26,7 +27,9 @@ import { MatOptionModule } from '@angular/material/core';
     FormsModule,
     MatSelectModule,
     MatFormFieldModule,
-    MatOptionModule
+    MatOptionModule,
+    MatRadioModule,
+
     
   ]
 })

@@ -63,77 +63,6 @@
     </div>
     <!-- Categories End -->
     <!--Discount Start -->
-    <!-- <div class="section pt-0">
-        <div class="container">
-            <img class="banner-design2" [src]="bannerUrl">
-            <div class="andro_cta2-notice-inner" *ngFor="let discount of storeDiscounts; ">
-                <h1 style="font-weight: 600; color: white; font-size: xx-large; margin-top: -80px;">{{discount.discountName}}</h1>
-                <span style="font-weight: 200; color: white">
-                    {{discount.startDate | date: 'longDate'}} to {{discount.endDate | date: 'longDate'}}</span>
-                <h4 style="color: white; margin: 0px;">
-                    <mat-icon *ngIf="discount.discountType === 'SHIPPING'" aria-label="Example Home Icon" class="micon">delivery_dining</mat-icon>
-                    <mat-icon *ngIf="discount.discountType === 'TOTALSALES'" aria-label="Example Home Icon" class="micon">receipt_long</mat-icon>
-                    <mat-icon *ngIf="discount.discountType === 'ITEM'" aria-label="Example Home Icon" class="micon">tag</mat-icon>
-                </h4>
-                <div *ngFor="let discountTier of discount.storeDiscountTierList">
-                    <span style="font-weight: 200; color: white" *ngIf="discountTier.calculationType === 'PERCENT'">
-                      {{discountTier.discountAmount}}% Off</span>
-                    <span style="font-weight: 200; color: white" *ngIf="discountTier.calculationType === 'FIX'">
-                      {{currencySymbol}} {{ " " + discountTier.discountAmount}} Off. Total spend from {{discountTier.startTotalSalesAmount}}
-                    </span>
-                    <span *ngIf="discountTier.maxDiscountAmount" style="font-weight: 200; color: white; font-size: xx-small;">
-                      (Capped at {{currencySymbol}} {{discount.maxDiscountAmount}} )</span>
-
-                </div>
-                <p style="font-weight: 200; color: white">
-                    Discount automatically applied on all orders at check out.</p>
-
-                <a routerLink="/catalogue/all" class="andro_btn-custom2 light">Shop Now</a>
-            </div>
-        </div>
-    </div> -->
-    <!-- Discount End-->
-    <!--Discount Start -->
-    <!-- <div class="section pt-0">
-        <img class="banner-design2" [src]="bannerUrl">
-        <ngx-slick-carousel #slickModal="slick-carousel" [config]="bannerConfig" class="andro_banner-slider">
-            <div class="andro_banner-slider-inner" ngxSlickItem *ngFor="let discount of storeDiscounts">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6 d-none d-lg-block">
-                            <h2>{{discount.discountName}}</h2>
-                            <span style="font-weight: 200; color: white">
-                                     {{discount.startDate | date: 'longDate'}} to {{discount.endDate | date: 'longDate'}}</span>
-                            <h4 style="color: white;">
-                                <mat-icon *ngIf="discount.storeDiscountTierList.discountType === 'SHIPPING'" aria-label="Example Home Icon" class="micon">
-                                    delivery_dining</mat-icon>
-                                <mat-icon *ngIf="discount.storeDiscountTierList.discountType === 'TOTALSALES'" aria-label="Example Home Icon" class="micon">
-                                    receipt_long</mat-icon>
-                                <mat-icon *ngIf="discount.storeDiscountTierList.discountType === 'ITEM'" aria-label="Example Home Icon" class="micon">
-                                    tag</mat-icon>
-                            </h4>
-                            <span style="font-weight: 200; color: white" *ngIf="discount.storeDiscountTierList.calculationType === 'PERCENT'">
-                                {{discount.storeDiscountTierList.discountAmount}}% Off</span>
-                            <span style="font-weight: 200; color: white" *ngIf="discount.storeDiscountTierList.calculationType === 'FIX'">
-                                {{currencySymbol}} {{ " " + discount.storeDiscountTierList.discountAmount}} Off. Total spend from {{discount.storeDiscountTierList.startTotalSalesAmount}}</span>
-                            <span *ngIf="discount.storeDiscountTierList.maxDiscountAmount" style="font-weight: 200; color: white; font-size: xx-small;">
-                                  (Capped at {{currencySymbol}} {{discount.maxDiscountAmount}} )</span>
-                            <p style="font-weight: 200; color: white">
-                                Discount automatically applied on all orders at check out.</p>
-                            <a routerLink="/catalogue/all" class="andro_btn-custom2 light">Shop Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </ngx-slick-carousel>
-        <div class="container">
-            <div class="andro_arrows justify-content-center">
-                <i class="fa fa-arrow-left slick-arrow slider-prev"></i>
-                <i class="fa fa-arrow-right slick-arrow slider-next"></i>
-            </div>
-        </div>
-    </div> -->
-    <!-- Discount End-->
     <div class="section pt-0">
         <div class="container">
             <ngx-slick-carousel #slickModal="slick-carousel" class="andro_banner-slider" [config]="discountConfig">
@@ -169,7 +98,7 @@
 
         </div>
     </div>
-
+    <!-- Discount End -->
     <!-- Fresh Arrival Start -->
 
     <!-- Products End -->

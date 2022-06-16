@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { ApiService } from './api.service';
 import { CartItem, CartItemRequest, CartTotals } from './components/models/cart';
 import { DeliveryCharge, DeliveryDetails } from './components/models/delivery';
+import { Order, OrderShipmentDetails, PickupDetails } from './components/models/pickup';
 import { Product, ProductInventory } from './components/models/product';
 import { Store } from './components/models/store';
 import { StoreService } from './store.service';
@@ -198,7 +199,45 @@ export class CartService {
       })
     })
   }
+  async getQuotation(pickupDetails: PickupDetails){
 
+    console.log("PICKUPDETAILS: ", pickupDetails);
+
+    const data = {
+      cartId: this.getCartId(),
+      customerId: null,
+      customerNotes: pickupDetails.deliveryNotes,
+      orderPaymentDetails: {
+        accountName: pickupDetails.pickupContactName,
+        deliveryQuotationReferenceId: null,
+      },
+      orderShipmentDetails: {
+        address: "",
+        city: "",
+        country: "=",
+        email: pickupDetails.pickupContactEmail,
+        phoneNumber: pickupDetails.pickupContactPhone,
+        receiverName: pickupDetails.pickupContactName,
+        state: "",
+        zipcode: "",
+        deliveryProviderId: "",
+        deliveryType: "PICKUP",
+      }
+    }
+    console.log("details:" + data,data.cartId)
+    return new Promise((resolve, reject) => {
+      this.apiService.postConfirmCOD(data, data.cartId, false).subscribe((res: any) => {
+        resolve(res);
+        if (res.status === 201) {
+          this.removeCart();
+        }
+      }, error => {
+        console.error("Error Placing Order", error);
+        reject(error);
+      });
+    })
+
+  }
   async confirmCashOnDelivery(deliveryDetails: DeliveryDetails, deliveryFee: DeliveryCharge) {
     const deliveryOption: any = await this.storeService.getDeliveryOption();
 

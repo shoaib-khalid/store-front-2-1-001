@@ -5,6 +5,7 @@ import { Category } from "./components/models/category";
 import { Observable } from "rxjs";
 import { AppConfig } from "./app.config";
 import { isDevMode } from "@angular/core";
+import { DeliveryOptions } from "./components/models/store";
 
 @Injectable({
   providedIn: "root",
@@ -150,7 +151,7 @@ export class ApiService {
 
   // Ref : https://api.symplified.biz/product-service/v1/stores/McD
 
-  getStoreInfoByID(storeID: string) {
+  getStoreInfoByID(storeID) {
     const header = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",

@@ -3,7 +3,7 @@ import { Subject } from "rxjs/internal/Subject";
 import { ApiService } from "./api.service";
 import { Category } from "./components/models/category";
 import { Product } from "./components/models/product";
-import { Store, StoreDiscount } from "./components/models/store";
+import { DeliveryOptions, Store, StoreDiscount } from "./components/models/store";
 import { isDevMode } from "@angular/core";
 
 
@@ -171,11 +171,12 @@ export class StoreService {
 
 
 
-  getDeliveryOption() {
+  getDeliveryOption(): Promise<DeliveryOptions> {
     return new Promise((resolve, reject) => {
       this.apiService.getDeliveryOption(this.getStoreId()).subscribe(
         async (res: any) => {
           resolve(res.data);
+          console.log(res.data);
         },
         (error) => {
           reject(error);
@@ -191,6 +192,7 @@ export class StoreService {
       this.apiService.getStoreInfoByDomainName(domainName).subscribe(
         (res: any) => {
           resolve(res.data.content[0]);
+          console.log(res.data.content[0]);
         },
         (error) => {
           reject(error);

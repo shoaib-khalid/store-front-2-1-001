@@ -12,6 +12,8 @@ import { MatSelect } from "@angular/material/select";
 import { MatFormField } from "@angular/material/form-field";
 import { MatLabel } from "@angular/material/form-field";
 import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from "@angular/cdk/overlay/overlay-directives";
+import { FormGroup } from "@angular/forms";
+import { Order, PickupDetails } from "../../../models/pickup";
 
 @Component({
   selector: "app-content",
@@ -19,16 +21,19 @@ import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from "@angular
   styleUrls: ["./content.component.css"],
 })
 export class ContentComponent implements OnInit {
+  store: Store;
   checkout: CartItem[];
   userDeliveryDetails: DeliveryDetails;
-  cartTotals: CartTotals = null;
-  deliveryFee: DeliveryCharge = null;
+  userPickupDetails: PickupDetails;
+  cartTotals: CartTotals;
+  deliveryFee: DeliveryCharge;
   isSaved: boolean = false;
 
   isProcessing: boolean = false;
   hasDeliveryCharges: boolean = false;
 
   isError: boolean
+  allowsStorePickup: boolean = false;
 
   isNameValid: boolean = true;
   isAddressValid: boolean = true;
@@ -62,6 +67,26 @@ export class ContentComponent implements OnInit {
 
   totalServiceCharge: number;
   storeTimings: any;
+  checkoutForm: FormGroup;
+  
+  
+ //Radio
+ deliveryType = 1;
+  getStoreByDomainName: any;
+  storeNameRaw: any;
+  storeContact: any;
+  storeAddress: string;
+  storeEmail: string;
+  postcode: string;
+  city: string;
+  countryName: string;
+  stateId: string;
+  submitButtonText2: string;
+  userOrder: Order;
+  isEmailValid2: boolean;
+  isPhoneNumberValid2: boolean;
+  
+
 
   constructor(
     private cartService: CartService,
@@ -74,6 +99,15 @@ export class ContentComponent implements OnInit {
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     this.phoneNumberRegex = /^[+]*[(]?[0-9]{1,4}[)]?[-\s\.\/0-9]*$/;
     this.submitButtonText = "Get Delivery Charges";
+    this.submitButtonText2 = "Calculate Charges";
+
+    this.userPickupDetails = {
+      pickupContactName: "",
+      pickupContactEmail: "",
+      pickupContactPhone: "",
+      deliveryNotes: "",
+    }
+    
     this.userDeliveryDetails = {
       deliveryContactName: "",
       deliveryAddress: "",
@@ -94,6 +128,9 @@ export class ContentComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     this.checkout = this.cartService.cart;
+    this.storeService.getDeliveryOption().then(response => {
+      this.allowsStorePickup = response.allowsStorePickup;
+    });
     this.getStoreInfo();
     this.cartService.cartChange.subscribe((cart) => {
       this.checkout = cart;
@@ -108,48 +145,77 @@ export class ContentComponent implements OnInit {
   }
 
   async onSubmit() {
-    if (this.isAllFieldsValid()) {
-      this.isProcessing = true;
-      if (this.hasDeliveryCharges) {
-        const codResult: any = await this.cartService.confirmCashOnDelivery(
-          this.userDeliveryDetails,
-          this.deliveryFee
-        );
-        if (codResult.status === 201) {
-          this.route.navigate(["/thankyou"]);
+    if (this.deliveryType === 1) {
+      if (this.isAllFieldsValid()) {
+        this.isProcessing = true;
+        if (this.hasDeliveryCharges) {
+          const codResult: any = await this.cartService.confirmCashOnDelivery(
+            this.userDeliveryDetails,
+            this.deliveryFee
+          );
+          if (codResult.status === 201) {
+            this.route.navigate(["/thankyou"]);
+          } else {
+            // TODO: Show error message
+          }
         } else {
-          // TODO: Show error message
+          try{
+          this.deliveryFee = await this.cartService.getDeliveryFee(
+            this.userDeliveryDetails
+          );
+          this.cartTotals = await this.cartService.getDiscount(
+            this.deliveryFee.price
+          );
+          this.hasDeliveryCharges = this.cartTotals ? true : false;
+          this.isError = this.deliveryFee.isError
+          this.totalServiceCharge =
+            this.storeDeliveryPercentage === 0
+              ? this.storeDeliveryPercentage
+              : (this.storeDeliveryPercentage / 100) *
+                this.cartTotals.cartSubTotal;
+              }
+              catch {
+                Swal.fire({
+                  icon: "error",
+                  title: "Ooops",
+                  text: "We can't deliver in your state.",
+                  timer: 3000,
+                });
+                console.log('Something went wrong. Try again')
+              }
+          this.submitButtonText = "Place Order";
         }
-      } else {
-        try{
-        this.deliveryFee = await this.cartService.getDeliveryFee(
-          this.userDeliveryDetails
-        );
-        this.cartTotals = await this.cartService.getDiscount(
-          this.deliveryFee.price
-        );
-        this.hasDeliveryCharges = this.cartTotals ? true : false;
-        this.isError = this.deliveryFee.isError
-        this.totalServiceCharge =
-          this.storeDeliveryPercentage === 0
-            ? this.storeDeliveryPercentage
-            : (this.storeDeliveryPercentage / 100) *
-              this.cartTotals.cartSubTotal;
-            }
-            catch {
-              Swal.fire({
-                icon: "error",
-                title: "Ooops",
-                text: "We can't deliver in your state.",
-                timer: 3000,
-              });
-              console.log('Something went wrong. Try again')
-            }
-        this.submitButtonText = "Place Order";
+        this.isProcessing = false;
       }
-      this.isProcessing = false;
+    }
+    else if (this.deliveryType === 2) {
+      if (this.isFieldsValid()) {
+        this.isProcessing = true;
+          if (this.hasDeliveryCharges) {
+            console.log("USERORDER: ", this.userOrder)
+            console.log("PickupDetails: ", this.userPickupDetails)
+            const codResult: any = await this.cartService.getQuotation(
+              this.userPickupDetails
+            );
+            if (codResult.status === 201) {
+              this.route.navigate(["/thankyou"]);
+            } else {              
+            // TODO: Show error message
+            }
+          } else {
+            this.cartTotals = await this.cartService.getDiscount(
+              0
+            );
+            
+          this.hasDeliveryCharges = this.cartTotals ? true : false;
+            
+            this.submitButtonText2 = "Place Order";
+          }
+          this.isProcessing = false;
+      }
     }
   }
+  
 
   getStatesByID(countryID): Promise<State[]> {
     return new Promise((resolve) => {
@@ -166,10 +232,23 @@ export class ContentComponent implements OnInit {
       );
     });
   }
+  
+//   allowPickupStore() {
+//     this.checkoutForm.get('storePickup').setValue(this.checkoutForm.get('storePickup').value);
+// }
+
 
   async getStoreInfo() {
     try {
       const storeInfo: Store = await this.storeService.getStoreInfo();
+      this.storeNameRaw = storeInfo.name;
+      this.storeContact = storeInfo.phoneNumber;
+      this.storeAddress = storeInfo.address;
+      this.storeEmail = storeInfo.email;
+      this.postcode = storeInfo.postcode;
+      this.city = storeInfo.city;
+      this.stateId  = storeInfo.regionCountryStateId;
+      this.countryName = storeInfo.regionCountry.name;
       this.currencySymbol = storeInfo.regionCountry.currencySymbol;
       this.userDeliveryDetails.deliveryCountry = storeInfo.regionCountry.name;
       this.storeDeliveryPercentage = storeInfo.serviceChargesPercentage;
@@ -224,8 +303,20 @@ export class ContentComponent implements OnInit {
     );
   }
 
+  isFieldsValid(): boolean {
+    this.validateEmailAddress2();
+    this.validateName();
+    this.validatePhoneNumber2();
+    return (
+      this.isNameValid &&
+      this.isEmailValid2 &&
+      this.isPhoneNumberValid2
+    )
+  }
+
   validateName(): boolean {
     this.isNameValid = this.userDeliveryDetails.deliveryContactName !== "";
+    this.isNameValid = this.userPickupDetails.pickupContactName !== "";
     return this.isNameValid;
   }
 
@@ -273,6 +364,18 @@ export class ContentComponent implements OnInit {
     }
     return this.isPhoneNumberValid;
   }
+  validatePhoneNumber2(): boolean {
+    const phoneRegexMatch = this.userPickupDetails.pickupContactPhone.match(
+      this.phoneNumberRegex
+    );
+    this.isPhoneNumberValid2 = phoneRegexMatch !== null;
+    if (this.userPickupDetails.pickupContactPhone === "") {
+      this.phoneNumberErrorMsg = "Phone number cannot be blank.";
+    } else if (!phoneRegexMatch) {
+      this.phoneNumberErrorMsg = "Not a valid phone number.";
+    }
+    return this.isPhoneNumberValid2;
+  }
 
   validateEmailAddress(): boolean {
     const emailRegexMatch = this.userDeliveryDetails.deliveryContactEmail.match(
@@ -285,5 +388,24 @@ export class ContentComponent implements OnInit {
       this.emailErrorMsg = "Not a valid email address.";
     }
     return this.isEmailValid;
+  }
+  validateEmailAddress2(): boolean {
+    const emailRegexMatch = this.userPickupDetails.pickupContactEmail.match(
+      this.emailRegex
+    );
+    this.isEmailValid2 = emailRegexMatch !== null;
+    if (this.userPickupDetails.pickupContactEmail === "") {
+      this.emailErrorMsg = "Email address cannot be blank.";
+    } else if (!emailRegexMatch) {
+      this.emailErrorMsg = "Not a valid email address.";
+    }
+    return this.isEmailValid2;
+  }
+
+  pickup(){
+    this.deliveryType = 2;
+  }
+  delivery(){
+    this.deliveryType = 1;
   }
 }

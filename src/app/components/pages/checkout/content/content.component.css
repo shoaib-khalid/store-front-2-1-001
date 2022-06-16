@@ -1,5 +1,5 @@
-::ng-deep .mat-select-value{
-  height: 50px;
+::ng-deep .mat-select-value {
+    height: 50px;
     padding: 14px 15px;
     border-radius: 0;
     border: 1px solid #f0f2f3;
@@ -10,25 +10,32 @@
     letter-spacing: 0.1px;
     font-size: 14px;
 }
+
 textarea {
     resize: none;
-  }
-  .form-control1::-webkit-input-placeholder {
+}
+
+.form-control1::-webkit-input-placeholder {
     color: #a5a5a5;
-  }
-  .form-control1::-moz-placeholder {
+}
+
+.form-control1::-moz-placeholder {
     color: #a5a5a5;
-  }
-  .form-control1:-ms-input-placeholder {
+}
+
+.form-control1:-ms-input-placeholder {
     color: #a5a5a5;
-  }
-  .form-control1::-ms-input-placeholder {
+}
+
+.form-control1::-ms-input-placeholder {
     color: #a5a5a5;
-  }
-  .form-control1::placeholder {
+}
+
+.form-control1::placeholder {
     color: #a5a5a5;
-  }
-  .selectpicker {
+}
+
+.selectpicker {
     height: 50px;
     padding: 8px 15px;
     border-radius: 0;
@@ -39,33 +46,41 @@ textarea {
     background-color: #fff;
     letter-spacing: 0.1px;
     font-size: 14px;
-  }
-  .form-control1 .option{
-      border-radius: 10px;
-      color: #50bd49;
-  }
-  .form-control1:focus {
+}
+
+.form-control1 .option {
+    border-radius: 10px;
+    color: #50bd49;
+}
+
+.form-control1:focus {
     border: 1px solid #efefef;
     border-radius: 8px;
     -webkit-box-shadow: none;
     box-shadow: none;
-  }
-  .form-control1-1::-webkit-input-placeholder {
+}
+
+.form-control1-1::-webkit-input-placeholder {
     color: #a5a5a5;
-  }
-  .form-control1-1::-moz-placeholder {
+}
+
+.form-control1-1::-moz-placeholder {
     color: #a5a5a5;
-  }
-  .form-control1-1:-ms-input-placeholder {
+}
+
+.form-control1-1:-ms-input-placeholder {
     color: #a5a5a5;
-  }
-  .form-control1-1::-ms-input-placeholder {
+}
+
+.form-control1-1::-ms-input-placeholder {
     color: #a5a5a5;
-  }
-  .form-control1-1::placeholder {
+}
+
+.form-control1-1::placeholder {
     color: #a5a5a5;
-  }
-  .form-control1-1 {
+}
+
+.form-control1-1 {
     height: 50px;
     padding: 8px 15px;
     border-radius: 0;
@@ -76,23 +91,28 @@ textarea {
     background-color: #fff;
     letter-spacing: 0.1px;
     font-size: 14px;
-  }
-  .form-control1-1:focus {
+}
+
+.form-control1-1:focus {
     border: 1px solid #efefef;
     -webkit-box-shadow: none;
     box-shadow: none;
-  }
-  .form-group {
+}
+
+.form-group {
     margin-bottom: 20px;
-  }
-  .input-with-icon {
+}
+
+.input-with-icon {
     position: relative;
-  }
-  .input-with-icon input,
-  .input-with-icon select {
+}
+
+.input-with-icon input,
+.input-with-icon select {
     padding-left: 40px;
-  }
-  .input-with-icon i {
+}
+
+.input-with-icon i {
     position: absolute;
     top: 50%;
     left: 15px;
@@ -104,23 +124,33 @@ textarea {
     -webkit-transition: 0.3s;
     -o-transition: 0.3s;
     transition: 0.3s;
-  }
-  .input-with-icon input:focus + i,
-  .input-with-icon select:focus + i {
+}
+
+.input-with-icon input:focus+i,
+.input-with-icon select:focus+i {
     color: #454545;
-  }
-  .custom-control-input:focus ~ .custom-control-label::before {
+}
+
+.custom-control-input:focus~.custom-control-label::before {
     -webkit-box-shadow: none;
     box-shadow: none;
-    
-  }
-  .custom-radio .custom-control-input:checked ~ .custom-control-label::before,
-  .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+}
+
+.custom-radio .custom-control-input:checked~.custom-control-label::before,
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
     background-color: #50bd49;
-  }
-  .custom-control label {
+}
+
+.custom-control label {
     line-height: 23px;
-  }
-  
-  
-  
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #50bd49!important;
+    /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: black!important;
+    /*outer ring color change*/
+}

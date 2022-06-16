@@ -31,6 +31,14 @@ export interface Store {
   storeTiming: StoreTiming[];
   storeAssets: StoreAssets[];
 }
+export interface DeliveryOptions
+{
+    allowsStorePickup: boolean;
+    itemType: string;
+    maxOrderQuantityForBike: number;
+    storeId: string;
+    type: string;
+}
 
 export interface StoreAssets {
   id: string;

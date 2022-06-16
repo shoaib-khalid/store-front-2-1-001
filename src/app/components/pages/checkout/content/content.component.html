@@ -78,7 +78,14 @@
                     </div>
                     <!-- Buyer Info Start -->
                     <h4><b>Billing Details </b></h4>
-                    <div class="row">
+                    <mat-radio-group aria-labelledby="example-radio-group-label" class="flex flex row">
+
+                        <mat-radio-button class="col-lg-4" (change)="pickup()" [value]="2">Pickup</mat-radio-button>
+                        <mat-radio-button class="col-lg-6" (change)="delivery()" checked [value]="1">Delivery</mat-radio-button>
+
+                    </mat-radio-group>
+                    <!--Delivery-->
+                    <div class="row" *ngIf="deliveryType === 1">
                         <div class="form-group col-xl-12">
                             <label>Full Name <span class="text-danger">*</span></label>
                             <input type="text" id="username" placeholder="Full Name" name="username" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryContactName" (ngModelChange)="validateName()" class="form-control" required>
@@ -117,7 +124,7 @@
                                 <li value="" aria-disabled="true">Select State</li>
                                 <li *ngFor="Let state of states" [ngValue]="state">{{state.name}}</li>
                             </ul>
-                            <!-- <select class="form-control1" (change)="selectState($event)" [disabled]="store_close">
+                             <select class="form-control1" (change)="selectState($event)" [disabled]="store_close">
                                 <option value="" disabled>Select a State</option>
                                 <option *ngFor="let state of states" [ngValue]="state">{{ state.name }}</option>
                             </select> 
@@ -150,6 +157,52 @@
                         <div class="form-group col-xl-12 mb-0">
                             <button type="submit" class="andro_btn-custom primary btn-block" [disabled]="isProcessing" [disabled]="store_close">
                                 <span *ngIf="!isProcessing; else loadingAnim">{{ submitButtonText }}</span>
+                                <ng-template #loadingAnim><span class="spinner-grow spinner-grow-sm" role="status"
+                                        aria-hidden="true"></span></ng-template>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Pickup -->
+                    <div class="row" *ngIf="deliveryType === 2">
+                        <div class="form-group col-xl-12">
+                            <label>Email Address <span class="text-danger">*</span></label>
+                            <input type="email" id="userEmail" placeholder="Email Address" name="email" [disabled]="store_close" [(ngModel)]="userPickupDetails.pickupContactEmail" class="form-control" value="" (ngModelChange)="validateEmailAddress2()" required="">
+                            <div class="text-danger" [hidden]="isEmailValid">{{ emailErrorMsg }}</div>
+                        </div>
+                        <div class="form-group col-xl-6">
+                            <label>Full Name <span class="text-danger">*</span></label>
+                            <input type="text" id="username" placeholder="Full Name" name="username" [disabled]="store_close" [(ngModel)]="userPickupDetails.pickupContactName" (ngModelChange)="validateName()" class="form-control" required>
+                            <div class="text-danger" [hidden]="isNameValid">Name cannot be blank.</div>
+                        </div>
+                        <div class="form-group col-xl-6">
+                            <label>Phone Number <span class="text-danger">*</span></label>
+                            <input type="tel" id="userPhone" placeholder="Phone Number" name="userPhone" [disabled]="store_close" [(ngModel)]="userPickupDetails.pickupContactPhone" class="form-control" value="" (ngModelChange)="validatePhoneNumber2()" required="">
+                            <div class="text-danger" [hidden]="isPhoneNumberValid">{{ phoneNumberErrorMsg }}</div>
+                        </div>
+                        <div class="col-xl-12">
+                            <label>Store Address</label>
+                            <div class="andro_icon-block">
+                                <div class="col-lg-12">
+                                    <span style="font-weight:500;">{{storeAddress}} {{city}} {{postcode}} <br>
+                                        {{stateId}}, {{countryName}}</span>
+                                </div>
+                                <div class="col-lg-12">
+                                    <span style="font-weight:500;">Contact Us:</span><br>
+                                    <span style="font-weight:500;">Email: {{storeEmail}}</span><br>
+                                    <span style="font-weight:500;">Phone Number: {{storeContact}}</span>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg">
+                                    <rect height="1000"  width="1000" class="andro_svg-stroke-shape-anim"></rect>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="form-group col-xl-12 mb-0">
+                            <label>Order Notes (Optional)</label>
+                            <textarea id="orderNotes" name="orderNotes" placeholder="Order Notes (Optional)" rows="5" [disabled]="store_close" [(ngModel)]="userPickupDetails.deliveryNotes" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group col-xl-12 mb-0">
+                            <button type="submit" class="andro_btn-custom primary btn-block" [disabled]="isProcessing" [disabled]="store_close">
+                                <span *ngIf="!isProcessing; else loadingAnim">{{ submitButtonText2 }}</span>
                                 <ng-template #loadingAnim><span class="spinner-grow spinner-grow-sm" role="status"
                                         aria-hidden="true"></span></ng-template>
                             </button>
