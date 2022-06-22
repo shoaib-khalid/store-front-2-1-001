@@ -1,6 +1,6 @@
 {
     "name": "store-front-organic",
-    "version": "0.2.8",
+    "version": "0.2.9",
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
@@ -11,6 +11,7 @@
     },
     "private": true,
     "dependencies": {
+        "@agm/core": "^1.1.0",
         "@angular/animations": "^10.1.6",
         "@angular/cdk": "^10.2.7",
         "@angular/common": "~10.1.5",
@@ -50,6 +51,7 @@
         "@angular-devkit/build-angular": "~0.1001.6",
         "@angular/cli": "~10.1.6",
         "@angular/compiler-cli": "~10.1.5",
+        "@types/googlemaps": "^3.43.3",
         "@types/jasmine": "~3.5.0",
         "@types/jasminewd2": "~2.0.3",
         "@types/node": "^12.11.1",

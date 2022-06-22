@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
 import { ApiService } from "../../../../api.service";
 import { CartService } from "../../../../cart.service";
@@ -14,6 +14,7 @@ import { MatLabel } from "@angular/material/form-field";
 import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from "@angular/cdk/overlay/overlay-directives";
 import { FormGroup } from "@angular/forms";
 import { Order, PickupDetails } from "../../../models/pickup";
+import { MapsAPILoader, MouseEvent } from "@agm/core";
 
 @Component({
   selector: "app-content",
@@ -86,13 +87,23 @@ export class ContentComponent implements OnInit {
   isEmailValid2: boolean;
   isPhoneNumberValid2: boolean;
   
-
-
+ // Map
+ latitude: number ;
+ longitude: number ;
+ zoom: number ;
+ address: string;
+ private geoCoder;
+ countryId: String;
+ @ViewChild('search')
+    public searchElementRef: ElementRef;
+ 
   constructor(
     private cartService: CartService,
     private storeService: StoreService,
     private route: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private mapsAPILoader: MapsAPILoader,
+        private ngZone: NgZone,
   ) {
     this.numberRegex = /[0-9]+/;
     this.emailRegex =
@@ -118,6 +129,7 @@ export class ContentComponent implements OnInit {
       deliveryCity: "",
       deliveryCountry: "",
       deliveryNotes: "",
+      deliveryPickup: {latitude: this.latitude , longitude: this.longitude}
     };
   }
   public isOne = true;
@@ -132,6 +144,7 @@ export class ContentComponent implements OnInit {
       this.allowsStorePickup = response.allowsStorePickup;
     });
     this.getStoreInfo();
+    this.getMap();
     this.cartService.cartChange.subscribe((cart) => {
       this.checkout = cart;
     });
@@ -148,6 +161,7 @@ export class ContentComponent implements OnInit {
     if (this.deliveryType === 1) {
       if (this.isAllFieldsValid()) {
         this.isProcessing = true;
+        this.getMap();
         if (this.hasDeliveryCharges) {
           const codResult: any = await this.cartService.confirmCashOnDelivery(
             this.userDeliveryDetails,
@@ -274,10 +288,68 @@ export class ContentComponent implements OnInit {
           } else {
             this.store_close = true;}
         }
-      }      
+      }
     } catch (error) {
       console.error("Error getting storeInfo", error);
     }
+  }
+  async getMap(){
+    this.mapsAPILoader.load().then(() => {
+      this.setCurrentLocation();
+      this.geoCoder = new google.maps.Geocoder;
+      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
+      autocomplete.addListener("place_changed", () => {
+          this.ngZone.run(() => {
+              //get the place result
+              let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+  
+              //verify result
+              if (place.geometry === undefined || place.geometry === null) {
+              return;
+              }
+  
+              //set latitude, longitude and zoom
+              this.latitude = place.geometry.location.lat();
+              this.longitude = place.geometry.location.lng();
+              this.zoom = 12;
+              // console.log('Location Entered', 'Lat' , this.latitude + ' Lng', this.longitude)
+          });
+      });
+  });      
+  }
+  private setCurrentLocation() {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        this.zoom = 8;
+        this.getAddress(this.latitude, this.longitude);
+      });
+    }
+  }
+  markerDragEnd($event: any) {
+    // console.log($event);
+    this.latitude = $event.coords.lat;
+    this.longitude = $event.coords.lng;
+    this.getAddress(this.latitude, this.longitude);
+    // console.log('Marker Dragged',  'Lat' , this.latitude + ' Lng', this.longitude)
+  }
+  getAddress(latitude, longitude) {
+    this.geoCoder.geocode({ 'location': { lat: latitude, lng: longitude } }, (results, status) => {
+      //   console.log(results);
+      //   console.log(status);
+        if (status === 'OK') {
+          if (results[0]) {
+            this.zoom = 12;
+            this.address = results[0].formatted_address;
+          } else {
+            window.alert('No results found');
+          }
+        } else {
+          window.alert('Geocoder failed due to: ' + status);
+        }
+  
+      });
   }
 
   // Validation
@@ -315,8 +387,12 @@ export class ContentComponent implements OnInit {
   }
 
   validateName(): boolean {
+    if(this.deliveryType === 1){
     this.isNameValid = this.userDeliveryDetails.deliveryContactName !== "";
+    }
+    if(this.deliveryType === 2){
     this.isNameValid = this.userPickupDetails.pickupContactName !== "";
+    }
     return this.isNameValid;
   }
 

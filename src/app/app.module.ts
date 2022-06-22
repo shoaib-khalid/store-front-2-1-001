@@ -19,6 +19,7 @@ import { AppConfig } from "./app.config";
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from "@angular/material/core";
+import { AgmCoreModule } from "@agm/core";
 
 export function initializeApp(appConfig: AppConfig) {
   return () => appConfig.load();
@@ -39,6 +40,10 @@ export function initializeApp(appConfig: AppConfig) {
     MatSelectModule,
     MatFormFieldModule,
     MatOptionModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyCFhf1LxbPWNQSDmxpfQlx69agW-I-xBIw',
+      libraries: ['places']
+    })
   ],
   providers: [
     AppConfig,

@@ -19,4 +19,5 @@ export interface DeliveryDetails {
     deliveryCity: string;
     deliveryCountry: string;
     deliveryNotes: string;
+    deliveryPickup: {};
 }

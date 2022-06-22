@@ -22,12 +22,14 @@ export class StoreService {
   constructor(private apiService: ApiService) {}
 
   async parseStoreFromUrl() {
-    let currBaseUrl = location.origin;
-    console.log("Current URL: ", currBaseUrl);
+    // let currBaseUrl = location.origin;
+    // console.log("Current URL: ", currBaseUrl);
+    let domainName = location.origin;
 
     if (isDevMode()) {
       console.log("Running in dev mode");
-      currBaseUrl = "al-awan-shoping.dev-pk.symplified.ai";
+      //currBaseUrl = "al-awan-shoping.dev-pk.symplified.ai";
+      domainName = "al-awan-shoping";
     }
 
     // For testing purposes
@@ -35,8 +37,8 @@ export class StoreService {
     // currBaseUrl = "mcd.dev-pk2.symplified.ai";
     // currBaseUrl = "al-awan-shoping.dev-pk.symplified.ai";
 
-    currBaseUrl = currBaseUrl.split(".")[0].replace(/^(https?:|)\/\//, "");
-    const store: Store = await this.getStoreByDomainName(currBaseUrl);
+    domainName = domainName.split(".")[0].replace(/^(https?:|)\/\//, "");
+    const store: Store = await this.getStoreByDomainName(domainName);
     console.log("StoreInfo: ", store.id);
     if (this.getStoreId() !== store.id) {
       this.setStoreId(store.id);

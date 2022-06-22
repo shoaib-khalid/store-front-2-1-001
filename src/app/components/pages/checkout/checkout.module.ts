@@ -14,7 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
-
+import { AgmCoreModule } from '@agm/core';
 
 
 @NgModule({
@@ -29,8 +29,14 @@ import { MatRadioModule } from '@angular/material/radio';
     MatFormFieldModule,
     MatOptionModule,
     MatRadioModule,
-
-    
+    // AgmCoreModule.forRoot({  
+    //   apiKey: 'AIzaSyCFhf1LxbPWNQSDmxpfQlx69agW-I-xBIw' ,
+    //   libraries: ['places'] 
+    // }), 
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyCFhf1LxbPWNQSDmxpfQlx69agW-I-xBIw',
+      libraries: ['places']
+    })
   ]
 })
 export class CheckoutModule { }
