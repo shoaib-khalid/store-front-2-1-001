@@ -96,6 +96,7 @@ export class ContentComponent implements OnInit {
  countryId: String;
  @ViewChild('search')
     public searchElementRef: ElementRef;
+  isNameValid2: boolean;
  
   constructor(
     private cartService: CartService,
@@ -377,23 +378,23 @@ export class ContentComponent implements OnInit {
 
   isFieldsValid(): boolean {
     this.validateEmailAddress2();
-    this.validateName();
+    this.validateName2();
     this.validatePhoneNumber2();
     return (
-      this.isNameValid &&
+      this.isNameValid2 &&
       this.isEmailValid2 &&
       this.isPhoneNumberValid2
     )
   }
 
   validateName(): boolean {
-    if(this.deliveryType === 1){
     this.isNameValid = this.userDeliveryDetails.deliveryContactName !== "";
-    }
-    if(this.deliveryType === 2){
-    this.isNameValid = this.userPickupDetails.pickupContactName !== "";
-    }
     return this.isNameValid;
+  }
+  validateName2(): boolean {
+    this.isNameValid2 = this.userPickupDetails.pickupContactName !== "";
+    
+    return this.isNameValid2;
   }
 
   validateAddress(): boolean {
