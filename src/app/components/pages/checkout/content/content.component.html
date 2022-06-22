@@ -88,7 +88,7 @@
                     <div class="row" *ngIf="deliveryType === 1">
                         <div class="form-group col-xl-12">
                             <label>Full Name <span class="text-danger">*</span></label>
-                            <input type="text" id="username" placeholder="Full Name" name="username" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryContactName" (ngModelChange)="isNameValid()" class="form-control" required>
+                            <input type="text" id="username" placeholder="Full Name" name="username" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryContactName" (ngModelChange)="isNameValid" class="form-control" required>
                             <div class="text-danger" [hidden]="isNameValid">Name cannot be blank.</div>
                         </div>
                         <div class="form-group col-xl-6">
