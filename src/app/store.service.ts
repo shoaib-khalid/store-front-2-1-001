@@ -37,7 +37,8 @@ export class StoreService {
     // currBaseUrl = "mcd.dev-pk2.symplified.ai";
     // currBaseUrl = "al-awan-shoping.dev-pk.symplified.ai";
 
-    domainName = domainName.split(".")[0].replace(/^(https?:|)\/\//, "");
+    // domainName = domainName.replace(/^(https?:|)\/\//, "");
+    console.log("domainName", domainName);
     const store: Store = await this.getStoreByDomainName(domainName);
     console.log("StoreInfo: ", store.id);
     if (this.getStoreId() !== store.id) {
