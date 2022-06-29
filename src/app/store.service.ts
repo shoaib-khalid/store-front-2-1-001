@@ -24,7 +24,7 @@ export class StoreService {
   async parseStoreFromUrl() {
     // let currBaseUrl = location.origin;
     // console.log("Current URL: ", currBaseUrl);
-    let domainName = location.origin;
+    let domainName = location.host;
 
     if (isDevMode()) {
       console.log("Running in dev mode");

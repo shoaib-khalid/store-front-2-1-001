@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { ApiService } from "../../../../api.service";
 import { CartService } from "../../../../cart.service";
 import { CartItem, CartTotals } from "../../../models/cart";
-import { DeliveryCharge, DeliveryDetails } from "../../../models/delivery";
+import { DeliveryCharge, DeliveryDetails, MarkerDragEvent } from "../../../models/delivery";
 import { State } from "../../../models/region";
 import { Store, StoreTiming } from "../../../models/store";
 import { StoreService } from "../../../../store.service";
@@ -14,7 +14,7 @@ import { MatLabel } from "@angular/material/form-field";
 import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from "@angular/cdk/overlay/overlay-directives";
 import { FormGroup } from "@angular/forms";
 import { Order, PickupDetails } from "../../../models/pickup";
-import { MapsAPILoader, MouseEvent } from "@agm/core";
+import { MapsAPILoader, Marker, MouseEvent } from "@agm/core";
 
 @Component({
   selector: "app-content",
@@ -25,6 +25,7 @@ export class ContentComponent implements OnInit {
   store: Store;
   checkout: CartItem[];
   userDeliveryDetails: DeliveryDetails;
+  // markerDragEvent: MarkerDragEvent;
   userPickupDetails: PickupDetails;
   cartTotals: CartTotals;
   deliveryFee: DeliveryCharge;
@@ -33,7 +34,7 @@ export class ContentComponent implements OnInit {
   isProcessing: boolean = false;
   hasDeliveryCharges: boolean = false;
 
-  isError: boolean
+  isError: boolean;
   allowsStorePickup: boolean = false;
 
   isNameValid: boolean = true;
@@ -88,7 +89,7 @@ export class ContentComponent implements OnInit {
   isPhoneNumberValid2: boolean;
   
  // Map
- latitude: number ;
+latitude: number ;
  longitude: number ;
  zoom: number ;
  address: string;
@@ -97,6 +98,8 @@ export class ContentComponent implements OnInit {
  @ViewChild('search')
     public searchElementRef: ElementRef;
   isNameValid2: boolean;
+  lat: any;
+  lng: any;
  
   constructor(
     private cartService: CartService,
@@ -112,6 +115,8 @@ export class ContentComponent implements OnInit {
     this.phoneNumberRegex = /^[+]*[(]?[0-9]{1,4}[)]?[-\s\.\/0-9]*$/;
     this.submitButtonText = "Get Delivery Charges";
     this.submitButtonText2 = "Calculate Charges";
+    this.latitude = this.lat;
+    this.longitude = this.lng;
 
     this.userPickupDetails = {
       pickupContactName: "",
@@ -328,14 +333,14 @@ export class ContentComponent implements OnInit {
       });
     }
   }
-  markerDragEnd($event: any) {
+  markerDragEnd($event: MarkerDragEvent) : void{
     // console.log($event);
     this.latitude = $event.coords.lat;
     this.longitude = $event.coords.lng;
     this.getAddress(this.latitude, this.longitude);
     // console.log('Marker Dragged',  'Lat' , this.latitude + ' Lng', this.longitude)
   }
-  getAddress(latitude, longitude) {
+  getAddress(latitude: number, longitude: number): void {
     this.geoCoder.geocode({ 'location': { lat: latitude, lng: longitude } }, (results, status) => {
       //   console.log(results);
       //   console.log(status);
