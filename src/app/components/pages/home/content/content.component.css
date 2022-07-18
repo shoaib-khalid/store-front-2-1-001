@@ -1,6 +1,7 @@
 .banner-design {
     width: 100%;
     height: auto;
+    max-height: 50em;
 }
 
 .banner-design2 {

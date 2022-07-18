@@ -1,15 +1,15 @@
 <!-- Checkout Start -->
 <div class="section">
-    <div class="container">
-        <div class="wrapper">
-            <div *ngIf="isLoading">
-                <div class="spinner-wrapper">
-                    <div class="dot1"></div>
-                    <div class="dot2"></div>
-                </div>
-            </div>
+  <div class="container">
+    <div class="wrapper">
+      <div *ngIf="isLoading">
+        <div class="spinner-wrapper">
+          <div class="dot1"></div>
+          <div class="dot2"></div>
         </div>
-        <!-- <div *ngIf="store_close">
+      </div>
+    </div>
+    <!-- <div *ngIf="store_close">
             <p class="small" >
                 We are closed now our opening hours are as per below
             </p>
@@ -19,271 +19,520 @@
                 </strong><br></span>
             </div>
             </div> -->
-        <form method="post" (ngSubmit)="onSubmit()" #billingForm="ngForm">
-            <div class="row">
-                <div class="col-xl-7">
-                    <!-- Login -->
-                    <!-- <div class="andro_notice">
+    <form method="post" (ngSubmit)="onSubmit()" #billingForm="ngForm">
+      <div class="row">
+        <div class="col-xl-7">
+          <!-- Login -->
+          <!-- <div class="andro_notice">
                         <p>Are you a returning customer? <a href="javascript:void(0)" (click)="isOne = !isOne"
                                 [attr.aria-expanded]="!isOne">Click here to login</a> </p>
                     </div> -->
-                    <div *ngIf="store_close" style="margin-bottom: 20px; background-origin: padding-box;">
-                        <p class="small" class="text-center">
-                            We are closed now our opening hours are as per below
-                        </p>
-                        <div *ngFor="let timing of storeTimings" class="text-center">
-                            <span *ngIf="!timing.isOff">{{timing.day}} on <strong>
-                                {{timing.openTime}} - {{timing.closeTime}}
-                            </strong><br></span>
-                        </div>
-                    </div>
-                    <div [ngbCollapse]="isOne" class="collapse">
-                        <div class="andro_notice-content d-block">
-                            <div class="row">
-                                <div class="col-xl-6 form-group">
-                                    <label>Email Address</label>
-                                    <input type="text" class="form-control" name="login-email" placeholder="Email Address" value="">
-                                </div>
-                                <div class="col-xl-6 form-group">
-                                    <label>Password</label>
-                                    <input type="password" class="form-control" name="login-pass" placeholder="Password" value="">
-                                </div>
-                                <div class="col-12 form-group">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="rememberMe">
-                                        <label class="custom-control-label" for="rememberMe">Remember Me</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <button type="submit" class="andro_btn-custom shadow-none btn-sm" name="button">Login</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Coupon Code -->
-                    <!-- <div class="andro_notice">
+          <div
+            *ngIf="store_close"
+            style="margin-bottom: 20px; background-origin: padding-box"
+          >
+            <p class="small" class="text-center">
+              We are closed now our opening hours are as per below
+            </p>
+            <div *ngFor="let timing of storeTimings" class="text-center">
+              <span *ngIf="!timing.isOff"
+                >{{ timing.day }} on
+                <strong> {{ timing.openTime }} - {{ timing.closeTime }} </strong
+                ><br
+              /></span>
+            </div>
+          </div>
+          <div [ngbCollapse]="isOne" class="collapse">
+            <div class="andro_notice-content d-block">
+              <div class="row">
+                <div class="col-xl-6 form-group">
+                  <label>Email Address</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="login-email"
+                    placeholder="Email Address"
+                    value=""
+                  />
+                </div>
+                <div class="col-xl-6 form-group">
+                  <label>Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    name="login-pass"
+                    placeholder="Password"
+                    value=""
+                  />
+                </div>
+                <div class="col-12 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="rememberMe"
+                    />
+                    <label class="custom-control-label" for="rememberMe"
+                      >Remember Me</label
+                    >
+                  </div>
+                </div>
+                <div class="col-12">
+                  <button
+                    type="submit"
+                    class="andro_btn-custom shadow-none btn-sm"
+                    name="button"
+                  >
+                    Login
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Coupon Code -->
+          <!-- <div class="andro_notice">
                         <p>Do you have a coupon code? <a href="javascript:void(0)" (click)="isTwo = !isTwo"
                                 [attr.aria-expanded]="!isTwo">Click here to apply</a> </p>
                     </div> -->
-                    <div [ngbCollapse]="isTwo" class="collapse">
-                        <div class="andro_notice-content d-block">
-                            <p>If you have a coupon code, apply it below</p>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Coupon Code">
-                                <div class="input-group-append">
-                                    <button class="andro_btn-custom shadow-none" type="button">Apply Code</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Buyer Info Start -->
-                    <h4><b>Billing Details </b></h4>
-                    <mat-radio-group aria-labelledby="example-radio-group-label" class="flex flex row">
-
-                        <mat-radio-button class="col-lg-4" (change)="pickup()" [value]="2">Pickup</mat-radio-button>
-                        <mat-radio-button class="col-lg-6" (change)="delivery()" checked [value]="1">Delivery</mat-radio-button>
-
-                    </mat-radio-group>
-                    <!--Delivery-->
-                    <div class="row" *ngIf="deliveryType === 1">
-                        <div class="form-group col-xl-12">
-                            <label>Full Name <span class="text-danger">*</span></label>
-                            <input type="text" id="username" placeholder="Full Name" name="username" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryContactName" (ngModelChange)="isNameValid" class="form-control" required>
-                            <div class="text-danger" [hidden]="isNameValid">Name cannot be blank.</div>
-                        </div>
-                        <div class="form-group col-xl-6">
-                            <label>Phone Number <span class="text-danger">*</span></label>
-                            <input type="tel" id="userPhone" placeholder="Phone Number" name="userPhone" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryContactPhone" class="form-control" value="" (ngModelChange)="validatePhoneNumber()" required="">
-                            <div class="text-danger" [hidden]="isPhoneNumberValid">{{ phoneNumberErrorMsg }}</div>
-                        </div>
-                        <div class="form-group col-xl-6">
-                            <label>Email Address <span class="text-danger">*</span></label>
-                            <input type="email" id="userEmail" placeholder="Email Address" name="email" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryContactEmail" class="form-control" value="" (ngModelChange)="validateEmailAddress()" required="">
-                            <div class="text-danger" [hidden]="isEmailValid">{{ emailErrorMsg }}</div>
-                        </div>
-                        <div class="form-group col-xl-6">
-                            <label>Postcode<span class="text-danger">*</span></label>
-                            <input type="text" id="userPostcode" placeholder="Post Code" name="userPostcode" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryPostcode" class="form-control" (ngModelChange)="validatePostCode()" required="">
-                            <div class="text-danger" [hidden]="isPostCodeValid">{{ postCodeErrorMsg }}</div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                            <label>Country</label>
-                            <input type="text" name="userCountries" class="form-control" [(ngModel)]="userDeliveryDetails.deliveryCountry" autocomplete="disabled" readonly [disabled]="store_close" placeholder="Countries" required="">
-                            <div class="text-danger" [hidden]="isCountryValid">Country cannot be blank.</div>
-                        </div>
-                        <div class="form-group col-xl-6">
-                            <label>Town / City <span class="text-danger">*</span></label>
-                            <input type="text" id="userCity" placeholder="Town/City" name="userCity" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryCity" class="form-control" (ngModelChange)="validateCity()" required="">
-                            <div class="text-danger" [hidden]="isCityValid">City cannot be blank.</div>
-                        </div>
-                        <div class="form-group col-xl-6">
-                            <label>State<span class="text-danger">*</span></label>
-                            <mat-select class="form-control1" appearance="outline" name="state" placeholder="State" [(ngModel)]="userDeliveryDetails.deliveryState" [disabled]="store_close">
-                                <mat-option *ngFor="let state of states" [value]="state.id">
-                                    {{ state.name }}
-                                </mat-option>
-                            </mat-select>
-                            <div class="text-danger" [hidden]="isStateValid">State cannot be blank.</div>
-                        </div>
-                        <div class="form-group col-xl-12">
-                            <label>Address <span class="text-danger">*</span></label>
-                            <textarea id="userAddress" placeholder="Enter Address" name="userAddress" rows="1" (keydown.enter)="$event.preventDefault()" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryAddress" class="form-control" (ngModelChange)="validateAddress()"
-                                required #search></textarea>
-                            <div class="text-danger" [hidden]="isAddressValid">Address cannot be blank.</div>
-                        </div>
-                        <div class="col-lg-12">
-                            <label>Drag the pin on the location of your address.</label>
-                            <agm-map style=" height: 250px; width: 100%;" [latitude]="latitude" [longitude]="longitude" [zoom]="zoom">
-                                <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true" (dragEnd)="markerDragEnd($event)">
-                                </agm-marker>
-                            </agm-map>
-                        </div>
-                        <!-- <div class="form-group col-xl-6">
-                            <label>State <span class="text-danger">*</span></label>
-                            <ul class="form-control1" (change)="selectState($event)">
-                                <li value="" aria-disabled="true">Select State</li>
-                                <li *ngFor="Let state of states" [ngValue]="state">{{state.name}}</li>
-                            </ul>
-                            <select class="form-control1" (change)="selectState($event)" [disabled]="store_close">
-                                <option value="" disabled>Select a State</option>
-                                <option *ngFor="let state of states" [ngValue]="state">{{ state.name }}</option>
-                            </select>
-                            <div class="text-danger" [hidden]="isStateValid">State cannot be blank.</div>
-                        </div> -->
-
-                        <div class="form-group col-xl-12 mb-0">
-                            <label>Order Notes (Optional)</label>
-                            <textarea id="orderNotes" name="orderNotes" placeholder="Order Notes (Optional)" rows="5" [disabled]="store_close" [(ngModel)]="userDeliveryDetails.deliveryNotes" class="form-control"></textarea>
-                        </div>
-                        <div class="form-group col-xl-12 mb-0">
-                            <button type="submit" class="andro_btn-custom primary btn-block" [disabled]="isProcessing" [disabled]="store_close">
-                                <span *ngIf="!isProcessing; else loadingAnim">{{ submitButtonText }}</span>
-                                <ng-template #loadingAnim><span class="spinner-grow spinner-grow-sm" role="status"
-                                        aria-hidden="true"></span></ng-template>
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Pickup -->
-                    <div class="row" *ngIf="deliveryType === 2">
-                        <div class="form-group col-xl-12">
-                            <label>Email Address <span class="text-danger">*</span></label>
-                            <input type="email" id="userEmail" placeholder="Email Address" name="email" [disabled]="store_close" [(ngModel)]="userPickupDetails.pickupContactEmail" class="form-control" value="" (ngModelChange)="validateEmailAddress2()" required="">
-                            <div class="text-danger" [hidden]="isEmailValid">{{ emailErrorMsg }}</div>
-                        </div>
-                        <div class="form-group col-xl-6">
-                            <label>Full Name <span class="text-danger">*</span></label>
-                            <input type="text" id="username" placeholder="Full Name" name="username" [disabled]="store_close" [(ngModel)]="userPickupDetails.pickupContactName" (ngModelChange)="validateName2()" class="form-control" required>
-                            <div class="text-danger" [hidden]="isNameValid">Name cannot be blank.</div>
-                        </div>
-                        <div class="form-group col-xl-6">
-                            <label>Phone Number <span class="text-danger">*</span></label>
-                            <input type="tel" id="userPhone" placeholder="Phone Number" name="userPhone" [disabled]="store_close" [(ngModel)]="userPickupDetails.pickupContactPhone" class="form-control" value="" (ngModelChange)="validatePhoneNumber2()" required="">
-                            <div class="text-danger" [hidden]="isPhoneNumberValid">{{ phoneNumberErrorMsg }}</div>
-                        </div>
-                        <div class="col-xl-12">
-                            <label>Store Address</label>
-                            <div class="andro_icon-block">
-                                <div class="col-lg-12">
-                                    <span style="font-weight:500;">{{storeAddress}} {{city}} {{postcode}} <br>
-                                        {{stateId}}, {{countryName}}</span>
-                                </div>
-                                <div class="col-lg-12">
-                                    <span style="font-weight:500;">Contact Us:</span><br>
-                                    <span style="font-weight:500;">Email: {{storeEmail}}</span><br>
-                                    <span style="font-weight:500;">Phone Number: {{storeContact}}</span>
-                                </div>
-                                <svg xmlns="http://www.w3.org/2000/svg">
-                                    <rect height="1000"  width="1000" class="andro_svg-stroke-shape-anim"></rect>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="form-group col-xl-12 mb-0">
-                            <label>Order Notes (Optional)</label>
-                            <textarea id="orderNotes" name="orderNotes" placeholder="Order Notes (Optional)" rows="5" [disabled]="store_close" [(ngModel)]="userPickupDetails.deliveryNotes" class="form-control"></textarea>
-                        </div>
-                        <div class="form-group col-xl-12 mb-0">
-                            <button type="submit" class="andro_btn-custom primary btn-block" [disabled]="isProcessing" [disabled]="store_close">
-                                <span *ngIf="!isProcessing; else loadingAnim">{{ submitButtonText2 }}</span>
-                                <ng-template #loadingAnim><span class="spinner-grow spinner-grow-sm" role="status"
-                                        aria-hidden="true"></span></ng-template>
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Buyer Info End -->
+          <div [ngbCollapse]="isTwo" class="collapse">
+            <div class="andro_notice-content d-block">
+              <p>If you have a coupon code, apply it below</p>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Coupon Code"
+                />
+                <div class="input-group-append">
+                  <button class="andro_btn-custom shadow-none" type="button">
+                    Apply Code
+                  </button>
                 </div>
-                <div class=" col-xl-5 checkout-billing">
-                    <!-- Order Details Start -->
-                    <table class="andro_responsive-table">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Quantity</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let item of checkout">
-                                <td data-title="Product">
-                                    <div class="andro_cart-product-wrapper">
-                                        <div class="andro_cart-product-body">
-                                            <h6> {{item.productName}} </h6>
-                                            <!-- <p>{{item.qty}} Kilos</p> -->
-                                        </div>
-                                    </div>
-                                </td>
-                                <td data-title="Quantity">x{{item.quantity}}</td>
-                                <td data-title="Total"> <strong>{{ currencySymbol }} {{ item.price | number:'1.2-2'
-                                        }}</strong>
-                                </td>
-                            </tr>
-                            <tr *ngIf="hasDeliveryCharges" class="total">
-                                <td>
-                                    Subtotal
-                                </td>
-                                <td></td>
-                                <td><strong>{{ currencySymbol }} {{ cartTotals.cartSubTotal| number:'1.2-2'
-                                        }}</strong></td>
-                            </tr>
-                            <tr *ngIf="hasDeliveryCharges && cartTotals.subTotalDiscount > 0">
-                                <td>Order Discount</td>
-                                <td></td>
-                                <td>{{ currencySymbol }} -{{ cartTotals.subTotalDiscount| number:'1.2-2' }}</td>
-                            </tr>
-                            <tr *ngIf="hasDeliveryCharges && totalServiceCharge > 0">
-                                <td>Service Charge</td>
-                                <td></td>
-                                <td>{{ currencySymbol }} {{ totalServiceCharge| number:'1.2-2' }} <span class="small">({{
-                                        storeDeliveryPercentage
-                                        }}%)</span></td>
-                            </tr>
-                            <tr *ngIf="hasDeliveryCharges && cartTotals.cartDeliveryCharge > 0">
-                                <td>Delivery Charges</td>
-                                <td></td>
-                                <td>{{ currencySymbol }} {{ cartTotals.cartDeliveryCharge| number:'1.2-2' }}</td>
-                            </tr>
-                            <tr *ngIf="hasDeliveryCharges && cartTotals.deliveryDiscount > 0">
-                                <td>Delivery Discount</td>
-                                <td></td>
-                                <td>{{ currencySymbol }} -{{ cartTotals.deliveryDiscount | number:'1.2-2' }}</td>
-                            </tr>
-                            <tr *ngIf="hasDeliveryCharges" class="total">
-                                <td>
-                                    Grand Total
-                                </td>
-                                <td></td>
-                                <td><strong>{{ currencySymbol }} {{ cartTotals.cartGrandTotal| number:'1.2-2'
-                                        }}</strong> </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- <div class="form-group">
+              </div>
+            </div>
+          </div>
+          <!-- Buyer Info Start -->
+          <h4><b>Billing Details </b></h4>
+          <mat-radio-group
+            aria-labelledby="example-radio-group-label"
+            class="flex flex row"
+          >
+            <mat-radio-button class="col-lg-4" (change)="pickup()" [value]="2"
+              >Pickup</mat-radio-button
+            >
+            <mat-radio-button
+              class="col-lg-6"
+              (change)="delivery()"
+              checked
+              [value]="1"
+              >Delivery</mat-radio-button
+            >
+          </mat-radio-group>
+          <!--Delivery-->
+          <div class="row" *ngIf="deliveryType === 1">
+            <div class="form-group col-xl-12">
+              <label>Full Name <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                id="username"
+                placeholder="Full Name"
+                name="username"
+                [disabled]="store_close"
+                [(ngModel)]="userDeliveryDetails.deliveryContactName"
+                (ngModelChange)="validateDeliveryName()"
+                class="form-control"
+                required
+              />
+              <div class="text-danger" [hidden]="isDeliveryNameValid">
+                Name cannot be blank.
+              </div>
+            </div>
+            <div class="form-group col-xl-6">
+              <label>Phone Number <span class="text-danger">*</span></label>
+              <input
+                type="tel"
+                id="userPhone"
+                placeholder="Phone Number"
+                name="userPhone"
+                [disabled]="store_close"
+                [(ngModel)]="userDeliveryDetails.deliveryContactPhone"
+                class="form-control"
+                value=""
+                (ngModelChange)="validateDeliveryPhoneNumber()"
+                required
+              />
+              <div class="text-danger" [hidden]="isDeliveryPhoneNumberValid">
+                {{ phoneNumberErrorMsg }}
+              </div>
+            </div>
+            <div class="form-group col-xl-6">
+              <label>Email Address <span class="text-danger">*</span></label>
+              <input
+                type="email"
+                id="userEmail"
+                placeholder="Email Address"
+                name="email"
+                [disabled]="store_close"
+                [(ngModel)]="userDeliveryDetails.deliveryContactEmail"
+                class="form-control"
+                value=""
+                (ngModelChange)="validateDeliveryEmailAddress()"
+                required
+              />
+              <div class="text-danger" [hidden]="isDeliveryEmailAddressValid">
+                {{ emailErrorMsg }}
+              </div>
+            </div>
+            <div class="form-group col-xl-6">
+              <label>Postcode<span class="text-danger">*</span></label>
+              <input
+                type="text"
+                id="userPostcode"
+                placeholder="Post Code"
+                name="userPostcode"
+                [disabled]="store_close"
+                [(ngModel)]="userDeliveryDetails.deliveryPostcode"
+                class="form-control"
+                (ngModelChange)="validateDeliveryPostcode()"
+                required
+              />
+              <div class="text-danger" [hidden]="isDeliveryPostcodeValid">
+                {{ postCodeErrorMsg }}
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+              <label>Country</label>
+              <input
+                type="text"
+                name="userCountries"
+                class="form-control"
+                [(ngModel)]="userDeliveryDetails.deliveryCountry"
+                autocomplete="disabled"
+                readonly
+                [disabled]="store_close"
+                placeholder="Countries"
+                required
+              />
+              <div class="text-danger" [hidden]="isDeliveryCountryValid">
+                Country cannot be blank.
+              </div>
+            </div>
+            <div class="form-group col-xl-6">
+              <label>Town / City <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                id="userCity"
+                placeholder="Town/City"
+                name="userCity"
+                [disabled]="store_close"
+                [(ngModel)]="userDeliveryDetails.deliveryCity"
+                class="form-control"
+                (ngModelChange)="validateDeliveryCity()"
+                required
+              />
+              <div class="text-danger" [hidden]="isDeliveryCityValid">
+                City cannot be blank.
+              </div>
+            </div>
+            <div class="form-group col-xl-6">
+              <label>State<span class="text-danger">*</span></label>
+              <mat-select
+                class="form-control1"
+                appearance="outline"
+                name="state"
+                placeholder="State"
+                [(ngModel)]="userDeliveryDetails.deliveryState"
+                [disabled]="store_close"
+              >
+                <mat-option *ngFor="let state of states" [value]="state.id">
+                  {{ state.name }}
+                </mat-option>
+              </mat-select>
+              <div class="text-danger" [hidden]="isDeliveryStateValid">
+                State cannot be blank.
+              </div>
+            </div>
+            <div class="form-group col-xl-12">
+              <label>Address <span class="text-danger">*</span></label>
+              <textarea
+                id="userAddress"
+                placeholder="Enter Address"
+                name="userAddress"
+                rows="1"
+                (keydown.enter)="$event.preventDefault()"
+                [disabled]="store_close"
+                [(ngModel)]="userDeliveryDetails.deliveryAddress"
+                class="form-control"
+                (ngModelChange)="validateDeliveryAddress()"
+                required
+                #search
+              ></textarea>
+              <div class="text-danger" [hidden]="isDeliveryAddressValid">
+                Address cannot be blank.
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <label>Drag the pin on the location of your address.</label>
+              <agm-map
+                style="height: 250px; width: 100%"
+                [latitude]="latitude"
+                [longitude]="longitude"
+                [zoom]="zoom"
+              >
+                <agm-marker
+                  [latitude]="latitude"
+                  [longitude]="longitude"
+                  [markerDraggable]="true"
+                  (dragEnd)="markerDragEnd($event)"
+                >
+                </agm-marker>
+              </agm-map>
+            </div>
+
+            <div class="form-group col-xl-12 mb-0">
+              <label>Order Notes (Optional)</label>
+              <textarea
+                id="orderNotes"
+                name="orderNotes"
+                placeholder="Order Notes (Optional)"
+                rows="5"
+                [disabled]="store_close"
+                [(ngModel)]="userDeliveryDetails.deliveryNotes"
+                class="form-control"
+              ></textarea>
+            </div>
+            <div class="form-group col-xl-12 mb-0">
+              <button
+                type="submit"
+                class="andro_btn-custom primary btn-block"
+                [disabled]="isProcessing"
+                [disabled]="store_close"
+              >
+                <span *ngIf="!isProcessing; else loadingAnim">{{
+                  submitButtonText
+                }}</span>
+                <ng-template #loadingAnim
+                  ><span
+                    class="spinner-grow spinner-grow-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span
+                ></ng-template>
+              </button>
+            </div>
+          </div>
+          <!-- End Delivery Details-->
+
+          <!-- Pickup Details -->
+          <div class="row" *ngIf="deliveryType === 2">
+            <div class="form-group col-xl-12">
+              <label>Email Address <span class="text-danger">*</span></label>
+              <input
+                type="email"
+                id="userEmail"
+                placeholder="Email Address"
+                name="email"
+                [disabled]="store_close"
+                [(ngModel)]="userPickupDetails.pickupContactEmail"
+                class="form-control"
+                value=""
+                (ngModelChange)="validatePickupEmailAddress()"
+                required=""
+              />
+              <div class="text-danger" [hidden]="isPickupEmailAddressValid">
+                {{ emailErrorMsg }}
+              </div>
+            </div>
+            <div class="form-group col-xl-6">
+              <label>Full Name <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                id="username"
+                placeholder="Full Name"
+                name="username"
+                [disabled]="store_close"
+                [(ngModel)]="userPickupDetails.pickupContactName"
+                (ngModelChange)="validatePickupName()"
+                class="form-control"
+                required
+              />
+              <div class="text-danger" [hidden]="isPickupNameValid">
+                Name cannot be blank.
+              </div>
+            </div>
+            <div class="form-group col-xl-6">
+              <label>Phone Number <span class="text-danger">*</span></label>
+              <input
+                type="tel"
+                id="userPhone"
+                placeholder="Phone Number"
+                name="userPhone"
+                [disabled]="store_close"
+                [(ngModel)]="userPickupDetails.pickupContactPhone"
+                class="form-control"
+                value=""
+                (ngModelChange)="validatePickupPhoneNumber()"
+                required=""
+              />
+              <div class="text-danger" [hidden]="isPickupPhoneNumberValid">
+                {{ phoneNumberErrorMsg }}
+              </div>
+            </div>
+            <div class="col-xl-12">
+              <label>Store Address</label>
+              <div class="andro_icon-block">
+                <div class="col-lg-12">
+                  <span style="font-weight: 500"
+                    >{{ storeAddress }} {{ city }} {{ postcode }} <br />
+                    {{ stateId }}, {{ countryName }}</span
+                  >
+                </div>
+                <div class="col-lg-12">
+                  <span style="font-weight: 500">Contact Us:</span><br />
+                  <span style="font-weight: 500">Email: {{ storeEmail }}</span
+                  ><br />
+                  <span style="font-weight: 500"
+                    >Phone Number: {{ storeContact }}</span
+                  >
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg">
+                  <rect
+                    height="1000"
+                    width="1000"
+                    class="andro_svg-stroke-shape-anim"
+                  ></rect>
+                </svg>
+              </div>
+            </div>
+            <div class="form-group col-xl-12 mb-0">
+              <label>Order Notes (Optional)</label>
+              <textarea
+                id="orderNotes"
+                name="orderNotes"
+                placeholder="Order Notes (Optional)"
+                rows="5"
+                [disabled]="store_close"
+                [(ngModel)]="userPickupDetails.deliveryNotes"
+                class="form-control"
+              ></textarea>
+            </div>
+            <div class="form-group col-xl-12 mb-0">
+              <button
+                type="submit"
+                class="andro_btn-custom primary btn-block"
+                [disabled]="isProcessing"
+                [disabled]="store_close"
+              >
+                <span *ngIf="!isProcessing; else loadingAnim">{{
+                  submitButtonText2
+                }}</span>
+                <ng-template #loadingAnim
+                  ><span
+                    class="spinner-grow spinner-grow-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span
+                ></ng-template>
+              </button>
+            </div>
+          </div>
+          <!-- Buyer Info End -->
+        </div>
+        <div class="col-xl-5 checkout-billing">
+          <!-- Order Details Start -->
+          <table class="andro_responsive-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of checkout">
+                <td data-title="Product">
+                  <div class="andro_cart-product-wrapper">
+                    <div class="andro_cart-product-body">
+                      <h6>{{ item.productName }}</h6>
+                      <!-- <p>{{item.qty}} Kilos</p> -->
+                    </div>
+                  </div>
+                </td>
+                <td data-title="Quantity">x{{ item.quantity }}</td>
+                <td data-title="Total">
+                  <strong
+                    >{{ currencySymbol }}
+                    {{ item.price | number: "1.2-2" }}</strong
+                  >
+                </td>
+              </tr>
+              <tr *ngIf="hasDeliveryCharges" class="total">
+                <td>Subtotal</td>
+                <td></td>
+                <td>
+                  <strong
+                    >{{ currencySymbol }}
+                    {{ cartTotals.cartSubTotal | number: "1.2-2" }}</strong
+                  >
+                </td>
+              </tr>
+              <tr *ngIf="hasDeliveryCharges && cartTotals.subTotalDiscount > 0">
+                <td>Order Discount</td>
+                <td></td>
+                <td>
+                  {{ currencySymbol }} -{{
+                    cartTotals.subTotalDiscount | number: "1.2-2"
+                  }}
+                </td>
+              </tr>
+              <tr *ngIf="hasDeliveryCharges && totalServiceCharge > 0">
+                <td>Service Charge</td>
+                <td></td>
+                <td>
+                  {{ currencySymbol }}
+                  {{ totalServiceCharge | number: "1.2-2" }}
+                  <span class="small">({{ storeDeliveryPercentage }}%)</span>
+                </td>
+              </tr>
+              <tr
+                *ngIf="hasDeliveryCharges && cartTotals.cartDeliveryCharge > 0"
+              >
+                <td>Delivery Charges</td>
+                <td></td>
+                <td>
+                  {{ currencySymbol }}
+                  {{ cartTotals.cartDeliveryCharge | number: "1.2-2" }}
+                </td>
+              </tr>
+              <tr *ngIf="hasDeliveryCharges && cartTotals.deliveryDiscount > 0">
+                <td>Delivery Discount</td>
+                <td></td>
+                <td>
+                  {{ currencySymbol }} -{{
+                    cartTotals.deliveryDiscount | number: "1.2-2"
+                  }}
+                </td>
+              </tr>
+              <tr *ngIf="hasDeliveryCharges" class="total">
+                <td>Grand Total</td>
+                <td></td>
+                <td>
+                  <strong
+                    >{{ currencySymbol }}
+                    {{ cartTotals.cartGrandTotal | number: "1.2-2" }}</strong
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- <div class="form-group">
                         <div *ngIf="!hasDeliveryCharges">
                             <p class="small" >
                                 We do not provide delivery to the state you have selected.
                             </p>        
                         </div>
                     </div> -->
-                    <!-- <div class="form-group">
+          <!-- <div class="form-group">
                         <label>Card Number</label>
                         <input type="text" class="form-control" name="master-number" placeholder="Card Number" value="">
                     </div>
@@ -302,7 +551,7 @@
                             <input type="number" class="form-control" name="master-cvv" placeholder="CVV" value="">
                         </div>
                     </div> -->
-                    <!-- <div *ngIf="store_close">
+          <!-- <div *ngIf="store_close">
                     <p class="small" >
                         We are closed now our opening hours are as per below
                     </p>
@@ -312,13 +561,12 @@
                         </strong><br></span>
                     </div>
                     </div> -->
-                    <!-- <button type="submit" class="andro_btn-custom primary btn-block">Place
+          <!-- <button type="submit" class="andro_btn-custom primary btn-block">Place
                         Order</button>  -->
-                    <!-- Order Details End -->
-                </div>
-
-            </div>
-        </form>
-    </div>
+          <!-- Order Details End -->
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
 <!-- Checkout End -->
