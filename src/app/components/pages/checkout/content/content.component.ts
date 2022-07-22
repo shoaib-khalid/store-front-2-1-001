@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef, NgZone } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  NgZone,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { ApiService } from "../../../../api.service";
 import { CartService } from "../../../../cart.service";
@@ -38,14 +44,18 @@ export class ContentComponent implements OnInit {
   isError: boolean;
   allowsStorePickup: boolean = false;
 
-  isNameValid: boolean = true;
-  isAddressValid: boolean = true;
-  isCityValid: boolean = true;
-  isStateValid: boolean = true;
-  isPostCodeValid: boolean = true;
-  isCountryValid: boolean = true;
-  isPhoneNumberValid: boolean = true;
-  isEmailValid: boolean = true;
+  isDeliveryNameValid: boolean = true;
+  isDeliveryAddressValid: boolean = true;
+  isDeliveryCityValid: boolean = true;
+  isDeliveryStateValid: boolean = true;
+  isDeliveryPostcodeValid: boolean = true;
+  isDeliveryCountryValid: boolean = true;
+  isDeliveryPhoneNumberValid: boolean = true;
+  isDeliveryEmailAddressValid: boolean = true;
+
+  isPickupNameValid: boolean = true;
+  isPickupEmailAddressValid: boolean = true;
+  isPickupPhoneNumberValid: boolean = true;
 
   phoneNumberErrorMsg: string;
   emailErrorMsg: string;
@@ -65,7 +75,15 @@ export class ContentComponent implements OnInit {
   storeDeliveryPercentage: number;
 
   storeTiming: StoreTiming[];
-  dayArr = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+  dayArr = [
+    "SUNDAY",
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+  ];
   store_close: boolean = false;
   totalServiceCharge: number;
   storeTimings: any;
@@ -106,7 +124,7 @@ export class ContentComponent implements OnInit {
     private route: Router,
     private apiService: ApiService,
     private mapsAPILoader: MapsAPILoader,
-        private ngZone: NgZone,
+    private ngZone: NgZone
   ) {
     this.numberRegex = /[0-9]+/;
     this.emailRegex =
@@ -120,8 +138,8 @@ export class ContentComponent implements OnInit {
       pickupContactEmail: "",
       pickupContactPhone: "",
       deliveryNotes: "",
-    }
-    
+    };
+
     this.userDeliveryDetails = {
       deliveryContactName: "",
       deliveryAddress: "",
@@ -151,19 +169,21 @@ export class ContentComponent implements OnInit {
     this.getStoreInfo();
     this.cartService.cartChange.subscribe((cart) => {
       this.checkout = cart;
+      1;
     });
     this.isLoading = false;
   }
 
   selectState(e): void {
-    console.log()
+    console.log();
     this.userDeliveryDetails.deliveryState = e.id;
     console.log("selectState: ", this.userDeliveryDetails.deliveryState);
   }
 
   async onSubmit() {
     if (this.deliveryType === 1) {
-      if (this.isAllFieldsValid()) {
+      console.log("onSubmit");
+      if (this.isDeliveryFieldsValid()) {
         this.isProcessing = true;
         if (this.hasDeliveryCharges) {
           const codResult: any = await this.cartService.confirmCashOnDelivery(
@@ -176,59 +196,55 @@ export class ContentComponent implements OnInit {
             // TODO: Show error message
           }
         } else {
-          try{
-          this.deliveryFee = await this.cartService.getDeliveryFee(
-            this.userDeliveryDetails
-          );
-          this.cartTotals = await this.cartService.getDiscount(
-            this.deliveryFee.price
-          );
-          this.hasDeliveryCharges = this.cartTotals ? true : false;
-          this.isError = this.deliveryFee.isError
-          this.totalServiceCharge =
-            this.storeDeliveryPercentage === 0
-              ? this.storeDeliveryPercentage
-              : (this.storeDeliveryPercentage / 100) *
-                this.cartTotals.cartSubTotal;
-              }
-              catch {
-                Swal.fire({
-                  icon: "error",
-                  title: "Ooops",
-                  text: "We can't deliver in your state.",
-                  timer: 3000,
-                });
-                console.log('Something went wrong. Try again')
-              }
+          try {
+            this.deliveryFee = await this.cartService.getDeliveryFee(
+              this.userDeliveryDetails
+            );
+            this.cartTotals = await this.cartService.getDiscount(
+              this.deliveryFee.price
+            );
+            this.hasDeliveryCharges = this.cartTotals ? true : false;
+            this.isError = this.deliveryFee.isError;
+            this.totalServiceCharge =
+              this.storeDeliveryPercentage === 0
+                ? this.storeDeliveryPercentage
+                : (this.storeDeliveryPercentage / 100) *
+                  this.cartTotals.cartSubTotal;
+          } catch {
+            Swal.fire({
+              icon: "error",
+              title: "Ooops",
+              text: "We can't deliver in your state.",
+              timer: 3000,
+            });
+            console.log("Something went wrong. Try again");
+          }
           this.submitButtonText = "Place Order";
         }
         this.isProcessing = false;
       }
-    }
-    else if (this.deliveryType === 2) {
-      if (this.isFieldsValid()) {
+    } else if (this.deliveryType === 2) {
+      if (this.isPickupFieldsValid()) {
         this.isProcessing = true;
-          if (this.hasDeliveryCharges) {
-            console.log("USERORDER: ", this.userOrder)
-            console.log("PickupDetails: ", this.userPickupDetails)
-            const codResult: any = await this.cartService.getQuotation(
-              this.userPickupDetails
-            );
-            if (codResult.status === 201) {
-              this.route.navigate(["/thankyou"]);
-            } else {              
-            // TODO: Show error message
-            }
+        if (this.hasDeliveryCharges) {
+          console.log("USERORDER: ", this.userOrder);
+          console.log("PickupDetails: ", this.userPickupDetails);
+          const codResult: any = await this.cartService.getQuotation(
+            this.userPickupDetails
+          );
+          if (codResult.status === 201) {
+            this.route.navigate(["/thankyou"]);
           } else {
-            this.cartTotals = await this.cartService.getDiscount(
-              0
-            );
-            
-          this.hasDeliveryCharges = this.cartTotals ? true : false;
-            
-            this.submitButtonText2 = "Place Order";
+            // TODO: Show error message
           }
-          this.isProcessing = false;
+        } else {
+          this.cartTotals = await this.cartService.getDiscount(0);
+
+          this.hasDeliveryCharges = this.cartTotals ? true : false;
+
+          this.submitButtonText2 = "Place Order";
+        }
+        this.isProcessing = false;
       }
     }
   }
@@ -248,11 +264,10 @@ export class ContentComponent implements OnInit {
       );
     });
   }
-  
-//   allowPickupStore() {
-//     this.checkoutForm.get('storePickup').setValue(this.checkoutForm.get('storePickup').value);
-// }
 
+  //   allowPickupStore() {
+  //     this.checkoutForm.get('storePickup').setValue(this.checkoutForm.get('storePickup').value);
+  // }
 
   async getStoreInfo() {
     try {
@@ -263,7 +278,7 @@ export class ContentComponent implements OnInit {
       this.storeEmail = storeInfo.email;
       this.postcode = storeInfo.postcode;
       this.city = storeInfo.city;
-      this.stateId  = storeInfo.regionCountryStateId;
+      this.stateId = storeInfo.regionCountryStateId;
       this.countryName = storeInfo.regionCountry.name;
       this.currencySymbol = storeInfo.regionCountry.currencySymbol;
       this.userDeliveryDetails.deliveryCountry = storeInfo.regionCountry.name;
@@ -273,22 +288,30 @@ export class ContentComponent implements OnInit {
       const currentDate = new Date();
       let todayDay = this.dayArr[currentDate.getDay()];
       let browserTime = new Date();
-      for (let item of this.storeTimings){
+      for (let item of this.storeTimings) {
         let dayObj = item.day;
-        if ( dayObj == todayDay){
+        if (dayObj == todayDay) {
           let isOff = item.isOff;
-          if(isOff == false){
+          if (isOff == false) {
             let openTime = new Date();
-            openTime.setHours(item.openTime.split(":")[0], item.openTime.split(":")[1], 0);
+            openTime.setHours(
+              item.openTime.split(":")[0],
+              item.openTime.split(":")[1],
+              0
+            );
             let closeTime = new Date();
-            closeTime.setHours(item.closeTime.split(":")[0], item.closeTime.split(":")[1], 0);
+            closeTime.setHours(
+              item.closeTime.split(":")[0],
+              item.closeTime.split(":")[1],
+              0
+            );
             if (browserTime >= openTime && browserTime < closeTime) {
-              
             } else {
               this.store_close = true;
             }
           } else {
-            this.store_close = true;}
+            this.store_close = true;
+          }
         }
       }
     } catch (error) {
@@ -302,8 +325,10 @@ export class ContentComponent implements OnInit {
         document.getElementById("map") as HTMLElement 
       );
       this.setCurrentLocation();
-      this.geoCoder = new google.maps.Geocoder;
-      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
+      this.geoCoder = new google.maps.Geocoder();
+      let autocomplete = new google.maps.places.Autocomplete(
+        this.searchElementRef.nativeElement
+      );
       autocomplete.addListener("place_changed", () => {
           this.ngZone.run(() => {
               //get the place result
@@ -320,10 +345,10 @@ export class ContentComponent implements OnInit {
               // console.log('Location Entered', 'Lat' , this.latitude + ' Lng', this.longitude)
           });
       });
-  });      
+    });
   }
   private setCurrentLocation() {
-    if ('geolocation' in navigator) {
+    if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
@@ -359,135 +384,144 @@ export class ContentComponent implements OnInit {
   }
 
   // Validation
-  isAllFieldsValid(): boolean {
-    this.validateName();
-    this.validateAddress();
-    this.validateCity();
-    this.validateState();
-    this.validatePostCode();
-    this.validateCountry();
-    this.validatePhoneNumber();
-    this.validateEmailAddress();
+  isDeliveryFieldsValid(): boolean {
+    console.log("validating delivery address: ", this.isDeliveryAddressValid);
+
+    this.validateDeliveryName();
+    this.validateDeliveryAddress();
+    this.validateDeliveryCity();
+    this.validateDeliveryState();
+    this.validateDeliveryPostcode();
+    this.validateDeliveryCountry();
+    this.validateDeliveryPhoneNumber();
+    this.validateDeliveryEmailAddress();
 
     return (
-      this.isNameValid &&
-      this.isAddressValid &&
-      this.isCityValid &&
-      this.isStateValid &&
-      this.isPostCodeValid &&
-      this.isCountryValid &&
-      this.isPhoneNumberValid &&
-      this.isEmailValid
+      this.isDeliveryNameValid &&
+      this.isDeliveryAddressValid &&
+      this.isDeliveryCityValid &&
+      this.isDeliveryStateValid &&
+      this.isDeliveryPostcodeValid &&
+      this.isDeliveryCountryValid &&
+      this.isDeliveryPhoneNumberValid &&
+      this.isDeliveryEmailAddressValid
     );
   }
 
-  isFieldsValid(): boolean {
-    this.validateEmailAddress2();
-    this.validateName2();
-    this.validatePhoneNumber2();
+  isPickupFieldsValid(): boolean {
+    this.validatePickupEmailAddress();
+    this.validatePickupName();
+    this.validatePickupPhoneNumber();
+
     return (
-      this.isNameValid2 &&
-      this.isEmailValid2 &&
-      this.isPhoneNumberValid2
-    )
+      this.isPickupEmailAddressValid &&
+      this.isPickupNameValid &&
+      this.isPickupPhoneNumberValid
+    );
   }
 
-  validateName(): boolean {
-    this.isNameValid = this.userDeliveryDetails.deliveryContactName !== "";
-    return this.isNameValid;
-  }
-  validateName2(): boolean {
-    this.isNameValid2 = this.userPickupDetails.pickupContactName !== "";
-    
-    return this.isNameValid2;
+  validateDeliveryName(): boolean {
+    this.isDeliveryNameValid =
+      this.userDeliveryDetails.deliveryContactName !== "";
+    return this.isDeliveryNameValid;
   }
 
-  validateAddress(): boolean {
-    this.isAddressValid = this.userDeliveryDetails.deliveryAddress !== "";
-    return this.isAddressValid;
+  validatePickupName(): boolean {
+    this.isPickupNameValid = this.userPickupDetails.pickupContactName !== "";
+
+    return this.isPickupNameValid;
   }
 
-  validateCity(): boolean {
-    this.isCityValid = this.userDeliveryDetails.deliveryCity !== "";
-    return this.isCityValid;
+  validateDeliveryAddress(): boolean {
+    this.isDeliveryAddressValid =
+      this.userDeliveryDetails.deliveryAddress !== "";
+    return this.isDeliveryAddressValid;
   }
 
-  validateState(): boolean {
-    console.log("onStateSelect, ", this.userDeliveryDetails.deliveryState);
-    return this.userDeliveryDetails.deliveryState !== "";
+  validateDeliveryCity(): boolean {
+    this.isDeliveryCityValid = this.userDeliveryDetails.deliveryCity !== "";
+    return this.isDeliveryCityValid;
   }
 
-  validateCountry(): boolean {
+  validateDeliveryState(): boolean {
+    this.isDeliveryStateValid = this.userDeliveryDetails.deliveryState !== "";
+    return this.isDeliveryStateValid;
+  }
+
+  validateDeliveryCountry(): boolean {
     return this.userDeliveryDetails.deliveryCountry !== "";
   }
 
-  validatePostCode(): boolean {
+  validateDeliveryPostcode(): boolean {
     const postCodeRegexMatch = this.userDeliveryDetails.deliveryPostcode.match(
       this.numberRegex
     );
-    this.isPostCodeValid = postCodeRegexMatch !== null;
+    this.isDeliveryPostcodeValid = postCodeRegexMatch !== null;
     if (this.userDeliveryDetails.deliveryPostcode === "") {
       this.postCodeErrorMsg = "Postcode cannot be blank.";
     } else if (!postCodeRegexMatch) {
       this.postCodeErrorMsg = "Postcode must be a valid number";
     }
-    return this.isPostCodeValid;
+    return this.isDeliveryPostcodeValid;
   }
 
-  validatePhoneNumber(): boolean {
+  validateDeliveryPhoneNumber(): boolean {
     const phoneRegexMatch = this.userDeliveryDetails.deliveryContactPhone.match(
       this.phoneNumberRegex
     );
-    this.isPhoneNumberValid = phoneRegexMatch !== null;
+    this.isDeliveryPhoneNumberValid = phoneRegexMatch !== null;
     if (this.userDeliveryDetails.deliveryContactPhone === "") {
       this.phoneNumberErrorMsg = "Phone number cannot be blank.";
     } else if (!phoneRegexMatch) {
       this.phoneNumberErrorMsg = "Not a valid phone number.";
     }
-    return this.isPhoneNumberValid;
+    return this.isDeliveryPhoneNumberValid;
   }
-  validatePhoneNumber2(): boolean {
+
+  validatePickupPhoneNumber(): boolean {
     const phoneRegexMatch = this.userPickupDetails.pickupContactPhone.match(
       this.phoneNumberRegex
     );
-    this.isPhoneNumberValid2 = phoneRegexMatch !== null;
+    this.isPickupPhoneNumberValid = phoneRegexMatch !== null;
+    console.log("pickupPhoneNumberValid:", this.isPickupPhoneNumberValid);
     if (this.userPickupDetails.pickupContactPhone === "") {
       this.phoneNumberErrorMsg = "Phone number cannot be blank.";
     } else if (!phoneRegexMatch) {
       this.phoneNumberErrorMsg = "Not a valid phone number.";
     }
-    return this.isPhoneNumberValid2;
+    return this.isPickupPhoneNumberValid;
   }
 
-  validateEmailAddress(): boolean {
+  validateDeliveryEmailAddress(): boolean {
     const emailRegexMatch = this.userDeliveryDetails.deliveryContactEmail.match(
       this.emailRegex
     );
-    this.isEmailValid = emailRegexMatch !== null;
+    this.isDeliveryEmailAddressValid = emailRegexMatch !== null;
     if (this.userDeliveryDetails.deliveryContactEmail === "") {
       this.emailErrorMsg = "Email address cannot be blank.";
     } else if (!emailRegexMatch) {
       this.emailErrorMsg = "Not a valid email address.";
     }
-    return this.isEmailValid;
+    return this.isDeliveryEmailAddressValid;
   }
-  validateEmailAddress2(): boolean {
+
+  validatePickupEmailAddress(): boolean {
     const emailRegexMatch = this.userPickupDetails.pickupContactEmail.match(
       this.emailRegex
     );
-    this.isEmailValid2 = emailRegexMatch !== null;
+    this.isPickupEmailAddressValid = emailRegexMatch !== null;
     if (this.userPickupDetails.pickupContactEmail === "") {
       this.emailErrorMsg = "Email address cannot be blank.";
     } else if (!emailRegexMatch) {
       this.emailErrorMsg = "Not a valid email address.";
     }
-    return this.isEmailValid2;
+    return this.isPickupEmailAddressValid;
   }
 
-  pickup(){
+  pickup() {
     this.deliveryType = 2;
   }
-  delivery(){
+  delivery() {
     this.deliveryType = 1;
   }
 }
