@@ -19,7 +19,7 @@ export interface DeliveryDetails {
     deliveryCity: string;
     deliveryCountry: string;
     deliveryNotes: string;
-    deliveryPickup: { latitude: number; longitude: number};
+    deliveryPickup: {latitude: number, longitude: number};
 }
 export interface MarkerDragEvent {
     coords: {

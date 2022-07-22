@@ -14,7 +14,8 @@ import { MatLabel } from "@angular/material/form-field";
 import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from "@angular/cdk/overlay/overlay-directives";
 import { FormGroup } from "@angular/forms";
 import { Order, PickupDetails } from "../../../models/pickup";
-import { MapsAPILoader, Marker, MouseEvent } from "@agm/core";
+import { LatLngLiteral, MapsAPILoader, Marker, MouseEvent } from "@agm/core";
+import { map } from "jquery";
 
 @Component({
   selector: "app-content",
@@ -66,11 +67,9 @@ export class ContentComponent implements OnInit {
   storeTiming: StoreTiming[];
   dayArr = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
   store_close: boolean = false;
-
   totalServiceCharge: number;
   storeTimings: any;
   checkoutForm: FormGroup;
-  
   
  //Radio
  deliveryType = 1;
@@ -89,18 +88,18 @@ export class ContentComponent implements OnInit {
   isPhoneNumberValid2: boolean;
   
  // Map
-latitude: number ;
- longitude: number ;
- zoom: number ;
- address: string;
- private geoCoder;
  countryId: String;
- @ViewChild('search')
-    public searchElementRef: ElementRef;
   isNameValid2: boolean;
-  lat: any;
-  lng: any;
- 
+  zoom: number = 5;
+  lat: number = 30.3753;
+  lng: number = 69.3451; 
+  markers: any;
+  geoCoder: google.maps.Geocoder;
+  map: google.maps.Map<HTMLElement>;
+  address: string;
+  centerLatitude = this.lat;
+  centerLongitude = this.lng;
+  searchElementRef: any;
   constructor(
     private cartService: CartService,
     private storeService: StoreService,
@@ -115,8 +114,6 @@ latitude: number ;
     this.phoneNumberRegex = /^[+]*[(]?[0-9]{1,4}[)]?[-\s\.\/0-9]*$/;
     this.submitButtonText = "Get Delivery Charges";
     this.submitButtonText2 = "Calculate Charges";
-    this.latitude = this.lat;
-    this.longitude = this.lng;
 
     this.userPickupDetails = {
       pickupContactName: "",
@@ -135,9 +132,10 @@ latitude: number ;
       deliveryCity: "",
       deliveryCountry: "",
       deliveryNotes: "",
-      deliveryPickup: {latitude: this.latitude , longitude: this.longitude}
-    };
+      deliveryPickup: {latitude: this.lat, longitude: this.lng}
+    }; 
   }
+  
   public isOne = true;
   public isTwo = true;
   public calculateSubtotal() {
@@ -146,11 +144,11 @@ latitude: number ;
   ngOnInit(): void {
     this.isLoading = true;
     this.checkout = this.cartService.cart;
+    
     this.storeService.getDeliveryOption().then(response => {
       this.allowsStorePickup = response.allowsStorePickup;
     });
     this.getStoreInfo();
-    this.getMap();
     this.cartService.cartChange.subscribe((cart) => {
       this.checkout = cart;
     });
@@ -167,7 +165,6 @@ latitude: number ;
     if (this.deliveryType === 1) {
       if (this.isAllFieldsValid()) {
         this.isProcessing = true;
-        this.getMap();
         if (this.hasDeliveryCharges) {
           const codResult: any = await this.cartService.confirmCashOnDelivery(
             this.userDeliveryDetails,
@@ -235,7 +232,6 @@ latitude: number ;
       }
     }
   }
-  
 
   getStatesByID(countryID): Promise<State[]> {
     return new Promise((resolve) => {
@@ -299,8 +295,12 @@ latitude: number ;
       console.error("Error getting storeInfo", error);
     }
   }
+  
   async getMap(){
     this.mapsAPILoader.load().then(() => {
+      this.map = new google.maps.Map(
+        document.getElementById("map") as HTMLElement 
+      );
       this.setCurrentLocation();
       this.geoCoder = new google.maps.Geocoder;
       let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
@@ -313,10 +313,9 @@ latitude: number ;
               if (place.geometry === undefined || place.geometry === null) {
               return;
               }
-  
               //set latitude, longitude and zoom
-              this.latitude = place.geometry.location.lat();
-              this.longitude = place.geometry.location.lng();
+              this.lat = place.geometry.location.lat();
+              this.lng = place.geometry.location.lng();
               this.zoom = 12;
               // console.log('Location Entered', 'Lat' , this.latitude + ' Lng', this.longitude)
           });
@@ -326,36 +325,37 @@ latitude: number ;
   private setCurrentLocation() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
-        this.latitude = position.coords.latitude;
-        this.longitude = position.coords.longitude;
+        this.lat = position.coords.latitude;
+        this.lng = position.coords.longitude;
         this.zoom = 8;
-        this.getAddress(this.latitude, this.longitude);
+        //this.getAddress(this.lat, this.lng);
       });
-    }
   }
-  markerDragEnd($event: MarkerDragEvent) : void{
-    // console.log($event);
-    this.latitude = $event.coords.lat;
-    this.longitude = $event.coords.lng;
-    this.getAddress(this.latitude, this.longitude);
+}
+  markerDragEnd($event: MouseEvent){
+    console.log($event);
+    this.lat = $event.coords.lat;
+    this.lng = $event.coords.lng;
+    this.getAddress(this.lat, this.lng);
     // console.log('Marker Dragged',  'Lat' , this.latitude + ' Lng', this.longitude)
   }
-  getAddress(latitude: number, longitude: number): void {
-    this.geoCoder.geocode({ 'location': { lat: latitude, lng: longitude } }, (results, status) => {
-      //   console.log(results);
-      //   console.log(status);
-        if (status === 'OK') {
-          if (results[0]) {
-            this.zoom = 12;
-            this.address = results[0].formatted_address;
-          } else {
-            window.alert('No results found');
-          }
-        } else {
-          window.alert('Geocoder failed due to: ' + status);
-        }
-  
+  getAddress(lat: number, lng: number) {
+    const geocoder = new google.maps.Geocoder();
+    const latlng = new google.maps.LatLng(lat, lng);
+    const request: any = {
+      latLng: latlng
+    }
+    return new Promise((resolve, reject) => {
+      geocoder.geocode(request, results => {
+        results.length ? resolve(results[0].formatted_address) : reject(null);
       });
+    })
+ }
+ 
+  centerChange(coords: LatLngLiteral) {
+    //console.log(event);
+    this.centerLatitude = coords.lat;
+    this.centerLongitude = coords.lng;
   }
 
   // Validation

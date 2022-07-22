@@ -29,10 +29,6 @@ import { AgmCoreModule } from '@agm/core';
     MatFormFieldModule,
     MatOptionModule,
     MatRadioModule,
-    // AgmCoreModule.forRoot({  
-    //   apiKey: 'AIzaSyCFhf1LxbPWNQSDmxpfQlx69agW-I-xBIw' ,
-    //   libraries: ['places'] 
-    // }), 
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCFhf1LxbPWNQSDmxpfQlx69agW-I-xBIw',
       libraries: ['places']

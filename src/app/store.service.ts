@@ -3,9 +3,13 @@ import { Subject } from "rxjs/internal/Subject";
 import { ApiService } from "./api.service";
 import { Category } from "./components/models/category";
 import { Product } from "./components/models/product";
-import { DeliveryOptions, Store, StoreDiscount } from "./components/models/store";
+import {
+  DeliveryOptions,
+  Store,
+  StoreDiscount,
+} from "./components/models/store";
 import { isDevMode } from "@angular/core";
-
+import { domain } from "process";
 
 @Injectable({
   providedIn: "root",
@@ -22,23 +26,15 @@ export class StoreService {
   constructor(private apiService: ApiService) {}
 
   async parseStoreFromUrl() {
-    // let currBaseUrl = location.origin;
-    // console.log("Current URL: ", currBaseUrl);
-    let domainName = location.host;
+    let domainName = location.hostname;
 
     if (isDevMode()) {
       console.log("Running in dev mode");
-      //currBaseUrl = "al-awan-shoping.dev-pk.symplified.ai";
-      domainName = "al-awan-shoping";
+      // domainName = "cafemalik";
+      domainName = "cafemalik";
     }
 
-    // For testing purposes
-    // currBaseUrl = "awan-tech.dev-pk2.symplified.ai";
-    // currBaseUrl = "mcd.dev-pk2.symplified.ai";
-    // currBaseUrl = "al-awan-shoping.dev-pk.symplified.ai";
-
-    // domainName = domainName.replace(/^(https?:|)\/\//, "");
-    console.log("domainName", domainName);
+    console.log("Domain Hostname", domainName);
     const store: Store = await this.getStoreByDomainName(domainName);
     console.log("StoreInfo: ", store.id);
     if (this.getStoreId() !== store.id) {
@@ -124,20 +120,19 @@ export class StoreService {
       );
     });
   }
-  getDiscount(): Promise<StoreDiscount[]>{
-    return new Promise((resolve,reject ) =>{
+  getDiscount(): Promise<StoreDiscount[]> {
+    return new Promise((resolve, reject) => {
       this.apiService.getStoreActiveDiscount(this.getStoreId()).subscribe(
-        (res:any) =>{
+        (res: any) => {
           resolve(res.data);
-          console.log("Discounts",res.data)
+          console.log("Discounts", res.data);
         },
-        (error) =>{
+        (error) => {
           console.error("Error getting Active Discounts", error);
           reject(error);
         }
-      )
-    })
-
+      );
+    });
   }
   getProductDetailsByName(seoName: string): Promise<Product> {
     return new Promise((resolve, reject) => {
@@ -151,7 +146,6 @@ export class StoreService {
       );
     });
   }
-  
 
   getProductsByCategory(
     categoryId: string,
@@ -172,8 +166,6 @@ export class StoreService {
     });
   }
 
-
-
   getDeliveryOption(): Promise<DeliveryOptions> {
     return new Promise((resolve, reject) => {
       this.apiService.getDeliveryOption(this.getStoreId()).subscribe(
@@ -189,8 +181,6 @@ export class StoreService {
   }
 
   private getStoreByDomainName(domainName: string): Promise<Store> {
-    console.log("Domain name: ", domainName);
-
     return new Promise((resolve, reject) => {
       this.apiService.getStoreInfoByDomainName(domainName).subscribe(
         (res: any) => {
