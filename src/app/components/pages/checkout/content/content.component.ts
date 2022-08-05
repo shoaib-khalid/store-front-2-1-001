@@ -9,7 +9,11 @@ import { Router } from "@angular/router";
 import { ApiService } from "../../../../api.service";
 import { CartService } from "../../../../cart.service";
 import { CartItem, CartTotals } from "../../../models/cart";
-import { DeliveryCharge, DeliveryDetails, MarkerDragEvent } from "../../../models/delivery";
+import {
+  DeliveryCharge,
+  DeliveryDetails,
+  MarkerDragEvent,
+} from "../../../models/delivery";
 import { State } from "../../../models/region";
 import { Store, StoreTiming } from "../../../models/store";
 import { StoreService } from "../../../../store.service";
@@ -48,7 +52,7 @@ export class ContentComponent implements OnInit {
   isDeliveryAddressValid: boolean = true;
   isDeliveryCityValid: boolean = true;
   isDeliveryStateValid: boolean = true;
-  isDeliveryPostcodeValid: boolean = true;
+  isDeliveryPostCodeValid: boolean = true;
   isDeliveryCountryValid: boolean = true;
   isDeliveryPhoneNumberValid: boolean = true;
   isDeliveryEmailAddressValid: boolean = true;
@@ -88,9 +92,9 @@ export class ContentComponent implements OnInit {
   totalServiceCharge: number;
   storeTimings: any;
   checkoutForm: FormGroup;
-  
- //Radio
- deliveryType = 1;
+
+  //Radio
+  deliveryType = 1;
   getStoreByDomainName: any;
   storeNameRaw: any;
   storeContact: any;
@@ -104,13 +108,13 @@ export class ContentComponent implements OnInit {
   userOrder: Order;
   isEmailValid2: boolean;
   isPhoneNumberValid2: boolean;
-  
- // Map
- countryId: String;
+
+  // Map
+  countryId: String;
   isNameValid2: boolean;
   zoom: number = 5;
   lat: number = 30.3753;
-  lng: number = 69.3451; 
+  lng: number = 69.3451;
   markers: any;
   geoCoder: google.maps.Geocoder;
   map: google.maps.Map<HTMLElement>;
@@ -150,10 +154,10 @@ export class ContentComponent implements OnInit {
       deliveryCity: "",
       deliveryCountry: "",
       deliveryNotes: "",
-      deliveryPickup: {latitude: this.lat, longitude: this.lng}
-    }; 
+      deliveryPickup: { latitude: this.lat, longitude: this.lng },
+    };
   }
-  
+
   public isOne = true;
   public isTwo = true;
   public calculateSubtotal() {
@@ -162,8 +166,8 @@ export class ContentComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     this.checkout = this.cartService.cart;
-    
-    this.storeService.getDeliveryOption().then(response => {
+
+    this.storeService.getDeliveryOption().then((response) => {
       this.allowsStorePickup = response.allowsStorePickup;
     });
     this.getStoreInfo();
@@ -318,11 +322,11 @@ export class ContentComponent implements OnInit {
       console.error("Error getting storeInfo", error);
     }
   }
-  
-  async getMap(){
+
+  async getMap() {
     this.mapsAPILoader.load().then(() => {
       this.map = new google.maps.Map(
-        document.getElementById("map") as HTMLElement 
+        document.getElementById("map") as HTMLElement
       );
       this.setCurrentLocation();
       this.geoCoder = new google.maps.Geocoder();
@@ -330,20 +334,20 @@ export class ContentComponent implements OnInit {
         this.searchElementRef.nativeElement
       );
       autocomplete.addListener("place_changed", () => {
-          this.ngZone.run(() => {
-              //get the place result
-              let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-  
-              //verify result
-              if (place.geometry === undefined || place.geometry === null) {
-              return;
-              }
-              //set latitude, longitude and zoom
-              this.lat = place.geometry.location.lat();
-              this.lng = place.geometry.location.lng();
-              this.zoom = 12;
-              // console.log('Location Entered', 'Lat' , this.latitude + ' Lng', this.longitude)
-          });
+        this.ngZone.run(() => {
+          //get the place result
+          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+
+          //verify result
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+          //set latitude, longitude and zoom
+          this.lat = place.geometry.location.lat();
+          this.lng = place.geometry.location.lng();
+          this.zoom = 12;
+          // console.log('Location Entered', 'Lat' , this.latitude + ' Lng', this.longitude)
+        });
       });
     });
   }
@@ -355,9 +359,9 @@ export class ContentComponent implements OnInit {
         this.zoom = 8;
         //this.getAddress(this.lat, this.lng);
       });
+    }
   }
-}
-  markerDragEnd($event: MouseEvent){
+  markerDragEnd($event: MouseEvent) {
     console.log($event);
     this.lat = $event.coords.lat;
     this.lng = $event.coords.lng;
@@ -368,15 +372,15 @@ export class ContentComponent implements OnInit {
     const geocoder = new google.maps.Geocoder();
     const latlng = new google.maps.LatLng(lat, lng);
     const request: any = {
-      latLng: latlng
-    }
+      latLng: latlng,
+    };
     return new Promise((resolve, reject) => {
-      geocoder.geocode(request, results => {
+      geocoder.geocode(request, (results) => {
         results.length ? resolve(results[0].formatted_address) : reject(null);
       });
-    })
- }
- 
+    });
+  }
+
   centerChange(coords: LatLngLiteral) {
     //console.log(event);
     this.centerLatitude = coords.lat;
@@ -391,7 +395,7 @@ export class ContentComponent implements OnInit {
     this.validateDeliveryAddress();
     this.validateDeliveryCity();
     this.validateDeliveryState();
-    this.validateDeliveryPostcode();
+    this.validateDeliveryPostCode();
     this.validateDeliveryCountry();
     this.validateDeliveryPhoneNumber();
     this.validateDeliveryEmailAddress();
@@ -401,7 +405,7 @@ export class ContentComponent implements OnInit {
       this.isDeliveryAddressValid &&
       this.isDeliveryCityValid &&
       this.isDeliveryStateValid &&
-      this.isDeliveryPostcodeValid &&
+      this.isDeliveryPostCodeValid &&
       this.isDeliveryCountryValid &&
       this.isDeliveryPhoneNumberValid &&
       this.isDeliveryEmailAddressValid
@@ -452,17 +456,17 @@ export class ContentComponent implements OnInit {
     return this.userDeliveryDetails.deliveryCountry !== "";
   }
 
-  validateDeliveryPostcode(): boolean {
+  validateDeliveryPostCode(): boolean {
     const postCodeRegexMatch = this.userDeliveryDetails.deliveryPostcode.match(
       this.numberRegex
     );
-    this.isDeliveryPostcodeValid = postCodeRegexMatch !== null;
+    this.isDeliveryPostCodeValid = postCodeRegexMatch !== null;
     if (this.userDeliveryDetails.deliveryPostcode === "") {
       this.postCodeErrorMsg = "Postcode cannot be blank.";
     } else if (!postCodeRegexMatch) {
       this.postCodeErrorMsg = "Postcode must be a valid number";
     }
-    return this.isDeliveryPostcodeValid;
+    return this.isDeliveryPostCodeValid;
   }
 
   validateDeliveryPhoneNumber(): boolean {
