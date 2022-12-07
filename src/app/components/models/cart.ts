@@ -53,6 +53,7 @@ export interface CartItemRequest {
 }
 
 export interface CartTotals {
+    cartId: string;
     discountId: string;
     cartDeliveryCharge: number;
     cartGrandTotal: number;
@@ -68,4 +69,20 @@ export interface CartTotals {
     storeServiceChargePercentage: number;
     subTotalDiscount: number;
     subTotalDiscountDescription: string;
+    voucherSubTotalDiscount: string;
+    voucherDeliveryDiscount: string;
+    voucherSubTotalDiscountDescription: string;
+    voucherDeliveryDiscountDescription: string;
+    voucherDiscountType: string;
+    voucherDiscountCalculationType: string;
+    voucherDiscountCalculationValue: string;
+    voucherDiscountMaxAmount: string;
+    storeVoucherSubTotalDiscount: string;
+    storeVoucherDeliveryDiscount: string;
+    storeVoucherSubTotalDiscountDescription: string;
+    storeVoucherDeliveryDiscountDescription: string;
+    storeVoucherDiscountType: string;
+    storeVoucherDiscountCalculationType: string;
+    storeVoucherDiscountCalculationValue: string;
+    storeVoucherDiscountMaxAmount: string;
 }

@@ -6,6 +6,7 @@ import { Observable } from "rxjs";
 import { AppConfig } from "./app.config";
 import { isDevMode } from "@angular/core";
 import { DeliveryOptions } from "./components/models/store";
+import { Customer } from "./components/models/user";
 
 @Injectable({
   providedIn: "root",
@@ -181,16 +182,27 @@ export class ApiService {
 
   // Ref : https://api.symplified.biz/order-service/v1/carts/8a4868e2-c5d2-4c7e-8c8f-1547c9736208/discount?deliveryCharge=10.00
 
-  getDiscount(cartId, deliveryCharge) {
+  getDiscount(discountParams) {
     const header = {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+      params: discountParams
     };
+
+    Object.keys(header.params).forEach(key => {
+      if (Array.isArray(header.params[key])) {
+          header.params[key] = header.params[key].filter(element => element !== null)
+      }
+      
+      if (!header.params[key] || (Array.isArray(header.params[key]) && header.params[key].length === 0)) {
+          delete header.params[key];
+      }
+   });
+
     const url =
       this.orderServiceURL +
       "carts/" +
-      cartId +
-      "/discount?deliveryCharge=" +
-      deliveryCharge;
+      discountParams.id +
+      "/discount";
 
     return this.http.get(url, header);
   }
@@ -206,6 +218,22 @@ export class ApiService {
       countryID;
 
     return this.http.get(url, header);
+  }
+
+  getCitiesByStateID(stateId: String, city: String = '', country :string = '') {
+    
+    const header = {
+      headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+    };
+
+    const url =
+      this.productServiceURL +
+      "region-country-state-city?stateId=" + stateId + 
+      "&city=" + city + 
+      "&country=" + country;
+
+    return this.http.get(url, header);
+
   }
 
   // https://api.symplified.biz/product-service/v1/stores/8913d06f-a63f-4a16-8059-2a30a517663a/products?pageSize=10&page=0&status=ACTIVE
@@ -577,7 +605,7 @@ export class ApiService {
   }
 
   // ref : http://209.58.160.20:7001/orders/placeOrder?cartId=0439aee0-b57f-4cf5-81c4-f93d6103c57f
-  postConfirmCOD(data, cartId, saveInfo): Observable<any> {
+  postConfirmCOD(data, cartId, saveInfo, storeId): Observable<any> {
     // data sample : { "created": "2021-05-26T01:59:19.698Z", "customerId": "string", "id": "string", "isOpen": true, "storeId": "string", "updated": "2021-05-26T01:59:19.699Z"}
     const httpOptions = {
       headers: new HttpHeaders({
@@ -592,7 +620,9 @@ export class ApiService {
       "orders/placeOrder?cartId=" +
       cartId +
       "&saveCustomerInformation=" +
-      saveInfo;
+      saveInfo +
+      "&storeId=" +
+      storeId
     return this.http.post(url, data, httpOptions);
   }
 
@@ -761,5 +791,32 @@ export class ApiService {
 
     return this.http.post(url, data, httpOptions);
     // return this.http.get(this.payServiceURL + "payments/makePayment", httpOptions);
+  }
+
+  getCustomerInfo(storeId, type, value) {
+    const header = {
+      headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`)
+    };
+
+    const url = this.userServiceURL + "stores/" + storeId + "/customers/?" + type + "=" + value
+    
+    return this.http.get(url, header);
+  }
+
+  verifyVoucher(voucherCode, storeId, customerEmail) {
+    const header = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        "Content-Type": "application/json",
+      }),
+    };
+
+    const url = this.orderServiceURL + 
+      "voucher/verify/" + 
+      customerEmail + "/" + 
+      voucherCode + "/" + 
+      storeId
+
+      return this.http.get(url, header)
   }
 }

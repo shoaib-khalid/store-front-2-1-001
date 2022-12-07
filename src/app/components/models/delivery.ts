@@ -19,11 +19,28 @@ export interface DeliveryDetails {
     deliveryCity: string;
     deliveryCountry: string;
     deliveryNotes: string;
-    deliveryPickup: {latitude: number, longitude: number};
 }
 export interface MarkerDragEvent {
     coords: {
         lat: number;
         lng: number;
     };
+}
+
+export interface DeliveryProvider
+{
+    deliveryPeriod  : {
+        id          : string;
+        description : string;
+        name        : string;
+    };
+    deliveryType    : string;
+    isError         : boolean;
+    message?        : string;
+    price           : number;
+    providerId      : string;
+    providerImage   : string;
+    providerName    : string;
+    refId           : string;
+    validUpTo       : string;
 }

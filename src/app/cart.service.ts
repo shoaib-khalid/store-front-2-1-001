@@ -3,10 +3,12 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ApiService } from './api.service';
 import { CartItem, CartItemRequest, CartTotals } from './components/models/cart';
-import { DeliveryCharge, DeliveryDetails } from './components/models/delivery';
+import { DeliveryCharge, DeliveryDetails, DeliveryProvider } from './components/models/delivery';
 import { Order, OrderShipmentDetails, PickupDetails } from './components/models/pickup';
 import { Product, ProductInventory } from './components/models/product';
 import { Store } from './components/models/store';
+import { Customer } from './components/models/user';
+import { Voucher } from './components/models/voucher';
 import { StoreService } from './store.service';
 
 @Injectable({
@@ -161,7 +163,7 @@ export class CartService {
     });
   }
 
-  getDeliveryFee(DeliveryDetails: DeliveryDetails): Promise<DeliveryCharge> {
+  getDeliveryFee(DeliveryDetails: DeliveryDetails): Promise<DeliveryProvider[]> {
     let data = {
       customerId: undefined,
       deliveryProviderId: null,
@@ -173,7 +175,7 @@ export class CartService {
     return new Promise((resolve, reject) => {
       this.apiService.postTogetDeliveryFee(data).subscribe(async (res: any) => {
         if (Array.isArray(res.data)) {
-          resolve(res.data[0]);
+          resolve(res.data);
           console.log(res.data)
         } else {
           resolve(res.data);console.log(res.data)
@@ -189,9 +191,19 @@ export class CartService {
     return this.cart.reduce((subtotal: number, item: CartItem) => subtotal + item.price, 0);
   }
 
-  getDiscount(deliveryCharge): Promise<CartTotals> {
+  getDiscount(params): Promise<CartTotals> {
     return new Promise((resolve, reject) => {
-      this.apiService.getDiscount(this.getCartId(), deliveryCharge).subscribe(async (res: any) => {
+      let discountParams = {
+        id: this.getCartId(),
+        deliveryQuotationId: params.deliveryQuotationId,
+        deliveryType: params.deliveryType,
+        voucherCode: params.voucherCode,
+        storeVoucherCode: params.storeVoucherCode,
+        customerId: params.customerId,
+        email: params.email ? params.email : undefined,
+        storeId: this.storeService.getStoreId()
+    };
+      this.apiService.getDiscount(discountParams).subscribe(async (res: any) => {
         resolve(res.data);
       }, error => {
         console.error("Error getting discount", error);
@@ -199,7 +211,7 @@ export class CartService {
       })
     })
   }
-  async getQuotation(pickupDetails: PickupDetails){
+  async getQuotation(pickupDetails: any, saveInfo){
 
     console.log("PICKUPDETAILS: ", pickupDetails);
 
@@ -207,6 +219,8 @@ export class CartService {
       cartId: this.getCartId(),
       customerId: null,
       customerNotes: pickupDetails.deliveryNotes,
+      voucherCode: pickupDetails.voucherCode,
+      storeVoucherCode: pickupDetails.storeVoucherCode,
       orderPaymentDetails: {
         accountName: pickupDetails.pickupContactName,
         deliveryQuotationReferenceId: null,
@@ -214,7 +228,7 @@ export class CartService {
       orderShipmentDetails: {
         address: "",
         city: "",
-        country: "=",
+        country: "",
         email: pickupDetails.pickupContactEmail,
         phoneNumber: pickupDetails.pickupContactPhone,
         receiverName: pickupDetails.pickupContactName,
@@ -226,7 +240,7 @@ export class CartService {
     }
     console.log("details:" + data,data.cartId)
     return new Promise((resolve, reject) => {
-      this.apiService.postConfirmCOD(data, data.cartId, false).subscribe((res: any) => {
+      this.apiService.postConfirmCOD(data, data.cartId, saveInfo, this.storeService.getStoreId()).subscribe((res: any) => {
         resolve(res);
         if (res.status === 201) {
           this.removeCart();
@@ -238,35 +252,35 @@ export class CartService {
     })
 
   }
-  async confirmCashOnDelivery(deliveryDetails: DeliveryDetails, deliveryFee: DeliveryCharge) {
-    const deliveryOption: any = await this.storeService.getDeliveryOption();
+  async confirmCashOnDelivery(deliveryChargesBody: any, deliveryProvider: DeliveryProvider, saveInfo) {
+    // const deliveryOption: any = await this.storeService.getDeliveryOption();
 
     const data = {
       cartId: this.getCartId(),
       customerId: null,
-      customerNotes: deliveryDetails.deliveryNotes,
+      customerNotes: deliveryChargesBody.deliveryNotes,
+      voucherCode: deliveryChargesBody.voucherCode,
+      storeVoucherCode: deliveryChargesBody.storeVoucherCode,
       orderPaymentDetails: {
-        accountName: deliveryDetails.deliveryContactName,
-        deliveryQuotationAmount: deliveryFee.price,
-        deliveryQuotationReferenceId: deliveryFee.refId,
-        gatewayId: ""
+        accountName: deliveryChargesBody.deliveryContactName,
+        deliveryQuotationReferenceId: deliveryProvider.refId,
       },
       orderShipmentDetails: {
-        address: deliveryDetails.deliveryAddress,
-        city: deliveryDetails.deliveryCity,
-        country: deliveryDetails.deliveryCountry,
-        email: deliveryDetails.deliveryContactEmail,
-        phoneNumber: deliveryDetails.deliveryContactPhone,
-        receiverName: deliveryDetails.deliveryContactName,
-        state: deliveryDetails.deliveryState,
-        zipcode: deliveryDetails.deliveryPostcode,
-        deliveryProviderId: deliveryFee.providerId,
-        deliveryType: deliveryOption.type
+        address: deliveryChargesBody.deliveryAddress,
+        city: deliveryChargesBody.deliveryCity,
+        country: deliveryChargesBody.deliveryCountry,
+        email: deliveryChargesBody.deliveryContactEmail,
+        phoneNumber: deliveryChargesBody.deliveryContactPhone,
+        receiverName: deliveryChargesBody.deliveryContactName,
+        state: deliveryChargesBody.deliveryState,
+        zipcode: deliveryChargesBody.deliveryPostcode,
+        deliveryProviderId: deliveryProvider.providerId,
+        deliveryType: deliveryProvider.deliveryType
       }
     }
 
     return new Promise((resolve, reject) => {
-      this.apiService.postConfirmCOD(data, data.cartId, false).subscribe((res: any) => {
+      this.apiService.postConfirmCOD(data, data.cartId, saveInfo, this.storeService.getStoreId()).subscribe((res: any) => {
         resolve(res);
         if (res.status === 201) {
           this.removeCart();
@@ -275,6 +289,32 @@ export class CartService {
         console.error("Error confirming Cash on Delivery", error);
         reject(error);
       });
+    })
+  }
+
+  async getCustomerInfo(email: string | null, phoneNumber: string | null): Promise<Customer> {
+    const value = email === null ? phoneNumber : email
+    const type = email === null ? 'phoneNumber' : 'email'
+
+    return new Promise((resolve, reject) => {
+      this.apiService.getCustomerInfo(this.storeService.getStoreId(), type, value).subscribe((res: any) => {
+        resolve(res.data.content[0])
+      }, error => {
+          console.error("Error getting Customer Info", error);
+          reject(error);
+      })
+    })
+  }
+
+  async verifyVoucher(customerEmail, voucherCode): Promise<Voucher> {
+    return new Promise((resolve, reject) => {
+      this.apiService.verifyVoucher(voucherCode, this.storeService.getStoreId(), customerEmail).subscribe((res: any) => {
+        resolve(res.data);
+      }, error => {
+        console.error("Error verifying Voucher", error);
+        reject(error);
+      }
+      )
     })
   }
 }

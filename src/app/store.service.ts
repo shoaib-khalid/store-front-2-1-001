@@ -31,7 +31,8 @@ export class StoreService {
     if (isDevMode()) {
       console.log("Running in dev mode");
       // domainName = "cafemalik";
-      domainName = "cafemalik";
+      domainName = domainName.replace(/^(https?:|)\/\//, '').split('.')[0] + ".dev-pk.symplified.ai"
+      console.log("Domain Name: ", domainName)
     }
 
     console.log("Domain Hostname", domainName);

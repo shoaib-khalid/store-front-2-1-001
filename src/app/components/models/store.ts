@@ -14,8 +14,8 @@ export interface Store {
   email: string;
   googleAnalyticId: string;
   isBranch: boolean;
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
   liveChatCsrGroupId: string;
   liveChatCsrGroupName: string;
   liveChatOrdersGroupId: string;

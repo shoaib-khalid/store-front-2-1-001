@@ -12,9 +12,10 @@ import { CartItem, CartTotals } from "../../../models/cart";
 import {
   DeliveryCharge,
   DeliveryDetails,
+  DeliveryProvider,
   MarkerDragEvent,
 } from "../../../models/delivery";
-import { State } from "../../../models/region";
+import { City, State } from "../../../models/region";
 import { Store, StoreTiming } from "../../../models/store";
 import { StoreService } from "../../../../store.service";
 import Swal from "sweetalert2";
@@ -24,8 +25,15 @@ import { MatLabel } from "@angular/material/form-field";
 import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from "@angular/cdk/overlay/overlay-directives";
 import { FormGroup } from "@angular/forms";
 import { Order, PickupDetails } from "../../../models/pickup";
-import { LatLngLiteral, MapsAPILoader, Marker, MouseEvent } from "@agm/core";
-import { map } from "jquery";
+import {
+  of,
+  Observable,
+} from 'rxjs';
+import { HttpClient } from "@angular/common/http";
+import { catchError, map } from 'rxjs/operators';
+import { MatDialog } from "@angular/material/dialog";
+import { ChooseDeliveryAddressComponent } from "../choose-delivery-address/choose-delivery-address.component";
+import { CustomerVoucher, Voucher } from "../../../models/voucher";
 
 @Component({
   selector: "app-content",
@@ -41,6 +49,11 @@ export class ContentComponent implements OnInit {
   cartTotals: CartTotals;
   deliveryFee: DeliveryCharge;
   isSaved: boolean = false;
+  deliveryProviders: DeliveryProvider[] = [];
+  selectedDeliveryProvider: any;
+  saveMyInfo: boolean = true
+
+  voucherApplied: CustomerVoucher | null;
 
   isProcessing: boolean = false;
   hasDeliveryCharges: boolean = false;
@@ -65,6 +78,13 @@ export class ContentComponent implements OnInit {
   emailErrorMsg: string;
   postCodeErrorMsg: string;
   status: any;
+  dialingCode: string = '92';
+  countryID: string;
+
+  promoCode: string = ""
+  guestVouchers: CustomerVoucher | null;
+  redeemed: boolean = false;
+  voucherDiscountAppliedMax: number;
 
   numberRegex;
   emailRegex;
@@ -76,6 +96,7 @@ export class ContentComponent implements OnInit {
   // Store info
   currencySymbol: string = "";
   states: State[] = [];
+  cities: City[] = []
   storeDeliveryPercentage: number;
 
   storeTiming: StoreTiming[];
@@ -104,7 +125,6 @@ export class ContentComponent implements OnInit {
   city: string;
   countryName: string;
   stateId: string;
-  submitButtonText2: string;
   userOrder: Order;
   isEmailValid2: boolean;
   isPhoneNumberValid2: boolean;
@@ -119,23 +139,63 @@ export class ContentComponent implements OnInit {
   geoCoder: google.maps.Geocoder;
   map: google.maps.Map<HTMLElement>;
   address: string;
-  centerLatitude = this.lat;
-  centerLongitude = this.lng;
+  // centerLatitude = this.lat;
+  // centerLongitude = this.lng;
   searchElementRef: any;
+
+  mapSearchService: google.maps.places.AutocompleteService;
+  addressSearchPredictions: google.maps.places.QueryAutocompletePrediction[];
+  isAddressLoading: boolean = false;
+
+  mapsApiLoaded: Observable<boolean>;
+  mapZoom: number = 6;
+  mapCenter: google.maps.LatLngLiteral = {
+    lat: 29.863823279065763,
+    lng: 69.66914923422128,
+  };
+  mapOptions: google.maps.MapOptions = {
+    mapTypeId: 'roadmap',
+    disableDefaultUI: true,
+    zoomControl: true,
+    fullscreenControl: true,
+    scaleControl: true,
+  };
+
+  marker: google.maps.Marker;
+  markerPosition: object;
+  markerLabel: object;
+
+  fetched: boolean = false
+
   constructor(
     private cartService: CartService,
     private storeService: StoreService,
     private route: Router,
     private apiService: ApiService,
-    private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private httpClient: HttpClient,
+    private _dialog: MatDialog
   ) {
+    this.mapsApiLoaded = httpClient
+      .jsonp(
+        'https://maps.googleapis.com/maps/api/js?key=AIzaSyCFhf1LxbPWNQSDmxpfQlx69agW-I-xBIw&libraries=places',
+        'callback'
+      )
+      .pipe(
+        map(() => {
+          this.mapSearchService =
+            new google.maps.places.AutocompleteService();
+          this.geoCoder = new google.maps.Geocoder
+          return true;
+        }),
+        catchError(() => of(false))
+      );
     this.numberRegex = /[0-9]+/;
     this.emailRegex =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    this.phoneNumberRegex = /^[+]*[(]?[0-9]{1,4}[)]?[-\s\.\/0-9]*$/;
-    this.submitButtonText = "Get Delivery Charges";
-    this.submitButtonText2 = "Calculate Charges";
+    // this.phoneNumberRegex = /^[+]*[(]?[0-9]{1,4}[)]?[-\s\.\/0-9]*$/;
+    this.phoneNumberRegex = /^3[0-9]{9}/;
+    this.submitButtonText = "Calculate Charges";
 
     this.userPickupDetails = {
       pickupContactName: "",
@@ -153,8 +213,7 @@ export class ContentComponent implements OnInit {
       deliveryState: "",
       deliveryCity: "",
       deliveryCountry: "",
-      deliveryNotes: "",
-      deliveryPickup: { latitude: this.lat, longitude: this.lng },
+      deliveryNotes: ""
     };
   }
 
@@ -185,35 +244,91 @@ export class ContentComponent implements OnInit {
   }
 
   async onSubmit() {
+
+    this.isProcessing = true;
     if (this.deliveryType === 1) {
       console.log("onSubmit");
       if (this.isDeliveryFieldsValid()) {
-        this.isProcessing = true;
+        // this.userDeliveryDetails.deliveryContactPhone = this.dialingCode + this.userDeliveryDetails.deliveryContactPhone
+
+        const voucherCode = {
+          platformVoucher:
+            this.voucherApplied &&
+              this.voucherApplied.voucher.voucherType === 'PLATFORM'
+              ? this.voucherApplied.voucher.voucherCode
+              : null,
+          storeVoucher:
+            this.voucherApplied &&
+              this.voucherApplied.voucher.voucherType === 'STORE'
+              ? this.voucherApplied.voucher.voucherCode
+              : null,
+        };
+
+        const deliveryChargesBody = {
+          deliveryContactName: this.userDeliveryDetails.deliveryContactName,
+          deliveryAddress: this.userDeliveryDetails.deliveryAddress,
+          deliveryPostcode: this.userDeliveryDetails.deliveryPostcode,
+          deliveryContactEmail: this.userDeliveryDetails.deliveryContactEmail,
+          deliveryContactPhone: this.userDeliveryDetails.deliveryContactPhone,
+          deliveryState: this.userDeliveryDetails.deliveryState,
+          deliveryCity: this.userDeliveryDetails.deliveryCity,
+          deliveryCountry: this.userDeliveryDetails.deliveryCountry,
+          deliveryNotes: this.userDeliveryDetails.deliveryNotes,
+          latitude: this.lat,
+          longitude: this.lng,
+          voucherCode: voucherCode.platformVoucher,
+          storeVoucherCode: voucherCode.storeVoucher,
+        }
+        deliveryChargesBody.deliveryContactPhone = this.dialingCode + deliveryChargesBody.deliveryContactPhone
         if (this.hasDeliveryCharges) {
-          const codResult: any = await this.cartService.confirmCashOnDelivery(
-            this.userDeliveryDetails,
-            this.deliveryFee
-          );
-          if (codResult.status === 201) {
-            this.route.navigate(["/thankyou"]);
-          } else {
-            // TODO: Show error message
+          try {
+            const codResult: any = await this.cartService.confirmCashOnDelivery(
+              deliveryChargesBody,
+              this.selectedDeliveryProvider,
+              this.saveMyInfo
+            );
+            if (codResult.status === 201) {
+              this.route.navigate(["/thankyou"]);
+            } else {
+              // TODO: Show error message
+            }
+          } catch {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "An error occuured",
+              timer: 3000
+            })
           }
+
         } else {
           try {
-            this.deliveryFee = await this.cartService.getDeliveryFee(
-              this.userDeliveryDetails
-            );
-            this.cartTotals = await this.cartService.getDiscount(
-              this.deliveryFee.price
-            );
-            this.hasDeliveryCharges = this.cartTotals ? true : false;
-            this.isError = this.deliveryFee.isError;
-            this.totalServiceCharge =
-              this.storeDeliveryPercentage === 0
-                ? this.storeDeliveryPercentage
-                : (this.storeDeliveryPercentage / 100) *
-                  this.cartTotals.cartSubTotal;
+            this.deliveryProviders = await this.cartService.getDeliveryFee(
+              deliveryChargesBody
+            )
+            if (this.deliveryProviders.length === 0) {
+              Swal.fire({
+                icon: "error",
+                title: "Oops",
+                text: "No available delivery provider",
+                timer: 3000
+              })
+              return;
+            } else if (this.deliveryProviders.length === 1) {
+              if (this.deliveryProviders[0].isError) {
+                Swal.fire({
+                  icon: "error",
+                  title: "Oops",
+                  text: this.deliveryProviders[0].message,
+                  timer: 3000
+                })
+                this.deliveryProviders = []
+              }
+            }
+            // } else {
+            //   this.submitButtonText = "Place Order";
+            // }
+
           } catch {
             Swal.fire({
               icon: "error",
@@ -223,34 +338,88 @@ export class ContentComponent implements OnInit {
             });
             console.log("Something went wrong. Try again");
           }
-          this.submitButtonText = "Place Order";
         }
-        this.isProcessing = false;
       }
     } else if (this.deliveryType === 2) {
-      if (this.isPickupFieldsValid()) {
-        this.isProcessing = true;
-        if (this.hasDeliveryCharges) {
+      if (this.hasDeliveryCharges) {
+        if (this.isPickupFieldsValid()) {
+
+          const voucherCode = {
+            platformVoucher:
+              this.voucherApplied &&
+                this.voucherApplied.voucher.voucherType === 'PLATFORM'
+                ? this.voucherApplied.voucher.voucherCode
+                : null,
+            storeVoucher:
+              this.voucherApplied &&
+                this.voucherApplied.voucher.voucherType === 'STORE'
+                ? this.voucherApplied.voucher.voucherCode
+                : null,
+          };
+
+          const pickupChargesBody = {
+            pickupContactName: this.userPickupDetails.pickupContactName,
+            pickupContactEmail: this.userPickupDetails.pickupContactEmail,
+            pickupContactPhone: this.userPickupDetails.pickupContactPhone,
+            pickupNotes: this.userPickupDetails.deliveryNotes,
+            voucherCode: voucherCode.platformVoucher,
+            storeVoucherCode: voucherCode.storeVoucher,
+          }
+
+          pickupChargesBody.pickupContactPhone = this.dialingCode + pickupChargesBody.pickupContactPhone
           console.log("USERORDER: ", this.userOrder);
           console.log("PickupDetails: ", this.userPickupDetails);
           const codResult: any = await this.cartService.getQuotation(
-            this.userPickupDetails
+            this.userPickupDetails,
+            this.saveMyInfo
           );
           if (codResult.status === 201) {
             this.route.navigate(["/thankyou"]);
           } else {
             // TODO: Show error message
           }
-        } else {
-          this.cartTotals = await this.cartService.getDiscount(0);
-
-          this.hasDeliveryCharges = this.cartTotals ? true : false;
-
-          this.submitButtonText2 = "Place Order";
         }
-        this.isProcessing = false;
+      } else {
+        const voucherCode = {
+          platformVoucher:
+            this.voucherApplied &&
+              this.voucherApplied.voucher.voucherType ===
+              'PLATFORM'
+              ? this.voucherApplied.voucher.voucherCode
+              : null,
+          storeVoucher:
+            this.voucherApplied &&
+              this.voucherApplied.voucher.voucherType === 'STORE'
+              ? this.voucherApplied.voucher.voucherCode
+              : null,
+        };
+
+        let discountParams = {
+          deliveryQuotationId: null,
+          deliveryType: "PICKUP",
+          voucherCode: voucherCode.platformVoucher,
+          storeVoucherCode: voucherCode.storeVoucher,
+          customerId: null,
+          email: this.userPickupDetails.pickupContactEmail ? this.userPickupDetails.pickupContactEmail : null
+        };
+
+        this.cartService.getDiscount(discountParams).then((response: CartTotals) => {
+          this.cartTotals = response
+          this.hasDeliveryCharges = this.cartTotals ? true : false;
+          this.submitButtonText = "Place Order";
+        }, error => {
+          Swal.fire({
+            icon: "error",
+            title: "Ooops",
+            text: error.error.message,
+            timer: 3000,
+          });
+          console.log("Something went wrong. Try again");
+        })
+        // this.cartTotals = await this.cartService.getDiscount(discountParams);
       }
     }
+    this.isProcessing = false;
   }
 
   getStatesByID(countryID): Promise<State[]> {
@@ -269,6 +438,161 @@ export class ContentComponent implements OnInit {
     });
   }
 
+  getCitiesByStateID(deliveryStateID) {
+
+    this.apiService.getCitiesByStateID(deliveryStateID, '', this.countryID).subscribe(
+      async (res: any) => {
+        if (res.status === 200) {
+          this.cities = res.data
+          // this.userDeliveryDetails.deliveryCity = this.cities.length > 0 ? this.cities[0].name : ''
+        }
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  searchAddress(): void {
+    const address = this.userDeliveryDetails.deliveryAddress;
+    this.addressSearchPredictions = [];
+    this.mapSearchService.getPlacePredictions(
+      { input: address },
+      (
+        predictions:
+          | google.maps.places.QueryAutocompletePrediction[]
+          | null,
+        status: google.maps.places.PlacesServiceStatus
+      ) => {
+        if (
+          status !== google.maps.places.PlacesServiceStatus.OK ||
+          !predictions
+        ) {
+          console.log('Status: ' + status);
+          return;
+        }
+        this.addressSearchPredictions = predictions;
+      }
+    );
+  }
+
+  async onSelectDeliveryProvider() {
+    this.isProcessing = true
+    if (this.selectedDeliveryProvider.isError === true) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops",
+        text: this.selectedDeliveryProvider.message,
+        timer: 3000
+      })
+    } else {
+      const voucherCode = {
+        platformVoucher:
+          this.voucherApplied &&
+            this.voucherApplied.voucher.voucherType ===
+            'PLATFORM'
+            ? this.voucherApplied.voucher.voucherCode
+            : null,
+        storeVoucher:
+          this.voucherApplied &&
+            this.voucherApplied.voucher.voucherType === 'STORE'
+            ? this.voucherApplied.voucher.voucherCode
+            : null,
+      };
+      let discountParams = {
+        deliveryType: this.selectedDeliveryProvider.deliveryType,
+        deliveryQuotationId: this.selectedDeliveryProvider.refId,
+        voucherCode: voucherCode.platformVoucher,
+        storeVoucherCode: voucherCode.storeVoucher,
+        customerId: null,
+        email: this.userDeliveryDetails.deliveryContactEmail ? this.userDeliveryDetails.deliveryContactEmail : null
+      };
+
+      this.cartService.getDiscount(discountParams).then((response: CartTotals) => {
+        this.cartTotals = response
+        this.hasDeliveryCharges = this.cartTotals ? true : false;
+        this.totalServiceCharge =
+              this.storeDeliveryPercentage === 0
+                ? this.storeDeliveryPercentage
+                : (this.storeDeliveryPercentage / 100) *
+                  this.cartTotals.cartSubTotal;
+        this.submitButtonText = "Place Order";
+      }, error => {
+        Swal.fire({
+          icon: "error",
+          title: "Ooops",
+          text: error.error.message,
+          timer: 3000,
+        });
+        console.log("Something went wrong. Try again");
+      })
+      // this.isError = this.deliveryFee.isError;
+      // this.totalServiceCharge =
+      // this.storeDeliveryPercentage === 0
+      //   ? this.storeDeliveryPercentage
+      //   : (this.storeDeliveryPercentage / 100) *
+      //     this.cartTotals.cartSubTotal;
+    }
+    this.isProcessing = false
+  }
+
+  onSelectAddress(
+    selectedAddress: google.maps.places.QueryAutocompletePrediction
+  ): void {
+    this.addressSearchPredictions = []
+    this.userDeliveryDetails.deliveryAddress = selectedAddress.description
+    this.geoCoder
+      .geocode({ address: selectedAddress.description }, (results, status) => {
+        if (results && results[0]) {
+          const location = results[0].geometry.location
+
+          this.lat = location.lat()
+          this.lng = location.lng()
+          this.markerPosition = location
+          this.markerLabel = {
+            color: 'green',
+            text: selectedAddress.description
+          }
+
+          this.mapCenter = {
+            lat: location.lat(),
+            lng: location.lng()
+          }
+
+          this.mapZoom = 12
+        }
+      })
+  }
+
+  onMapClicked(event: google.maps.MapMouseEvent): void {
+    // if (this.checkoutForm.get('storePickup').value) return
+    // this.marker.position.lat = event.latLng.lat();
+    // this.marker.position.lng = event.latLng.lng();
+    const coordinates = {
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+    };
+
+    this.lat = coordinates.lat;
+    this.lng = coordinates.lng;
+
+    this.markerPosition = coordinates;
+
+    this.fillAddressBar(coordinates);
+  }
+
+  fillAddressBar(coordinates: any): void {
+    this.geoCoder.geocode({ location: coordinates }, (results, status) => {
+      if (results && results[0]) {
+        this.userDeliveryDetails.deliveryAddress = results[0].formatted_address
+        this.markerLabel = {
+          color: 'green',
+          text: results[0].formatted_address
+        }
+      }
+    })
+  }
+
   //   allowPickupStore() {
   //     this.checkoutForm.get('storePickup').setValue(this.checkoutForm.get('storePickup').value);
   // }
@@ -276,6 +600,7 @@ export class ContentComponent implements OnInit {
   async getStoreInfo() {
     try {
       const storeInfo: Store = await this.storeService.getStoreInfo();
+      this.store = storeInfo
       this.storeNameRaw = storeInfo.name;
       this.storeContact = storeInfo.phoneNumber;
       this.storeAddress = storeInfo.address;
@@ -287,8 +612,20 @@ export class ContentComponent implements OnInit {
       this.currencySymbol = storeInfo.regionCountry.currencySymbol;
       this.userDeliveryDetails.deliveryCountry = storeInfo.regionCountry.name;
       this.storeDeliveryPercentage = storeInfo.serviceChargesPercentage;
-      this.states = await this.getStatesByID(storeInfo.regionCountry.id);
+      this.countryID = storeInfo.regionCountry.id
+      this.states = await this.getStatesByID(this.countryID);
       this.storeTimings = storeInfo.storeTiming;
+      switch (storeInfo.regionCountry.id) {
+        case 'MYS':
+          // this.userDeliveryDetails.deliveryState = 'Selangor'
+          this.dialingCode = '60';
+          break;
+        case 'PAK':
+          // this.userDeliveryDetails.deliveryState = 'Federal'
+          this.dialingCode = '92';
+          break;
+      }
+      // await this.getCitiesByStateID(this.userDeliveryDetails.deliveryState)
       const currentDate = new Date();
       let todayDay = this.dayArr[currentDate.getDay()];
       let browserTime = new Date();
@@ -323,69 +660,69 @@ export class ContentComponent implements OnInit {
     }
   }
 
-  async getMap() {
-    this.mapsAPILoader.load().then(() => {
-      this.map = new google.maps.Map(
-        document.getElementById("map") as HTMLElement
-      );
-      this.setCurrentLocation();
-      this.geoCoder = new google.maps.Geocoder();
-      let autocomplete = new google.maps.places.Autocomplete(
-        this.searchElementRef.nativeElement
-      );
-      autocomplete.addListener("place_changed", () => {
-        this.ngZone.run(() => {
-          //get the place result
-          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+  // async getMap() {
+  //   this.mapsAPILoader.load().then(() => {
+  //     this.map = new google.maps.Map(
+  //       document.getElementById("map") as HTMLElement
+  //     );
+  //     this.setCurrentLocation();
+  //     this.geoCoder = new google.maps.Geocoder();
+  //     let autocomplete = new google.maps.places.Autocomplete(
+  //       this.searchElementRef.nativeElement
+  //     );
+  //     autocomplete.addListener("place_changed", () => {
+  //       this.ngZone.run(() => {
+  //         //get the place result
+  //         let place: google.maps.places.PlaceResult = autocomplete.getPlace();
 
-          //verify result
-          if (place.geometry === undefined || place.geometry === null) {
-            return;
-          }
-          //set latitude, longitude and zoom
-          this.lat = place.geometry.location.lat();
-          this.lng = place.geometry.location.lng();
-          this.zoom = 12;
-          // console.log('Location Entered', 'Lat' , this.latitude + ' Lng', this.longitude)
-        });
-      });
-    });
-  }
-  private setCurrentLocation() {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.lat = position.coords.latitude;
-        this.lng = position.coords.longitude;
-        this.zoom = 8;
-        //this.getAddress(this.lat, this.lng);
-      });
-    }
-  }
-  markerDragEnd($event: MouseEvent) {
-    console.log($event);
-    this.lat = $event.coords.lat;
-    this.lng = $event.coords.lng;
-    this.getAddress(this.lat, this.lng);
-    // console.log('Marker Dragged',  'Lat' , this.latitude + ' Lng', this.longitude)
-  }
-  getAddress(lat: number, lng: number) {
-    const geocoder = new google.maps.Geocoder();
-    const latlng = new google.maps.LatLng(lat, lng);
-    const request: any = {
-      latLng: latlng,
-    };
-    return new Promise((resolve, reject) => {
-      geocoder.geocode(request, (results) => {
-        results.length ? resolve(results[0].formatted_address) : reject(null);
-      });
-    });
-  }
+  //         //verify result
+  //         if (place.geometry === undefined || place.geometry === null) {
+  //           return;
+  //         }
+  //         //set latitude, longitude and zoom
+  //         this.lat = place.geometry.location.lat();
+  //         this.lng = place.geometry.location.lng();
+  //         this.zoom = 12;
+  //         // console.log('Location Entered', 'Lat' , this.latitude + ' Lng', this.longitude)
+  //       });
+  //     });
+  //   });
+  // }
+  // private setCurrentLocation() {
+  //   if ("geolocation" in navigator) {
+  //     navigator.geolocation.getCurrentPosition((position) => {
+  //       this.lat = position.coords.latitude;
+  //       this.lng = position.coords.longitude;
+  //       this.zoom = 8;
+  //       //this.getAddress(this.lat, this.lng);
+  //     });
+  //   }
+  // }
+  // markerDragEnd($event: MouseEvent) {
+  //   console.log($event);
+  //   this.lat = $event.coords.lat;
+  //   this.lng = $event.coords.lng;
+  //   this.getAddress(this.lat, this.lng);
+  //   // console.log('Marker Dragged',  'Lat' , this.latitude + ' Lng', this.longitude)
+  // }
+  // getAddress(lat: number, lng: number) {
+  //   const geocoder = new google.maps.Geocoder();
+  //   const latlng = new google.maps.LatLng(lat, lng);
+  //   const request: any = {
+  //     latLng: latlng,
+  //   };
+  //   return new Promise((resolve, reject) => {
+  //     geocoder.geocode(request, (results) => {
+  //       results.length ? resolve(results[0].formatted_address) : reject(null);
+  //     });
+  //   });
+  // }
 
-  centerChange(coords: LatLngLiteral) {
-    //console.log(event);
-    this.centerLatitude = coords.lat;
-    this.centerLongitude = coords.lng;
-  }
+  // centerChange(coords: LatLngLiteral) {
+  //   //console.log(event);
+  //   this.centerLatitude = coords.lat;
+  //   this.centerLongitude = coords.lng;
+  // }
 
   // Validation
   isDeliveryFieldsValid(): boolean {
@@ -428,6 +765,17 @@ export class ContentComponent implements OnInit {
     this.isDeliveryNameValid =
       this.userDeliveryDetails.deliveryContactName !== "";
     return this.isDeliveryNameValid;
+  }
+
+  validateDeliveryNameAlphabet(event) {
+
+    let charCode = (event.which) ? event.which : event.keyCode;
+    if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode === 32) {
+      return true;
+    } else {
+      event.preventDefault();
+      return false;
+    }
   }
 
   validatePickupName(): boolean {
@@ -523,9 +871,160 @@ export class ContentComponent implements OnInit {
   }
 
   pickup() {
+    this.hasDeliveryCharges = false
+    this.submitButtonText = "Calculate Charges";
+    this.deliveryProviders = []
     this.deliveryType = 2;
+    this.lat = this.store.latitude
+    this.lng = this.store.longitude
+    this.selectedDeliveryProvider = null
+    this.onSubmit()
   }
   delivery() {
+    this.submitButtonText = "Calculate Charges";
+    this.deliveryProviders = []
+    this.hasDeliveryCharges = false
     this.deliveryType = 1;
+    this.selectedDeliveryProvider = null
   }
+
+  getCustomerInfo(type, value) {
+    if (value === "" || this.fetched) return
+
+    const email = type === 'email' ? value : null;
+    const phoneNumber = type === 'phoneNumber' ? this.dialingCode + value : null;
+
+    this.cartService.getCustomerInfo(email, phoneNumber).then(response => {
+      if (response && response.customerAddress.length > 0) {
+        this.fetched = true
+        let dialogRef = this._dialog.open(
+          ChooseDeliveryAddressComponent,
+          { disableClose: true, data: response }
+        );
+
+        dialogRef.afterClosed().subscribe((result) => {
+          if (result.isAddress === true) {
+            // this.checkoutForm.get('id').patchValue(response.id);
+            this.userDeliveryDetails.deliveryContactName = result.name
+            this.userDeliveryDetails.deliveryContactEmail = result.email
+            this.userDeliveryDetails.deliveryContactPhone = result.phoneNumber.slice(-10)
+            this.userDeliveryDetails.deliveryAddress = result.address
+            this.userDeliveryDetails.deliveryPostcode = result.postCode.trim()
+            this.userDeliveryDetails.deliveryState = result.state
+            this.userDeliveryDetails.deliveryCity = result.city
+            this.userDeliveryDetails.deliveryCountry = result.country
+          }
+        });
+      }
+    })
+  }
+
+  claimPromoCode() {
+    if (this.promoCode === "") return;
+
+    const email = this.deliveryType === 1 ? this.userDeliveryDetails.deliveryContactEmail : this.userPickupDetails.pickupContactEmail;
+
+    if (email === "") {
+      Swal.fire({
+        icon: "warning",
+        title: "Email address required",
+        text: "Please add your email address to redeem the voucher.",
+        timer: 3000
+      })
+    } else {
+      this.cartService.verifyVoucher(email, this.promoCode).then((response: Voucher) => {
+        if (response) {
+          let voucher = response;
+          this.promoCode = ""
+
+          let indexVerticalList =
+            voucher.voucherVerticalList.findIndex(
+              (item) =>
+                item.verticalCode ===
+                this.store.verticalCode
+            );
+          let indexStoreList = voucher.voucherStoreList.findIndex(
+            (item) => item.storeId === this.store.id
+          );
+
+          if (
+            (voucher.voucherType === 'STORE'
+              ? indexStoreList > -1
+              : true) &&
+            indexVerticalList > -1
+          ) {
+            Swal.fire({
+              icon: "success",
+              title: "Congratulations!",
+              text: "Promo code successfully claimed",
+              timer: 3000
+            })
+
+            this.isTwo = true
+            this.redeemed = true
+
+            this.guestVouchers = {
+              id: "",
+              customerId: "",
+              voucherId: voucher.id,
+              isUsed: false,
+              created: "",
+              voucher: voucher,
+            };
+
+            this.selectVoucher(this.guestVouchers);
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error!",
+              text: "Promo code not valid for this store",
+              timer: 3000
+            })
+          }
+        }
+      }, error => {
+        if (error.error.message) {
+          Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: error.error.message,
+            timer: 3000
+          })
+        }
+      })
+    }
+  }
+
+  selectVoucher(voucher: CustomerVoucher) {
+    this.voucherApplied = voucher
+
+    this.voucherDiscountAppliedMax = voucher.voucher.discountValue
+
+    this.submitButtonText = "Calculate Charges";
+    this.deliveryProviders = []
+    this.hasDeliveryCharges = false
+    this.selectedDeliveryProvider = null
+
+    if (this.deliveryType === 2) {
+      this.onSubmit()
+    }
+  }
+
+  deselectVoucher() {
+    this.voucherApplied = null
+    this.voucherDiscountAppliedMax = 0;
+    this.guestVouchers = null;
+
+    this.redeemed = false
+
+    this.submitButtonText = "Calculate Charges";
+    this.deliveryProviders = []
+    this.hasDeliveryCharges = false
+    this.selectedDeliveryProvider = null
+
+    if (this.deliveryType === 2) {
+      this.onSubmit()
+    }
+  }
+
 }
