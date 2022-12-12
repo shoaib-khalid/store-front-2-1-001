@@ -983,14 +983,24 @@ export class ContentComponent implements OnInit {
           }
         }
       }, error => {
-        if (error.error.message) {
+        if (error['status'] === 409) {
+          if (error.error.message) {
+            Swal.fire({
+              icon: "error",
+              title: "Error!",
+              text: error.error.message,
+              timer: 3000
+            })
+          }
+        } else {
           Swal.fire({
             icon: "error",
-            title: "Error!",
+            title: error["error"].error,
             text: error.error.message,
             timer: 3000
           })
         }
+        this.promoCode = ""
       })
     }
   }

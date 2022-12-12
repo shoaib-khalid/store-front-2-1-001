@@ -194,4 +194,17 @@ export class StoreService {
       );
     });
   }
+
+  getCategoryById(categoryId): Promise<Category> {
+    return new Promise((resolve, reject) => {
+        this.apiService.getCategoryById(categoryId).subscribe(
+            (res: any) => {
+                resolve(res.data)
+            },
+            err => {
+                reject(err)
+            }
+        )
+    })
+}
 }

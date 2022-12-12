@@ -49,6 +49,7 @@ export class ContentComponent implements OnInit {
   name: any;
   sortId: any;
   currencySymbol: string = "";
+  selectedCategory: Category;
 
   constructor(
     private modalService: NgbModal,
@@ -98,14 +99,19 @@ export class ContentComponent implements OnInit {
 
   async getProductsByCategory(categoryId, sortId) {
     if (!categoryId && !sortId) {
-      this.selectedMenu = "all";
+      this.selectedMenu = "All Products";
     } else {
       this.selectedMenu = categoryId;
     }
     this.isLoading = true;
     this.catId = categoryId;
     localStorage.setItem("category_id", this.catId);
-    this.name = this.selectedMenu;
+    if (this.catId) {
+      this.selectedCategory = await this.storeService.getCategoryById(this.catId)
+      this.name = this.selectedCategory.name;
+    } else {
+      this.name = this.selectedMenu
+    }
     this.catalogueList = [];
     this.product = await this.storeService.getProductsByCategory(
       categoryId,

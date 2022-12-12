@@ -819,4 +819,16 @@ export class ApiService {
 
       return this.http.get(url, header)
   }
+
+  getCategoryById(categoryId): Observable<Category> {
+		const header = {
+			headers: new HttpHeaders({
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${this.token}`,
+			}),
+		}
+		const url = this.productServiceURL + "store-categories/" + categoryId
+
+		return this.http.get<Category>(url, header)
+	}
 }
