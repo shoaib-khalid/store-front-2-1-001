@@ -8,6 +8,7 @@ import { ShoptwoComponent } from './shoptwo.component';
 
 import { SharedModule } from '../../shared/shared.module';
 import { ContentComponent } from './content/content.component'
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [ShoptwoComponent, ContentComponent],
@@ -15,6 +16,7 @@ import { ContentComponent } from './content/content.component'
     CommonModule,
     ShoptwoRoutingModule,
     NgbModule,
+    FormsModule,
     NgxPaginationModule,
     SharedModule
   ]

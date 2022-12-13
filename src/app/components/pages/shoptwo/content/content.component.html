@@ -6,13 +6,13 @@
                 <!-- Product Count & Orderby Start -->
                 <div class="andro_shop-global">
                     <p>Showing <b>{{name}}</b> products </p>
-                    <select name="sortId" class="form-control-1" [(ngClass)]="sortId" (change)="sortByValue()">
+                    <select [ngModelOptions]="{ standalone: true }" [(ngModel)]="sortId" name="sortId" class="form-control-1" [(ngClass)]="sortId" (change)="sortByValue()">
                         <option value="0">Default sorting</option>
                         <option value="1">Cheapest</option>
                         <option value="2">Most Expensive</option>
                         <option value="3">Name A-Z</option>
                         <option value="4">Name Z-A</option>
-                        <option value="4">Most Recent</option>
+                        <option value="5">Most Recent</option>
                     </select>
                 </div>
                 <!-- Product Count & Orderby End -->
@@ -192,7 +192,7 @@
                             </div> -->
                             <div class="qty-outter">
                                 <!-- (click)="modal.dismiss('Cross click')" -->
-                                <a (click)="addToCartFromModal(modalContent)" class="andro_btn-custom">Add to Cart</a>
+                                <button (click)="addToCartFromModal(modalContent)" class="andro_btn-custom">Add to Cart</button>
                                 <div class="qty">
                                     <span class="qty-subtract" (click)="decrement()">
                                         <i class="fa fa-minus"></i>

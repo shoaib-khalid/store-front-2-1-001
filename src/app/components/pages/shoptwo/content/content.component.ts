@@ -47,7 +47,7 @@ export class ContentComponent implements OnInit {
   storeName: any;
   isLoading: boolean;
   name: any;
-  sortId: any;
+  sortId: any = 0;
   currencySymbol: string = "";
   selectedCategory: Category;
 
@@ -99,7 +99,7 @@ export class ContentComponent implements OnInit {
 
   async getProductsByCategory(categoryId, sortId) {
     if (!categoryId && !sortId) {
-      this.selectedMenu = "All Products";
+      this.selectedMenu = "All";
     } else {
       this.selectedMenu = categoryId;
     }
