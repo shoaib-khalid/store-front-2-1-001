@@ -86,7 +86,7 @@ export class ContentComponent implements OnInit {
   getAllProduct() {
     this.catId = null;
     this.sortBy = null;
-    this.getProductsByCategory(this.catId, this.sortBy);
+    this.getProductsByCategory(this.catId, this.sortId);
   }
 
   //SideBar Categories
@@ -98,7 +98,7 @@ export class ContentComponent implements OnInit {
   }
 
   async getProductsByCategory(categoryId, sortId) {
-    if (!categoryId && !sortId) {
+    if (!categoryId) {
       this.selectedMenu = "All";
     } else {
       this.selectedMenu = categoryId;
@@ -118,6 +118,7 @@ export class ContentComponent implements OnInit {
       sortId,
       this.page_no
     );
+    this.page = 1
     this.isLoading = false;
   }
   sortByValue() {
@@ -159,7 +160,7 @@ export class ContentComponent implements OnInit {
         this.catId = null
       }
       this.getStoreCategories();
-      this.getProductsByCategory(this.catId, this.sortBy);
+      this.getProductsByCategory(this.catId, this.sortId);
       this.getStoreInfo();
     });
   }
