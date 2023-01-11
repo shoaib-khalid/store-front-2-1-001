@@ -31,12 +31,12 @@ export class ApiService {
   }
   getBaseUrls() {
     try {
-      this.userServiceURL = AppConfig.settings.serviceUrl.userServiceURL;
-      this.productServiceURL = AppConfig.settings.serviceUrl.productServiceURL;
-      this.orderServiceURL = AppConfig.settings.serviceUrl.orderServiceURL;
+      this.userServiceURL = AppConfig.settings.apiServer.userService;
+      this.productServiceURL = AppConfig.settings.apiServer.productService;
+      this.orderServiceURL = AppConfig.settings.apiServer.orderService;
       this.deliveryServiceURL =
-        AppConfig.settings.serviceUrl.deliveryServiceURL;
-      this.payServiceURL = AppConfig.settings.serviceUrl.payServiceURL;
+        AppConfig.settings.apiServer.deliveryService;
+      this.payServiceURL = AppConfig.settings.apiServer.paymentService;
     } catch (ex) {
       console.error(
         "Failed to get API baseURLs from config file. Assigning hardcoded values instead.",
