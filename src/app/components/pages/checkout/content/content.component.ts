@@ -323,6 +323,50 @@ export class ContentComponent implements OnInit {
                   timer: 3000
                 })
                 this.deliveryProviders = []
+              } else if (this.deliveryProviders[0].deliveryType === 'SELF') {
+                this.selectedDeliveryProvider = this.deliveryProviders[0]
+                const voucherCode = {
+                  platformVoucher:
+                    this.voucherApplied &&
+                      this.voucherApplied.voucher.voucherType ===
+                      'PLATFORM'
+                      ? this.voucherApplied.voucher.voucherCode
+                      : null,
+                  storeVoucher:
+                    this.voucherApplied &&
+                      this.voucherApplied.voucher.voucherType === 'STORE'
+                      ? this.voucherApplied.voucher.voucherCode
+                      : null,
+                };
+                let discountParams = {
+                  id: this.cartService.getCartId(),
+                  deliveryType: this.selectedDeliveryProvider.deliveryType,
+                  deliveryQuotationId: this.selectedDeliveryProvider.refId,
+                  voucherCode: voucherCode.platformVoucher,
+                  storeVoucherCode: voucherCode.storeVoucher,
+                  customerId: null,
+                  email: this.userDeliveryDetails.deliveryContactEmail ? this.userDeliveryDetails.deliveryContactEmail : null,
+                  storeId: this.storeService.getStoreId()
+                };
+
+                this.cartService.getDiscount(discountParams).then((response: CartTotals) => {
+                  this.cartTotals = response
+                  this.hasDeliveryCharges = this.cartTotals ? true : false;
+                  this.totalServiceCharge =
+                        this.storeDeliveryPercentage === 0
+                          ? this.storeDeliveryPercentage
+                          : (this.storeDeliveryPercentage / 100) *
+                            this.cartTotals.cartSubTotal;
+                  this.submitButtonText = "Place Order";
+                }, error => {
+                  Swal.fire({
+                    icon: "error",
+                    title: "Ooops",
+                    text: error.error.message,
+                    timer: 3000,
+                  });
+                  console.log("Something went wrong. Try again");
+                })
               }
             }
             // } else {
@@ -395,12 +439,14 @@ export class ContentComponent implements OnInit {
         };
 
         let discountParams = {
+          id: this.cartService.getCartId(),
           deliveryQuotationId: null,
           deliveryType: "PICKUP",
           voucherCode: voucherCode.platformVoucher,
           storeVoucherCode: voucherCode.storeVoucher,
           customerId: null,
-          email: this.userPickupDetails.pickupContactEmail ? this.userPickupDetails.pickupContactEmail : null
+          email: this.userPickupDetails.pickupContactEmail ? this.userPickupDetails.pickupContactEmail : null,
+          storeId: this.storeService.getStoreId()
         };
 
         this.cartService.getDiscount(discountParams).then((response: CartTotals) => {
@@ -479,6 +525,7 @@ export class ContentComponent implements OnInit {
   async onSelectDeliveryProvider() {
     this.isProcessing = true
     if (this.selectedDeliveryProvider.isError === true) {
+      this.isProcessing = false
       Swal.fire({
         icon: "error",
         title: "Oops",
@@ -500,15 +547,18 @@ export class ContentComponent implements OnInit {
             : null,
       };
       let discountParams = {
+        id: this.cartService.getCartId(),
         deliveryType: this.selectedDeliveryProvider.deliveryType,
         deliveryQuotationId: this.selectedDeliveryProvider.refId,
         voucherCode: voucherCode.platformVoucher,
         storeVoucherCode: voucherCode.storeVoucher,
         customerId: null,
-        email: this.userDeliveryDetails.deliveryContactEmail ? this.userDeliveryDetails.deliveryContactEmail : null
+        email: this.userDeliveryDetails.deliveryContactEmail ? this.userDeliveryDetails.deliveryContactEmail : null,
+        storeId: this.storeService.getStoreId()
       };
 
       this.cartService.getDiscount(discountParams).then((response: CartTotals) => {
+        this.isProcessing = false
         this.cartTotals = response
         this.hasDeliveryCharges = this.cartTotals ? true : false;
         this.totalServiceCharge =
@@ -518,6 +568,7 @@ export class ContentComponent implements OnInit {
                   this.cartTotals.cartSubTotal;
         this.submitButtonText = "Place Order";
       }, error => {
+        this.isProcessing = false
         Swal.fire({
           icon: "error",
           title: "Ooops",
@@ -533,7 +584,6 @@ export class ContentComponent implements OnInit {
       //   : (this.storeDeliveryPercentage / 100) *
       //     this.cartTotals.cartSubTotal;
     }
-    this.isProcessing = false
   }
 
   onSelectAddress(

@@ -612,6 +612,7 @@
 
           <div *ngIf="deliveryProviders.length > 0" class="form-group col-xl-12">
             <mat-select
+              *ngIf="deliveryProviders[0].deliveryType !== 'SELF'"
               class="form-control1"
               appearance="outline"
               name="deliveryProvider"
@@ -624,6 +625,17 @@
                 {{ deliveryProvider.providerName }}
               </mat-option>
             </mat-select>
+            <input
+                *ngIf="deliveryProviders[0].deliveryType === 'SELF'"
+                type="text"
+                name="deliveryType"
+                class="form-control"
+                value="Self Delivery"
+                autocomplete="disabled"
+                readonly
+                [disabled]="store_close"
+                required=""
+              />
           </div>
           <div class="form-group col-xl-12 mb-0">
             <button
