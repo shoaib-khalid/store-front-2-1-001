@@ -45,26 +45,26 @@ export class ApiService {
       let currBaseUrl = location.origin;
       let splitUrl = currBaseUrl.split(".");
       if (splitUrl.length === 3) {
-        this.userServiceURL = "https://api.symplified.biz/user-service/v1/";
+        this.userServiceURL = "https://api.symplified.biz/user-service/v1";
         this.productServiceURL =
-          "https://api.symplified.biz/product-service/v1/";
-        this.payServiceURL = "https://api.symplified.biz/payment-service/v1/";
-        this.orderServiceURL = "https://api.symplified.biz/order-service/v1/";
+          "https://api.symplified.biz/product-service/v1";
+        this.payServiceURL = "https://api.symplified.biz/payment-service/v1";
+        this.orderServiceURL = "https://api.symplified.biz/order-service/v1";
         this.deliveryServiceURL =
-          "https://api.symplified.biz/delivery-service/v1/";
+          "https://api.symplified.biz/delivery-service/v1";
       } else {
-        this.userServiceURL = "https://api.symplified.it/user-service/v1/";
+        this.userServiceURL = "https://api.symplified.it/user-service/v1";
         this.productServiceURL =
-          "https://api.symplified.it/product-service/v1/";
-        this.orderServiceURL = "https://api.symplified.it/order-service/v1/";
+          "https://api.symplified.it/product-service/v1";
+        this.orderServiceURL = "https://api.symplified.it/order-service/v1";
         this.deliveryServiceURL =
-          "https://api.symplified.it/delivery-service/v1/";
-        this.payServiceURL = "https://api.symplified.it/payment-service/v1/";
+          "https://api.symplified.it/delivery-service/v1";
+        this.payServiceURL = "https://api.symplified.it/payment-service/v1";
       }
     }
   }
   postAuthenticate(data) {
-    return this.http.post(this.userServiceURL + "clients/authenticate", data);
+    return this.http.post(this.userServiceURL + "/clients/authenticate", data);
   }
 
   
@@ -76,7 +76,7 @@ export class ApiService {
     };
     const url =
       this.userServiceURL +
-      "stores/" +
+      "/stores/" +
       storeId +
       "/customers/?email=" +
       email +
@@ -93,7 +93,7 @@ export class ApiService {
     };
     const url =
       this.userServiceURL +
-      "stores/" +
+      "/stores/" +
       storeId +
       "/customers/?phoneNumber=" +
       msisdn +
@@ -112,7 +112,7 @@ export class ApiService {
 
     const url =
       this.userServiceURL +
-      "customer/" +
+      "/customer/" +
       uuid +
       "/address/?" +
       "page=0" +
@@ -135,7 +135,7 @@ export class ApiService {
         Authorization: `Bearer ${this.token}`,
       }),
     };
-    const url = `${this.productServiceURL}stores/${storeID}`;
+    const url = `${this.productServiceURL}/stores/${storeID}`;
     return this.http.get(url, header);
   }
 
@@ -145,7 +145,7 @@ export class ApiService {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
     const url =
-      this.productServiceURL + "stores/" + storeID + "/discount/active";
+      this.productServiceURL + "/stores/" + storeID + "/discount/active";
 
     return this.http.get(url, header);
   }
@@ -159,7 +159,7 @@ export class ApiService {
         Authorization: "Bearer accessToken",
       }),
     };
-    const url = this.productServiceURL + "stores/" + storeID;
+    const url = this.productServiceURL + "/stores/" + storeID;
 
     return this.http.get(url, header);
   }
@@ -175,7 +175,7 @@ export class ApiService {
       },
     };
 
-    const url = this.productServiceURL + "stores";
+    const url = this.productServiceURL + "/stores";
 
     return this.http.get(url, header);
   }
@@ -200,7 +200,7 @@ export class ApiService {
 
     const url =
       this.orderServiceURL +
-      "carts/" +
+      "/carts/" +
       discountParams.id +
       "/discount";
 
@@ -214,7 +214,7 @@ export class ApiService {
     };
     const url =
       this.productServiceURL +
-      "region-country-state?regionCountryId=" +
+      "/region-country-state?regionCountryId=" +
       countryID;
 
     return this.http.get(url, header);
@@ -228,7 +228,7 @@ export class ApiService {
 
     const url =
       this.productServiceURL +
-      "region-country-state-city?stateId=" + stateId + 
+      "/region-country-state-city?stateId=" + stateId + 
       "&city=" + city + 
       "&country=" + country;
 
@@ -243,7 +243,7 @@ export class ApiService {
     };
     const url =
       this.productServiceURL +
-      "stores/" +
+      "/stores/" +
       storeID +
       "/products?pageSize=10" +
       "&page=0" +
@@ -256,7 +256,7 @@ export class ApiService {
     const header = {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
-    const url = this.productServiceURL + "stores/" + storeID;
+    const url = this.productServiceURL + "/stores/" + storeID;
 
     return this.http.get(url, header);
   }
@@ -269,7 +269,7 @@ export class ApiService {
         Authorization: "Bearer accessToken",
       }),
     };
-    const url = this.productServiceURL + "stores/" + storename;
+    const url = this.productServiceURL + "/stores/" + storename;
 
     return this.http.get(url, header);
   }
@@ -284,7 +284,7 @@ export class ApiService {
     };
     const url =
       this.productServiceURL +
-      "products/" +
+      "/products/" +
       productID +
       "?featured=true" +
       "&page=0" +
@@ -301,7 +301,7 @@ export class ApiService {
     };
     const url =
       this.productServiceURL +
-      "store-categories?page=0" +
+      "/store-categories?page=0" +
       "&pageSize=20" +
       "&storeId=" +
       storeID;
@@ -313,7 +313,7 @@ export class ApiService {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
     const url =
-      this.productServiceURL + "stores/" + storeID + "/deliverydetails";
+      this.productServiceURL + "/stores/" + storeID + "/deliverydetails";
     return this.http.get(url, header);
   }
 
@@ -333,7 +333,7 @@ export class ApiService {
       if (sortId == 1) {
         // cheapest
         url =
-          "stores/" +
+          "/stores/" +
           storeID +
           "/products?status=ACTIVE" +
           "&page=" +
@@ -345,7 +345,7 @@ export class ApiService {
       } else if (sortId == 2) {
         // expensive
         url =
-          "stores/" +
+          "/stores/" +
           storeID +
           "/products?status=ACTIVE" +
           "&page=" +
@@ -357,7 +357,7 @@ export class ApiService {
       } else if (sortId == 3) {
         // by A-Z
         url =
-          "stores/" +
+          "/stores/" +
           storeID +
           "/products?status=ACTIVE" +
           "&page=" +
@@ -368,7 +368,7 @@ export class ApiService {
       } else if (sortId == 4) {
         // by Z-A
         url =
-          "stores/" +
+          "/stores/" +
           storeID +
           "/products?status=ACTIVE" +
           "&page=" +
@@ -379,7 +379,7 @@ export class ApiService {
       } else if (sortId == 5) {
         // by Most Recent
         url =
-          "stores/" +
+          "/stores/" +
           storeID +
           "/products?status=ACTIVE" +
           "&page=" +
@@ -391,7 +391,7 @@ export class ApiService {
       } else {
         // non sorted
         url =
-          "stores/" +
+          "/stores/" +
           storeID +
           "/products?status=ACTIVE" +
           "&categoryId=" +
@@ -403,7 +403,7 @@ export class ApiService {
       if (sortId == 1) {
         // cheapest
         url =
-          "stores/" +
+          "/stores/" +
           storeID +
           "/products?status=ACTIVE" +
           "&page=" +
@@ -413,7 +413,7 @@ export class ApiService {
       } else if (sortId == 2) {
         // expensive
         url =
-          "stores/" +
+          "/stores/" +
           storeID +
           "/products?status=ACTIVE" +
           "&page=" +
@@ -423,7 +423,7 @@ export class ApiService {
       } else if (sortId == 3) {
         // by A-Z
         url =
-          "stores/" +
+          "/stores/" +
           storeID +
           "/products?status=ACTIVE" +
           "&page=" +
@@ -432,7 +432,7 @@ export class ApiService {
       } else if (sortId == 4) {
         // by Z-A
         url =
-          "stores/" +
+          "/stores/" +
           storeID +
           "/products?status=ACTIVE" +
           "&page=" +
@@ -441,7 +441,7 @@ export class ApiService {
       } else if (sortId == 5) {
         // by Most Recent
         url =
-          "stores/" +
+          "/stores/" +
           storeID +
           "/products?status=ACTIVE" +
           "&page=" +
@@ -451,7 +451,7 @@ export class ApiService {
       } else {
         // non sorted
         url =
-          "stores/" + storeID + "/products?status=ACTIVE" + "&page=" + pageNo;
+          "/stores/" + storeID + "/products?status=ACTIVE" + "&page=" + pageNo;
       }
     }
 
@@ -469,7 +469,7 @@ export class ApiService {
 
     const url =
       this.productServiceURL +
-      "stores/" +
+      "/stores/" +
       store_id +
       "/products?featured=true" +
       "&page=0" +
@@ -497,7 +497,7 @@ export class ApiService {
     });
 
     const url = this.productServiceURL;
-    "stores/" +
+    "/stores/" +
       storeId +
       "/products/" +
       productId +
@@ -519,7 +519,7 @@ export class ApiService {
     // http://209.58.160.20:7072/carts?customerId=4&page=0&pageSize=20
     const url =
       this.orderServiceURL +
-      "carts?customerId=" +
+      "/carts?customerId=" +
       customerID +
       "&page=0" +
       "&pageSize=20" +
@@ -537,7 +537,7 @@ export class ApiService {
     // http://209.58.160.20:7072/orders?customerId=4&page=0&pageSize=20&storeId=b0c5d5bf-be25-465c-811a-44c20011d025
     const url =
       this.orderServiceURL +
-      "orders?customerId=" +
+      "/orders?customerId=" +
       customerID +
       "&page=0" +
       "&pageSize=20" +
@@ -555,7 +555,7 @@ export class ApiService {
     // http://209.58.160.20:7072/carts/3/items?page=0&pageSize=20
     const url =
       this.orderServiceURL +
-      "carts/" +
+      "/carts/" +
       cartID +
       "/items?page=0" +
       "&pageSize=200";
@@ -569,7 +569,7 @@ export class ApiService {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
     };
 
-    const url = this.orderServiceURL + "orders/" + order_id;
+    const url = this.orderServiceURL + "/orders/" + order_id;
 
     return this.http.get(url, header);
   }
@@ -584,7 +584,7 @@ export class ApiService {
       }),
     };
 
-    const url = this.orderServiceURL + "carts/" + data.cartId + "/items";
+    const url = this.orderServiceURL + "/carts/" + data.cartId + "/items";
 
     return this.http.post(url, data, httpOptions);
   }
@@ -599,7 +599,7 @@ export class ApiService {
       }),
     };
 
-    const url = this.orderServiceURL + "orders/" + data.orderId + "/items";
+    const url = this.orderServiceURL + "/orders/" + data.orderId + "/items";
 
     return this.http.post(url, data, httpOptions);
   }
@@ -617,7 +617,7 @@ export class ApiService {
     // const url = "http://209.58.160.20:7001/orders/placeOrder?cartId=" + cartId;
     const url =
       this.orderServiceURL +
-      "orders/placeOrder?cartId=" +
+      "/orders/placeOrder?cartId=" +
       cartId +
       "&saveCustomerInformation=" +
       saveInfo +
@@ -636,7 +636,7 @@ export class ApiService {
       }),
     };
 
-    const url = this.orderServiceURL + "carts";
+    const url = this.orderServiceURL + "/carts";
     return this.http.post(url, data, httpOptions);
   }
 
@@ -651,7 +651,7 @@ export class ApiService {
     };
     // "https://api.symplified.biz/order-service/v1/",
     const url =
-      this.orderServiceURL + "orders?saveCustomerInformation=" + isSaved;
+      this.orderServiceURL + "/orders?saveCustomerInformation=" + isSaved;
     return this.http.post(url, data, httpOptions);
   }
 
@@ -665,7 +665,7 @@ export class ApiService {
       }),
     };
 
-    const url = this.orderServiceURL + "orders";
+    const url = this.orderServiceURL + "/orders";
     return this.http.post(url, data, httpOptions);
   }
 
@@ -679,7 +679,7 @@ export class ApiService {
       body: data,
     };
 
-    const url = this.orderServiceURL + "carts/" + data.cartId + "/items/" + id;
+    const url = this.orderServiceURL + "/carts/" + data.cartId + "/items/" + id;
 
     return this.http.delete(url, httpOptions);
   }
@@ -695,7 +695,7 @@ export class ApiService {
     };
 
     const url =
-      this.orderServiceURL + "carts/" + data.cartId + "/items/" + data.id;
+      this.orderServiceURL + "/carts/" + data.cartId + "/items/" + data.id;
 
     return this.http.put(url, data, httpOptions);
   }
@@ -712,7 +712,7 @@ export class ApiService {
 
     const url =
       this.orderServiceURL +
-      "carts/" +
+      "/carts/" +
       data.cartId +
       "/items/updatequantiy/" +
       data.id +
@@ -732,7 +732,7 @@ export class ApiService {
       body: data,
     };
 
-    const url = this.orderServiceURL + "carts/" + data.cartId + "/items/clear";
+    const url = this.orderServiceURL + "/carts/" + data.cartId + "/items/clear";
 
     return this.http.delete(url, httpOptions);
   }
@@ -751,7 +751,7 @@ export class ApiService {
       }),
     };
 
-    const url = this.deliveryServiceURL + "orders/getprice";
+    const url = this.deliveryServiceURL + "/orders/getprice";
 
     return this.http.post(url, xxx, httpOptions);
     // return this.http.get(this.payServiceURL + "payments/makePayment", httpOptions);
@@ -767,7 +767,7 @@ export class ApiService {
       }),
     };
 
-    const url = this.deliveryServiceURL + "orders/submitorder";
+    const url = this.deliveryServiceURL + "/orders/submitorder";
 
     return this.http.post(url, data, httpOptions);
     // return this.http.get(this.payServiceURL + "payments/makePayment", httpOptions);
@@ -787,7 +787,7 @@ export class ApiService {
       }),
     };
 
-    const url = this.payServiceURL + "payments/makePayment";
+    const url = this.payServiceURL + "/payments/makePayment";
 
     return this.http.post(url, data, httpOptions);
     // return this.http.get(this.payServiceURL + "payments/makePayment", httpOptions);
@@ -798,7 +798,7 @@ export class ApiService {
       headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`)
     };
 
-    const url = this.userServiceURL + "stores/" + storeId + "/customers/?" + type + "=" + value
+    const url = this.userServiceURL + "/stores/" + storeId + "/customers/?" + type + "=" + value
     
     return this.http.get(url, header);
   }
@@ -812,7 +812,7 @@ export class ApiService {
     };
 
     const url = this.orderServiceURL + 
-      "voucher/verify/" + 
+      "/voucher/verify/" + 
       customerEmail + "/" + 
       voucherCode + "/" + 
       storeId
@@ -827,7 +827,7 @@ export class ApiService {
 				Authorization: `Bearer ${this.token}`,
 			}),
 		}
-		const url = this.productServiceURL + "store-categories/" + categoryId
+		const url = this.productServiceURL + "/store-categories/" + categoryId
 
 		return this.http.get<Category>(url, header)
 	}
