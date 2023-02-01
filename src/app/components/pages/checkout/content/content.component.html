@@ -570,7 +570,7 @@
                 </td>
               </tr>
               <tr
-                *ngIf="hasDeliveryCharges && cartTotals.cartDeliveryCharge > 0"
+                *ngIf="hasDeliveryCharges && deliveryType === 1"
               >
                 <td>Delivery Charges</td>
                 <td></td>

@@ -528,9 +528,14 @@ export class ContentComponent implements OnInit {
       this.isProcessing = false
       Swal.fire({
         icon: "error",
-        title: "Oops",
+        title: this.selectedDeliveryProvider.providerName + " error",
         text: this.selectedDeliveryProvider.message,
         timer: 3000
+      })
+      .then(() => {
+        this.hasDeliveryCharges = false;
+        this.submitButtonText = "Calculate Charges";
+        this.selectedDeliveryProvider = null
       })
     } else {
       const voucherCode = {
